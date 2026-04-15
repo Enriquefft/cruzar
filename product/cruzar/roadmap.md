@@ -14,7 +14,7 @@ This document answers: *what comes next, in what order, with what acceptance, an
 **Done:** P1 (monorepo scaffold), P2 (`apps/web/CLAUDE.md`), **P3** (career-ops absorb — commits `976d09d` + `a26a0fd`), P4 (ADRs 01–08), P5 (Architecture + Roadmap authored, spec archived), P6 (operator playbook dirs + lib shells + skill stubs).
 **Post-P3 refactor:** code roots collapsed under `apps/` — `packages/career-ops/` → `apps/career-ops/`, root `scripts/` → `apps/operator-scripts/`. Path references updated repo-wide.
 **M1 partial:** 11 Zod entity schemas under `apps/web/schemas/` (enums + student + english-cert + intake + profile + role + application + status-event), 8 Cruzar Drizzle tables derived + 4 Better Auth tables (`user`/`session`/`account`/`verification`) in `apps/web/db/schema.ts`, role catalog seed at `apps/web/db/seed.ts` wired to `bun run db:seed`. Typecheck green. **Pending M1 runtime steps:** `bun run db:push` against Neon, load seed, verify magic-link round trip end-to-end.
-**Blocked on:** `DATABASE_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `RESEND_FROM` before the M1 runtime steps above.
+**Blocked on:** `DATABASE_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `AI_API_KEY` before the M1 runtime steps above.
 
 Update this section at the start of every session.
 
