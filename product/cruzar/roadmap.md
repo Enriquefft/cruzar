@@ -10,11 +10,11 @@ This document answers: *what comes next, in what order, with what acceptance, an
 
 ## Current position
 
-**Phase:** P — Pre-handoff (Enrique). **Complete.**
+**Phase:** P — Pre-handoff **Complete**. Phase M — **M1 in progress** (schema authored, migration + seed + auth round-trip pending env).
 **Done:** P1 (monorepo scaffold), P2 (`apps/web/CLAUDE.md`), **P3** (career-ops absorb — commits `976d09d` + `a26a0fd`), P4 (ADRs 01–08), P5 (Architecture + Roadmap authored, spec archived), P6 (operator playbook dirs + lib shells + skill stubs).
 **Post-P3 refactor:** code roots collapsed under `apps/` — `packages/career-ops/` → `apps/career-ops/`, root `scripts/` → `apps/operator-scripts/`. Path references updated repo-wide.
-**Blocked on:** `DATABASE_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `RESEND_FROM` before M1 runtime steps (schema authoring proceeds without env).
-**Miura's 24h clock:** ready to start.
+**M1 partial:** 11 Zod entity schemas under `apps/web/schemas/` (enums + student + english-cert + intake + profile + role + application + status-event), 8 Cruzar Drizzle tables derived + 4 Better Auth tables (`user`/`session`/`account`/`verification`) in `apps/web/db/schema.ts`, role catalog seed at `apps/web/db/seed.ts` wired to `bun run db:seed`. Typecheck green. **Pending M1 runtime steps:** `bun run db:push` against Neon, load seed, verify magic-link round trip end-to-end.
+**Blocked on:** `DATABASE_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `RESEND_FROM` before the M1 runtime steps above.
 
 Update this section at the start of every session.
 
@@ -133,11 +133,11 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 **Dependencies:** P1, P2.
 
 **Acceptance:**
-- [ ] Every entity in Architecture has a Zod schema + Drizzle table.
+- [x] Every entity in Architecture has a Zod schema + Drizzle table.
 - [ ] `bun run db:push` applies the migration to Neon.
-- [ ] 10 role seed rows loaded.
+- [ ] 10 role seed rows loaded via `bun run db:seed`.
 - [ ] Magic-link round trip: submit email → receive email → click → session authenticated → redirect to `/onboarding`.
-- [ ] Typecheck clean. No `any`, no `as` except `as const`.
+- [x] Typecheck clean. No `any`, no `as` except `as const`.
 
 **CC prompt template:**
 
