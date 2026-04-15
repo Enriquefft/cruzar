@@ -1,0 +1,17 @@
+{
+  "name": "@cruzar/career-ops",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./bin/fill-forms.mjs",
+  "bin": {
+    "fill-forms": "./bin/fill-forms.mjs",
+    "generate-pdf": "./bin/generate-pdf.mjs"
+  },
+  "scripts": {
+    "typecheck": "echo 'no-op until TS code lands'"
+  },
+  "dependencies": {
+    "playwright": "1.59.1"
+  }
+}
