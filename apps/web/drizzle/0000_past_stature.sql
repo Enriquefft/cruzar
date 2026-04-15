@@ -211,6 +211,5 @@ CREATE UNIQUE INDEX "intake_batches_unique" ON "intake_batches" USING btree ("in
 CREATE INDEX "role_matches_profile_id_idx" ON "role_matches" USING btree ("profile_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "roles_title_unique" ON "roles" USING btree ("title");--> statement-breakpoint
 CREATE INDEX "session_userId_idx" ON "session" USING btree ("userId");--> statement-breakpoint
-CREATE UNIQUE INDEX "status_events_per_day" ON "status_events" USING btree ("application_id","kind",("created_at"::date));--> statement-breakpoint
 CREATE INDEX "status_events_student_created_idx" ON "status_events" USING btree ("student_id","created_at" DESC NULLS LAST);--> statement-breakpoint
 CREATE UNIQUE INDEX "students_public_slug_unique" ON "students" USING btree ("public_slug");

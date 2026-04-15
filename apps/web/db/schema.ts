@@ -303,8 +303,10 @@ export const statusEvents = pgTable(
     created_at: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    // Idempotency: at most one event per application per kind per calendar day.
-    uniqueIndex("status_events_per_day").on(t.application_id, t.kind, sql`(${t.created_at}::date)`),
+    // Per-day idempotency on (application_id, kind) is enforced at the script
+    // boundary (apps/operator-scripts/_shared/status-events.ts), not at the DB
+    // level — Postgres rejects `timestamptz::date` in a unique index expression
+    // because the cast is not IMMUTABLE (session-timezone dependent).
     index("status_events_student_created_idx").on(t.student_id, t.created_at.desc()),
   ],
 );
