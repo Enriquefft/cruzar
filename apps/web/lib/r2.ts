@@ -1,4 +1,6 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { z } from "zod";
 import { env } from "./env";
 
 let cached: S3Client | undefined;
@@ -32,4 +34,61 @@ export function r2(): S3Client {
 export function publicUrl(key: string): string {
   const { publicBase } = requireR2Env();
   return `${publicBase.replace(/\/$/, "")}/${encodeURI(key).replace(/^\//, "")}`;
+}
+
+export const attestationMimeTypeValues = ["image/png", "image/jpeg", "application/pdf"] as const;
+export type AttestationMimeType = (typeof attestationMimeTypeValues)[number];
+export const attestationMimeTypeSchema = z.enum(attestationMimeTypeValues);
+
+const ATTESTATION_MAX_BYTES = 10_000_000;
+const ATTESTATION_EXPIRES_IN_SECONDS = 300;
+
+const presignAttestationInputSchema = z.object({
+  studentId: z.string().min(1),
+  filename: z.string().min(1).max(255),
+  mimeType: attestationMimeTypeSchema,
+  sizeBytes: z.number().int().positive().max(ATTESTATION_MAX_BYTES),
+});
+export type PresignAttestationInput = z.infer<typeof presignAttestationInputSchema>;
+
+export interface PresignedAttestationPut {
+  url: string;
+  key: string;
+  expiresIn: number;
+}
+
+function sanitizeFilename(raw: string): string {
+  const stripped = raw.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+  const safe = stripped.replace(/[^A-Za-z0-9._-]+/g, "-").replace(/-+/g, "-");
+  const trimmed = safe.replace(/^[-.]+|[-.]+$/g, "");
+  if (trimmed.length === 0) return "file";
+  return trimmed.slice(0, 120);
+}
+
+export async function presignAttestationPut(
+  input: PresignAttestationInput,
+): Promise<PresignedAttestationPut> {
+  const parsed = presignAttestationInputSchema.parse(input);
+  const { bucket } = requireR2Env();
+  const key = `attestations/${parsed.studentId}/${crypto.randomUUID()}-${sanitizeFilename(parsed.filename)}`;
+  const command = new PutObjectCommand({
+    Bucket: bucket,
+    Key: key,
+    ContentType: parsed.mimeType,
+    ContentLength: parsed.sizeBytes,
+  });
+  const url = await getSignedUrl(r2(), command, {
+    expiresIn: ATTESTATION_EXPIRES_IN_SECONDS,
+  });
+  return { url, key, expiresIn: ATTESTATION_EXPIRES_IN_SECONDS };
+}
+
+export async function assertAttestationExists(key: string): Promise<void> {
+  const { bucket } = requireR2Env();
+  try {
+    await r2().send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
+  } catch (err) {
+    const name = err instanceof Error ? err.name : "UnknownError";
+    throw new Error(`R2 attestation not found (${name})`);
+  }
 }
