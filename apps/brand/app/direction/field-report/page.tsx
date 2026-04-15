@@ -1,13 +1,27 @@
 import { Fragment_Mono, Geologica } from "next/font/google";
 import { BRAND, PRICING, PROOF, QUOTE } from "@/lib/content";
+import {
+  CARD,
+  HAIRLINE,
+  HAIRLINE_STRONG,
+  INK,
+  INK_MUTE,
+  INK_SOFT,
+  PAPER,
+  SIGNAL,
+  SIGNAL_DIM,
+} from "@/lib/tokens";
 
 /**
- * Direction: Field Report / Operator
+ * Direction: Field Report / Operator — Cruzar's secondary register.
  *
  * Operator-grade layout. Light paper-cream background, hairline rules, dense
  * tabular data, one signal color (terra/brick) used surgically. Reads as the
  * inside of a system — the skin Miura would actually want on the operator
  * dashboard, and the tone a CTO recognizes as competent at a glance.
+ *
+ * Color tokens derive from `@/lib/tokens` (SSOT). Type stack is Geologica
+ * (body/display) + Fragment Mono (data).
  */
 
 const mono = Fragment_Mono({
@@ -22,17 +36,17 @@ const sans = Geologica({
   variable: "--fr-sans",
 });
 
-// ---- Palette (OKLCH, tinted warm) ----------------------------------------
+/** Local alias: field-report uses `dim`/`faint` as semantic names over INK_SOFT/INK_MUTE. */
 const C = {
-  paper: "oklch(0.968 0.008 75)", // background
-  card: "oklch(0.985 0.006 78)", // paper, inset surfaces
-  ink: "oklch(0.22 0.012 60)", // primary type
-  dim: "oklch(0.45 0.010 65)", // secondary type
-  faint: "oklch(0.62 0.008 68)", // tertiary type, labels
-  hairline: "oklch(0.82 0.010 70)", // 1px rules
-  hairlineStrong: "oklch(0.72 0.012 65)", // emphasized rule
-  signal: "oklch(0.55 0.16 35)", // terra / brick — the ONE accent
-  signalDim: "oklch(0.55 0.16 35 / 0.12)", // surface tint of signal
+  paper: PAPER,
+  card: CARD,
+  ink: INK,
+  dim: INK_SOFT,
+  faint: INK_MUTE,
+  hairline: HAIRLINE,
+  hairlineStrong: HAIRLINE_STRONG,
+  signal: SIGNAL,
+  signalDim: SIGNAL_DIM,
 } as const;
 
 const BUILD_ID = "0001";

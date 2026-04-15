@@ -13,26 +13,37 @@
 
 export const PAPER = "oklch(0.97 0.012 85)";
 export const PAPER_DEEP = "oklch(0.945 0.014 82)";
+/** Inset card / row surfaces over paper. Slightly lighter than PAPER to read as raised. */
+export const CARD = "oklch(0.985 0.006 82)";
+
 export const INK = "oklch(0.18 0.01 80)";
 export const INK_SOFT = "oklch(0.38 0.012 80)";
 export const INK_MUTE = "oklch(0.55 0.012 80)";
+
 export const HAIRLINE = "oklch(0.82 0.012 80)";
+/** Emphasized hairline — header/section dividers in dense layouts. */
+export const HAIRLINE_STRONG = "oklch(0.72 0.012 80)";
 
 /** The aged editorial red. Used surgically — wordmark period, section markers. */
 export const ACCENT = "oklch(0.42 0.14 30)";
 
 /** Terra/brick, same hue family as ACCENT but brighter for mono/operator contexts. */
 export const SIGNAL = "oklch(0.55 0.16 35)";
+/** Soft surface tint of SIGNAL — row highlights, status bands. */
+export const SIGNAL_DIM = "oklch(0.55 0.16 35 / 0.12)";
 
 export const color = {
   paper: PAPER,
   paperDeep: PAPER_DEEP,
+  card: CARD,
   ink: INK,
   inkSoft: INK_SOFT,
   inkMute: INK_MUTE,
   hairline: HAIRLINE,
+  hairlineStrong: HAIRLINE_STRONG,
   accent: ACCENT,
   signal: SIGNAL,
+  signalDim: SIGNAL_DIM,
 } as const;
 
 /* ──────────────────────────  TYPOGRAPHY  ────────────────────────── */
