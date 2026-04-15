@@ -58,6 +58,8 @@ export const FONT_FAMILY = {
   display: "Source Serif 4",
   /** Primary body sans — off the reflex-reject list, pairs against Source Serif 4. */
   body: "Funnel Sans",
+  /** Field-register body sans — denser, instrument-panel voice for operator surfaces. */
+  bodyDense: "Geologica",
   /** Mono companion — humanist, single-weight, for data-density surfaces (CV, operator, CSV). */
   mono: "Fragment Mono",
 } as const;
@@ -66,12 +68,14 @@ export const FONT_FAMILY = {
 export const CSS_VAR = {
   display: "--cruzar-display",
   body: "--cruzar-body",
+  bodyDense: "--cruzar-body-dense",
   mono: "--cruzar-mono",
 } as const;
 
 export const FONT_STACK = {
   display: `var(${CSS_VAR.display}), ui-serif, Georgia, serif`,
   body: `var(${CSS_VAR.body}), ui-sans-serif, system-ui, sans-serif`,
+  bodyDense: `var(${CSS_VAR.bodyDense}), ui-sans-serif, system-ui, sans-serif`,
   mono: `var(${CSS_VAR.mono}), ui-monospace, SFMono-Regular, Menlo, monospace`,
 } as const;
 

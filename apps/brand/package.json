@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     "./tokens": "./lib/tokens.ts",
+    "./fonts": "./lib/fonts.ts",
     "./content": "./lib/content.ts"
   },
   "scripts": {

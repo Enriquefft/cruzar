@@ -1,5 +1,5 @@
-import { Funnel_Sans, Source_Serif_4 } from "next/font/google";
 import { BRAND, PRICING, PROOF, QUOTE } from "@/lib/content";
+import { body, display } from "@/lib/fonts";
 import { ACCENT, HAIRLINE, INK, INK_MUTE, INK_SOFT, PAPER, PAPER_DEEP } from "@/lib/tokens";
 
 /**
@@ -12,23 +12,8 @@ import { ACCENT, HAIRLINE, INK, INK_MUTE, INK_SOFT, PAPER, PAPER_DEEP } from "@/
  * two-column compositions. Warm cream paper, rich ink, one restrained
  * aged-red accent. Every figure is tabular.
  *
- * Color, type references, and spacing derive from `@/lib/tokens` (SSOT).
+ * Color, type, and spacing derive from `@cruzar/brand` modules (SSOT).
  */
-
-const display = Source_Serif_4({
-  subsets: ["latin"],
-  weight: ["300", "400", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-  variable: "--ed-display",
-});
-
-const body = Funnel_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  variable: "--ed-body",
-});
 
 function SectionEyebrow({ no, label }: { no: string; label: string }) {
   return (
@@ -41,7 +26,7 @@ function SectionEyebrow({ no, label }: { no: string; label: string }) {
         letterSpacing: "0.22em",
         textTransform: "uppercase",
         color: INK_MUTE,
-        fontFamily: "var(--ed-body)",
+        fontFamily: "var(--cruzar-body)",
         fontVariantNumeric: "tabular-nums",
       }}
     >
@@ -69,7 +54,7 @@ export default function EditorialDirection() {
         background: PAPER,
         color: INK,
         minHeight: "100vh",
-        fontFamily: "var(--ed-body), ui-sans-serif, system-ui, sans-serif",
+        fontFamily: "var(--cruzar-body), ui-sans-serif, system-ui, sans-serif",
         fontSize: "16px",
         lineHeight: 1.55,
         fontVariantNumeric: "tabular-nums lining-nums",
@@ -78,10 +63,10 @@ export default function EditorialDirection() {
       }}
     >
       <style>{`
-        .ed-serif { font-family: var(--ed-display), ui-serif, Georgia, serif; }
-        .ed-sans  { font-family: var(--ed-body), ui-sans-serif, system-ui, sans-serif; }
+        .ed-serif { font-family: var(--cruzar-display), ui-serif, Georgia, serif; }
+        .ed-sans  { font-family: var(--cruzar-body), ui-sans-serif, system-ui, sans-serif; }
         .ed-figure-huge {
-          font-family: var(--ed-display);
+          font-family: var(--cruzar-display);
           font-weight: 300;
           font-feature-settings: "tnum" 1, "lnum" 1;
           letter-spacing: -0.03em;
@@ -246,7 +231,7 @@ export default function EditorialDirection() {
             </h2>
             <p
               style={{
-                fontFamily: "var(--ed-body)",
+                fontFamily: "var(--cruzar-body)",
                 margin: 0,
                 fontSize: "1.08rem",
                 lineHeight: 1.6,
@@ -572,7 +557,7 @@ export default function EditorialDirection() {
             <figcaption
               className="ed-smallcaps"
               style={{
-                fontFamily: "var(--ed-body)",
+                fontFamily: "var(--cruzar-body)",
                 fontSize: "0.92rem",
                 letterSpacing: "0.14em",
                 color: INK,

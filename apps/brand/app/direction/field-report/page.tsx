@@ -1,5 +1,5 @@
-import { Fragment_Mono, Geologica } from "next/font/google";
 import { BRAND, PRICING, PROOF, QUOTE } from "@/lib/content";
+import { bodyDense as sans, mono } from "@/lib/fonts";
 import {
   CARD,
   HAIRLINE,
@@ -20,21 +20,11 @@ import {
  * inside of a system — the skin Miura would actually want on the operator
  * dashboard, and the tone a CTO recognizes as competent at a glance.
  *
- * Color tokens derive from `@/lib/tokens` (SSOT). Type stack is Geologica
- * (body/display) + Fragment Mono (data).
+ * Color, type, and spacing derive from `@cruzar/brand` modules (SSOT).
+ * Note: the secondary register pairs body sans (Funnel Sans) with mono
+ * (Fragment Mono) — the previous Geologica-as-sans choice has been folded
+ * into the shared body font for system coherence.
  */
-
-const mono = Fragment_Mono({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--fr-mono",
-});
-
-const sans = Geologica({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--fr-sans",
-});
 
 /** Local alias: field-report uses `dim`/`faint` as semantic names over INK_SOFT/INK_MUTE. */
 const C = {
@@ -55,7 +45,7 @@ const REPORT_TS = "2026-04-15T09:42:00-05:00";
 
 // ---- Small primitives (inline, scoped to this file) ----------------------
 const labelStyle: React.CSSProperties = {
-  fontFamily: "var(--fr-mono)",
+  fontFamily: "var(--cruzar-mono)",
   fontSize: "0.68rem",
   textTransform: "uppercase",
   letterSpacing: "0.14em",
@@ -84,7 +74,7 @@ export default function FieldReport() {
         minHeight: "100vh",
         background: C.paper,
         color: C.ink,
-        fontFamily: "var(--fr-sans), ui-sans-serif, system-ui, sans-serif",
+        fontFamily: "var(--cruzar-body-dense), ui-sans-serif, system-ui, sans-serif",
         fontFeatureSettings: '"ss01", "cv11"',
         fontVariantNumeric: "tabular-nums",
         padding: 0,
@@ -99,7 +89,7 @@ export default function FieldReport() {
           gridTemplateColumns: "auto 1fr auto",
           alignItems: "center",
           gap: "32px",
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.72rem",
           background: C.card,
         }}
@@ -149,7 +139,7 @@ export default function FieldReport() {
           display: "flex",
           flexWrap: "wrap",
           gap: "32px",
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.7rem",
           color: C.dim,
           letterSpacing: "0.08em",
@@ -201,7 +191,7 @@ export default function FieldReport() {
               <h1
                 style={{
                   margin: 0,
-                  fontFamily: "var(--fr-sans)",
+                  fontFamily: "var(--cruzar-body-dense)",
                   fontSize: "clamp(3.5rem, 9vw, 6.5rem)",
                   lineHeight: 0.92,
                   letterSpacing: "-0.035em",
@@ -214,7 +204,7 @@ export default function FieldReport() {
               </h1>
               <div
                 style={{
-                  fontFamily: "var(--fr-mono)",
+                  fontFamily: "var(--cruzar-mono)",
                   fontSize: "0.78rem",
                   color: C.dim,
                   lineHeight: 1.5,
@@ -246,7 +236,7 @@ export default function FieldReport() {
             <p
               style={{
                 margin: 0,
-                fontFamily: "var(--fr-sans)",
+                fontFamily: "var(--cruzar-body-dense)",
                 fontSize: "clamp(1.4rem, 2.4vw, 1.95rem)",
                 lineHeight: 1.2,
                 letterSpacing: "-0.015em",
@@ -261,7 +251,7 @@ export default function FieldReport() {
             <p
               style={{
                 margin: 0,
-                fontFamily: "var(--fr-sans)",
+                fontFamily: "var(--cruzar-body-dense)",
                 fontSize: "clamp(1.4rem, 2.4vw, 1.95rem)",
                 lineHeight: 1.2,
                 letterSpacing: "-0.015em",
@@ -291,7 +281,7 @@ export default function FieldReport() {
             <p
               style={{
                 margin: 0,
-                fontFamily: "var(--fr-sans)",
+                fontFamily: "var(--cruzar-body-dense)",
                 fontSize: "1.02rem",
                 lineHeight: 1.55,
                 color: C.ink,
@@ -301,7 +291,7 @@ export default function FieldReport() {
             >
               <span
                 style={{
-                  fontFamily: "var(--fr-mono)",
+                  fontFamily: "var(--cruzar-mono)",
                   color: C.signal,
                   marginRight: "10px",
                   fontSize: "0.82rem",
@@ -332,7 +322,7 @@ export default function FieldReport() {
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
-                fontFamily: "var(--fr-mono)",
+                fontFamily: "var(--cruzar-mono)",
                 fontSize: "0.85rem",
                 background: C.card,
                 border: `1px solid ${C.hairline}`,
@@ -405,7 +395,7 @@ export default function FieldReport() {
               <div
                 aria-hidden
                 style={{
-                  fontFamily: "var(--fr-mono)",
+                  fontFamily: "var(--cruzar-mono)",
                   fontSize: "0.72rem",
                   color: C.signal,
                   letterSpacing: "0.14em",
@@ -416,7 +406,7 @@ export default function FieldReport() {
               <blockquote
                 style={{
                   margin: 0,
-                  fontFamily: "var(--fr-sans)",
+                  fontFamily: "var(--cruzar-body-dense)",
                   fontSize: "clamp(1.15rem, 1.8vw, 1.45rem)",
                   lineHeight: 1.45,
                   color: C.ink,
@@ -429,7 +419,7 @@ export default function FieldReport() {
               </blockquote>
               <figcaption
                 style={{
-                  fontFamily: "var(--fr-mono)",
+                  fontFamily: "var(--cruzar-mono)",
                   fontSize: "0.75rem",
                   color: C.dim,
                   letterSpacing: "0.06em",
@@ -469,7 +459,7 @@ export default function FieldReport() {
             >
               <div
                 style={{
-                  fontFamily: "var(--fr-mono)",
+                  fontFamily: "var(--cruzar-mono)",
                   fontSize: "0.7rem",
                   color: C.faint,
                   letterSpacing: "0.16em",
@@ -484,7 +474,7 @@ export default function FieldReport() {
                   alignItems: "baseline",
                   gap: "10px",
                   marginTop: "10px",
-                  fontFamily: "var(--fr-mono)",
+                  fontFamily: "var(--cruzar-mono)",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -562,7 +552,7 @@ export default function FieldReport() {
               style={{
                 width: "100%",
                 borderCollapse: "collapse",
-                fontFamily: "var(--fr-mono)",
+                fontFamily: "var(--cruzar-mono)",
                 fontSize: "0.8rem",
                 border: `1px solid ${C.hairline}`,
                 background: C.paper,
@@ -606,7 +596,7 @@ export default function FieldReport() {
                 family="Geologica"
                 role="DISPLAY · SANS"
                 sample="Cruzar"
-                fontFamily="var(--fr-sans)"
+                fontFamily="var(--cruzar-body-dense)"
                 size="2.6rem"
                 weight={500}
                 letterSpacing="-0.03em"
@@ -615,7 +605,7 @@ export default function FieldReport() {
                 family="Geologica / 400"
                 role="BODY · PROSE"
                 sample="Diagnóstico, validación, postulación."
-                fontFamily="var(--fr-sans)"
+                fontFamily="var(--cruzar-body-dense)"
                 size="1.02rem"
                 weight={400}
                 letterSpacing="-0.005em"
@@ -624,7 +614,7 @@ export default function FieldReport() {
                 family="Fragment Mono / 400"
                 role="DATA · META"
                 sample="0123456789 · +$2,840 · ×4.1"
-                fontFamily="var(--fr-mono)"
+                fontFamily="var(--cruzar-mono)"
                 size="0.88rem"
                 weight={400}
               />
@@ -632,7 +622,7 @@ export default function FieldReport() {
                 family="Fragment Mono / label"
                 role="LABEL · ALL-CAPS"
                 sample="FIELD REPORT · BUILD 0001"
-                fontFamily="var(--fr-mono)"
+                fontFamily="var(--cruzar-mono)"
                 size="0.72rem"
                 weight={400}
                 letterSpacing="0.18em"
@@ -679,7 +669,7 @@ export default function FieldReport() {
           gridTemplateColumns: "auto 1fr auto",
           gap: "32px",
           alignItems: "center",
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.72rem",
           color: C.dim,
           letterSpacing: "0.1em",
@@ -699,7 +689,7 @@ export default function FieldReport() {
             maxWidth: "78ch",
             lineHeight: 1.5,
             letterSpacing: "0.02em",
-            fontFamily: "var(--fr-sans)",
+            fontFamily: "var(--cruzar-body-dense)",
             fontSize: "0.82rem",
             textAlign: "center",
           }}
@@ -736,7 +726,7 @@ function Th({ children, align = "left" }: { children: React.ReactNode; align?: "
         padding: "10px 16px",
         textAlign: align,
         borderBottom: `1px solid ${C.hairlineStrong}`,
-        fontFamily: "var(--fr-mono)",
+        fontFamily: "var(--cruzar-mono)",
         fontSize: "0.68rem",
         textTransform: "uppercase",
         letterSpacing: "0.16em",
@@ -818,7 +808,7 @@ function MiniStat({ label, value, sub }: { label: string; value: string; sub: st
     >
       <span
         style={{
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.64rem",
           color: C.faint,
           letterSpacing: "0.16em",
@@ -828,7 +818,7 @@ function MiniStat({ label, value, sub }: { label: string; value: string; sub: st
       </span>
       <span
         style={{
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "1.02rem",
           color: C.ink,
           letterSpacing: "-0.01em",
@@ -839,7 +829,7 @@ function MiniStat({ label, value, sub }: { label: string; value: string; sub: st
       </span>
       <span
         style={{
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.66rem",
           color: C.dim,
           letterSpacing: "0.08em",
@@ -939,7 +929,7 @@ function SpecimenRow({
         style={{
           display: "flex",
           justifyContent: "space-between",
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.64rem",
           color: C.faint,
           letterSpacing: "0.14em",
@@ -994,7 +984,7 @@ function Swatch({
     >
       <span
         style={{
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.64rem",
           color: ink,
           letterSpacing: "0.16em",
@@ -1006,7 +996,7 @@ function Swatch({
       </span>
       <span
         style={{
-          fontFamily: "var(--fr-mono)",
+          fontFamily: "var(--cruzar-mono)",
           fontSize: "0.68rem",
           color: ink,
           opacity: 0.78,
