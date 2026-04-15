@@ -1,16 +1,13 @@
 import { z } from "zod";
+import type { EnglishCertKind } from "@/schemas/_shared";
 
 export const cefrLevels = ["A2", "B1", "B2", "C1", "C2"] as const;
 export type CefrLevel = (typeof cefrLevels)[number];
 export const cefrLevelSchema = z.enum(cefrLevels);
 
-export const certKinds = ["ielts", "toefl", "cambridge", "aprendly", "other"] as const;
-export type CertKind = (typeof certKinds)[number];
-export const certKindSchema = z.enum(certKinds);
-
 // Maps an external cert (kind + numeric/string score) to a CEFR level.
 // Returns null when the mapping is ambiguous and requires Miura verification.
-export function mapCertToCefr(kind: CertKind, score: string): CefrLevel | null {
+export function mapCertToCefr(kind: EnglishCertKind, score: string): CefrLevel | null {
   const s = score.trim().toLowerCase();
   switch (kind) {
     case "ielts": {

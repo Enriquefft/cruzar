@@ -77,7 +77,7 @@ CREATE TABLE "intake_batch_answers" (
 	"question_key" text NOT NULL,
 	"question_text" text NOT NULL,
 	"answer_text" text NOT NULL,
-	"confidence" integer NOT NULL
+	"confidence" real NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "intake_batches" (
@@ -162,7 +162,8 @@ CREATE TABLE "students" (
 	"consent_public_profile" boolean DEFAULT false NOT NULL,
 	"public_slug" text NOT NULL,
 	"onboarded_at" timestamp with time zone,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "students_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 CREATE TABLE "user" (

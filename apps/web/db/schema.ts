@@ -6,6 +6,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  real,
   text,
   timestamp,
   uniqueIndex,
@@ -116,7 +117,7 @@ export const students = pgTable(
     id: text("id")
       .primaryKey()
       .references(() => user.id, { onDelete: "cascade" }),
-    email: text("email").notNull(),
+    email: text("email").notNull().unique(),
     name: text("name").notNull(),
     whatsapp: text("whatsapp").notNull(),
     local_salary_usd: integer("local_salary_usd"),
@@ -175,7 +176,7 @@ export const intakeBatchAnswers = pgTable("intake_batch_answers", {
   question_key: text("question_key").notNull(),
   question_text: text("question_text").notNull(),
   answer_text: text("answer_text").notNull(),
-  confidence: integer("confidence").notNull(),
+  confidence: real("confidence").notNull(),
 });
 
 export const roles = pgTable(

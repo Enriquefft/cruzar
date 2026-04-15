@@ -43,11 +43,11 @@ export async function llmJsonCompletion<T>({
   schemaName,
 }: LlmJsonCompletionInput<T>): Promise<T> {
   const model = tier === "strong" ? strongModel() : weakModel();
-  const firstAttempt = await requestJson({ model, messages });
+  const firstAttempt = await requestJson({ model, messages, schemaName, tier });
   const firstParse = schema.safeParse(firstAttempt.parsed);
   if (firstParse.success) return firstParse.data;
 
-  const retryAttempt = await requestJson({ model, messages });
+  const retryAttempt = await requestJson({ model, messages, schemaName, tier });
   const retryParse = schema.safeParse(retryAttempt.parsed);
   if (retryParse.success) return retryParse.data;
 
@@ -64,9 +64,13 @@ interface RequestJsonOutput {
 async function requestJson({
   model,
   messages,
+  schemaName,
+  tier,
 }: {
   model: string;
   messages: LlmMessage[];
+  schemaName: string;
+  tier: LlmTier;
 }): Promise<RequestJsonOutput> {
   const e = env();
   const response = await fetch(`${e.AI_BASE_URL.replace(/\/$/, "")}/chat/completions`, {
@@ -93,6 +97,14 @@ async function requestJson({
   const firstChoice = outer.choices[0];
   if (!firstChoice) throw new Error("LLM response had no choices");
   const raw = firstChoice.message.content;
-  const parsed: unknown = JSON.parse(raw);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (cause) {
+    throw new Error(
+      `LLM returned invalid JSON for schema '${schemaName}' on tier '${tier}'`,
+      { cause },
+    );
+  }
   return { parsed, raw };
 }

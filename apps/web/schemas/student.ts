@@ -7,7 +7,7 @@ export const studentSchema = z.object({
   email: z.email(),
   name: z.string().min(1),
   whatsapp: z.string().min(5),
-  local_salary_usd: z.number().positive().optional(),
+  local_salary_usd: z.number().int().positive().optional(),
   consent_public_profile: z.boolean(),
   public_slug: z.string().min(3),
   onboarded_at: z.iso.datetime().optional(),

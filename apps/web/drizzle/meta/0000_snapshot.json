@@ -1,5 +1,5 @@
 {
-  "id": "ba91a8bb-e4eb-4647-82d4-bb126c4081e4",
+  "id": "7c9d269b-0893-4547-a55e-e0dc2d9c9c47",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -605,7 +605,7 @@
         },
         "confidence": {
           "name": "confidence",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true
         }
@@ -1376,7 +1376,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "students_email_unique": {
+          "name": "students_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
