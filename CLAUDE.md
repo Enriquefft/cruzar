@@ -1,23 +1,38 @@
-## Development Philosophy
+# CLAUDE.md
 
-### 1. Decision quality is the constraint, not dev time
-One person orchestrating agent swarms equals 10+ senior engineers in parallel. Labor is solved; the bottleneck is *what to build and how to structure it*. The only valid reason to simplify is that simpler is *better*, not *faster*.
+Monorepo for two founders running the company end-to-end for the next 6 months. Holds both the **software we ship** (products under `product/`, all code workspaces under `apps/`) and the **business intelligence source of truth** (everything non-code).
 
-### 2. Perfection is the target.
-Not an MVP. The thing that makes someone say: *"this is how it should have always worked."* Own the critical path, every byte of it. Dependencies belong on the non-critical path. The hard parts are where the value lives.
+If a durable business fact lives outside this repo (Notion, Google Docs, Slack, memory), it is stale or at risk. The repo wins.
 
-### 3. Single source of truth, always.
-One canonical representation for every piece of state, type, and contract. Duplication is decay, if the same fact lives in two places, one is already wrong. Schemas, types, configs, and docs derive from one origin.
+## Areas
 
-### 4. Zero workarounds.
-No bandaids, no hacks, no "fix later" TODOs. A workaround shipped is a workaround owned forever. If something is hard to do right, do it right anyway.
+Each top-level area has its own `CLAUDE.md` with rules specific to that discipline. When working in an area, that file loads on top of this one.
 
-### 5. Production-ready is the floor.
-Robust, long-term correct, scalable only. Enterprise-grade isn't a milestone, it's the baseline. Everything above is the actual work. If something is hard to do right, do it right anyway.
+- `business/` — research, market, competitive, positioning, personas, problems
+- `product/` — per-product spec, MSP, UX decisions (one subdir per product, e.g. `product/cruzar/`)
+- `company/` — legal, finance, captable, partnerships, team, grants, internal meetings
+- `apps/` — all code workspaces (web app, career-ops binaries, operator-scripts)
 
-## TypeScript
+## Hard rules
 
-- **Never use `any`**. Use `unknown` + runtime validation, generics, or explicit types.
-- **Never use `as` type casting** (except `as const`). Use type guards, Zod parse, or structural fixes. Only `as` if genuinely no other way — and document why.
-- Derive types from sources (Zod `z.infer`, Drizzle `$inferSelect`, pgEnum). Never duplicate. SSOT is top priority, avoid hardcoding return types, infer as much as possible.
-- Use types as narrow as possible, avoid string, use branded types, etc
+- **SSOT.** Every durable fact has exactly one file. Other files link, never copy. If two places disagree, one is wrong — reconcile in the same PR, don't leave contradictions in tree.
+- **No PII in tree.** Customer names, emails, phone numbers, payroll. Store in secured systems; reference by ID.
+- **No secrets.** No credentials, tokens, keys. Use env management.
+- **No aspirational docs.** Empty placeholder files, "we will eventually..." sections, TODO-only files — delete or don't create.
+
+## Editing existing facts
+
+- When a fact changes, update the canonical file in place. Git keeps the history — don't mirror it in markdown.
+- **Exception:** facts that genuinely evolve and where the progression matters at a glance (equity splits over time, partnership terms) get a `Historial` table appended to. Everything else just gets edited.
+- Dated artifacts (past meetings, pitch prep for a specific date) stay as-is under `meetings/YYYY-MM-DD-<slug>.md`. The filename already marks them dated; don't also add "historical" banners.
+- Every reference to an entity defined elsewhere is a markdown link to the canonical file. Do not paraphrase.
+- Dates are absolute (YYYY-MM-DD). Numbers have units and scope.
+
+## Language
+
+Docs may be Spanish or English. One language per file, no code-switching. Filenames and structural headings (`Status`, `Historial`, `Open questions`) stay English so grep works uniformly.
+
+
+## Commits
+
+Explain **why** the change was made, not just what. `update equity` is bad. `equity: meeting outcome 2026-04-14, 50/50 draft with bimonthly revision` is good. Git log is the history of the business — the markdown tree only needs to carry the current state.

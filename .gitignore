@@ -146,7 +146,7 @@ apps/web/.cruzar-runtime/
 playwright-report/
 test-results/
 traces/
-packages/career-ops/output/
+apps/career-ops/output/
 
 # Drizzle
 drizzle/

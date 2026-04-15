@@ -18,7 +18,7 @@
  *   answersPath, workspaceDir }` passed via JSON on stdin or flags. Until
  *   M8 lands, do NOT run this binary against real applications — it will
  *   leak the absorbed source's identity. See
- *   packages/career-ops/CLAUDE.md for the multi-tenant rule.
+ *   apps/career-ops/CLAUDE.md for the multi-tenant rule.
  */
 
 import { chromium } from 'playwright';
