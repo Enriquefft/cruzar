@@ -17,7 +17,6 @@
     "eval:cefr": "bun run scripts/eval-cefr.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "0.89.0",
     "@aws-sdk/client-s3": "3.1030.0",
     "@aws-sdk/s3-request-presigner": "3.1030.0",
     "@vercel/og": "0.11.1",

@@ -20,7 +20,7 @@ export async function sendMagicLinkEmail(params: { email: string; url: string })
   });
 
   const { data, error } = await client().emails.send({
-    from: env().RESEND_FROM,
+    from: env().RESEND_FROM_EMAIL,
     to: params.email,
     subject,
     html,

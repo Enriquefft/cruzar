@@ -8,9 +8,12 @@ const envSchema = z.object({
   NEXT_PUBLIC_BETTER_AUTH_URL: z.string().url().optional(),
 
   RESEND_API_KEY: z.string().min(1),
-  RESEND_FROM: z.string().email(),
+  RESEND_FROM_EMAIL: z.string().min(1),
 
-  ANTHROPIC_API_KEY: z.string().min(1),
+  AI_API_KEY: z.string().min(1),
+  AI_BASE_URL: z.string().url(),
+  AI_STRONG_MODEL: z.string().min(1),
+  AI_WEAK_MODEL: z.string().min(1),
 
   R2_ACCOUNT_ID: z.string().min(1),
   R2_ACCESS_KEY_ID: z.string().min(1),
