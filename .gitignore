@@ -148,8 +148,9 @@ test-results/
 traces/
 apps/career-ops/output/
 
-# Drizzle
-drizzle/
+# Drizzle kit local caches (.drizzle-kit/, journal artifacts, etc). Migrations
+# themselves live under apps/web/drizzle/ and are tracked.
+.drizzle-kit/
 
 # Turbo
 .turbo
