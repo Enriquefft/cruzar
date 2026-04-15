@@ -202,10 +202,10 @@ export const profiles = pgTable("profiles", {
   gaps_jsonb: jsonb("gaps_jsonb").$type<ProfileGap[]>().notNull(),
   plan_markdown: text("plan_markdown").notNull(),
   next_assessment_at: timestamp("next_assessment_at", { withTimezone: true }),
-  cv_markdown: text("cv_markdown"),
-  cv_r2_key: text("cv_r2_key"),
-  cv_version: integer("cv_version").notNull().default(0),
-  generated_at: timestamp("generated_at", { withTimezone: true }),
+  profile_md: text("profile_md").notNull(),
+  profile_md_version: integer("profile_md_version").notNull().default(1),
+  profile_md_generated_at: timestamp("profile_md_generated_at", { withTimezone: true }),
+  showcase_cv_r2_key: text("showcase_cv_r2_key"),
   prompt_version: text("prompt_version").notNull(),
 });
 

@@ -105,10 +105,10 @@ CREATE TABLE "profiles" (
 	"gaps_jsonb" jsonb NOT NULL,
 	"plan_markdown" text NOT NULL,
 	"next_assessment_at" timestamp with time zone,
-	"cv_markdown" text,
-	"cv_r2_key" text,
-	"cv_version" integer DEFAULT 0 NOT NULL,
-	"generated_at" timestamp with time zone,
+	"profile_md" text NOT NULL,
+	"profile_md_version" integer DEFAULT 1 NOT NULL,
+	"profile_md_generated_at" timestamp with time zone,
+	"showcase_cv_r2_key" text,
 	"prompt_version" text NOT NULL
 );
 --> statement-breakpoint

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-// Per-application tailored CV. `version` is per-application; it is orthogonal
-// to `profiles.cv_version`, which tracks the master CV.
+// Per-application tailored CV derived from `profiles.profile_md` + JD text
+// (ADR-09). `version` is per-application and append-only for audit.
 export const generatedCvSchema = z.object({
   id: z.uuid(),
   student_id: z.string().min(1),

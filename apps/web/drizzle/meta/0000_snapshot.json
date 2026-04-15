@@ -1,5 +1,5 @@
 {
-  "id": "4f2eca87-7d47-4ac1-bce8-01047c237374",
+  "id": "ba91a8bb-e4eb-4647-82d4-bb126c4081e4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -826,28 +826,28 @@
           "primaryKey": false,
           "notNull": false
         },
-        "cv_markdown": {
-          "name": "cv_markdown",
+        "profile_md": {
+          "name": "profile_md",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "cv_r2_key": {
-          "name": "cv_r2_key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "cv_version": {
-          "name": "cv_version",
+        "profile_md_version": {
+          "name": "profile_md_version",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "default": 0
+          "default": 1
         },
-        "generated_at": {
-          "name": "generated_at",
+        "profile_md_generated_at": {
+          "name": "profile_md_generated_at",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "showcase_cv_r2_key": {
+          "name": "showcase_cv_r2_key",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
