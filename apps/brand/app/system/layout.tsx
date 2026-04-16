@@ -61,6 +61,15 @@ const NAV: NavSection[] = [
       { href: "/system#overlays", label: "Dialog · Sheet · Popover", note: "Soon" },
     ],
   },
+  {
+    title: "Patterns",
+    items: [
+      {
+        href: "/system/patterns",
+        label: "Cruzar compositions",
+      },
+    ],
+  },
 ];
 
 function Wordmark({ className }: { className?: string }) {

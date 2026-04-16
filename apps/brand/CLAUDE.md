@@ -109,6 +109,74 @@ If a design needs to behave differently in the two registers, the difference bel
 5. Commit. No consumer-side action is required — workspace symlinks pick up the change on next dev/build.
 6. In the same PR, grep the monorepo for any consumer code that had been working around the pre-change behavior (inline hex, local re-implementations). Delete the workarounds; a workaround shipped is a workaround owned forever.
 
+## Patterns layer
+
+Lives in [`components/patterns/`](./components/patterns/), exported as
+`@cruzar/brand/patterns` (barrel) and `@cruzar/brand/patterns/<Name>`
+(single-pattern import). The layer sits **between** raw shadcn primitives
+(`components/ui/`, exported as `@cruzar/brand/ui`) and full pages
+(`apps/web/app/*`, deck slides, CV templates).
+
+### What patterns are vs primitives
+
+- **Primitives** (`components/ui/`) are generic: `Button`, `Card`, `Badge`,
+  `Table`. They know nothing about Cruzar's domain — they could ship in any
+  shadcn project. They consume tokens but never product knowledge.
+- **Patterns** (`components/patterns/`) are Cruzar-specific compositions
+  that encode product knowledge: what the six placement statuses are and
+  how each looks (`PlacementStatusBadge`), how the wordmark is rendered
+  per the Capa 1 lock (`WordmarkHeading`), what a CV masthead must include
+  (`CvHeaderBlock`). They compose primitives + tokens; they NEVER reach
+  for raw HTML where a primitive exists.
+
+A pattern is the right answer when consuming surfaces would otherwise
+copy the same composition into 2+ places. If the shape only exists once,
+it stays inline in that surface until repetition forces extraction.
+
+### How to add a new pattern
+
+1. Confirm the composition isn't already a primitive. If you find yourself
+   wanting to add a new shadcn component, run `bunx --bun shadcn@latest add <name>`
+   first — patterns compose primitives, they don't replace them.
+2. Create `components/patterns/<PatternName>.tsx` with a single named
+   export plus its props type. The props type must be strongly typed
+   (no `any`, no string magic). Domain-entity types (`PlacementStatus`)
+   should be declared in the pattern file and re-exported from the barrel.
+3. Tokens, not raw values. Color via the `text-brand-*` / `bg-brand-*`
+   utilities (token bridge), font via `font-serif` / `font-sans-dense` /
+   `font-mono` / `font-sans`. Use `var(--brand-accent)` and
+   `var(--brand-signal)` only via inline `style` for the surgical accent
+   marks (period, status dots) — never the body of the pattern.
+4. Per-register awareness: if the pattern's layout legitimately differs
+   between editorial and field, expose `register?: "editorial" | "field"`
+   with a sensible default. If the pattern works identically across
+   registers (it just inherits the parent's font), do NOT add the prop —
+   the register lives on the parent.
+5. Append the `export *` line to `components/patterns/index.ts`
+   (alphabetical).
+6. Add a `<PatternBlock>` in `app/system/patterns/page.tsx` with the
+   rendered output, a one-paragraph description, and the props signature
+   as code.
+7. Re-capture `screenshots/system-patterns.png` via
+   `bun run scripts/screenshot-patterns.ts` and run `bun run typecheck`.
+
+### When a pattern should become a primitive
+
+Promote a composition out of `patterns/` and into `components/ui/` only
+when **all three** are true:
+
+1. **≥3 patterns share the same internal composition**, identically.
+2. The composition is **generic enough to live in shadcn upstream** —
+   no Cruzar-specific copy, no domain-entity props, no brand-locked
+   visual treatment.
+3. Adding it as a primitive **does not duplicate** an existing shadcn
+   component (search the registry first; `bunx --bun shadcn@latest search`).
+
+If only one or two patterns share the composition, it stays a private
+helper inside the pattern file. Premature primitive promotion bloats the
+public `@cruzar/brand/ui` surface and entangles the design system with
+product semantics — the exact coupling patterns exist to prevent.
+
 ## Commands
 
 - `bun run dev` — port 3100 (studies + `/system/*` showcase).

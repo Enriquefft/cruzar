@@ -8,6 +8,8 @@
     "./content": "./lib/content.ts",
     "./ui": "./components/ui/index.ts",
     "./ui/*": "./components/ui/*.tsx",
+    "./patterns": "./components/patterns/index.ts",
+    "./patterns/*": "./components/patterns/*.tsx",
     "./cn": "./lib/utils.ts",
     "./globals.css": "./app/globals.css"
   },
