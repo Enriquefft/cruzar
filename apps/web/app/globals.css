@@ -36,3 +36,74 @@ body {
   color: var(--foreground);
   font-family: var(--cruzar-body), ui-sans-serif, system-ui, sans-serif;
 }
+
+/*
+ * Prose styles for operator-generated markdown rendered via lib/markdown.ts.
+ * Applied to profile_md and plan_markdown content. Scoped under .prose-cruzar
+ * to avoid leaking into the rest of the UI.
+ */
+.prose-cruzar h1,
+.prose-cruzar h2,
+.prose-cruzar h3,
+.prose-cruzar h4,
+.prose-cruzar h5,
+.prose-cruzar h6 {
+  font-family: var(--cruzar-display), ui-serif, Georgia, serif;
+  color: var(--brand-ink);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+
+.prose-cruzar h1 { font-size: 1.56rem; }
+.prose-cruzar h2 { font-size: 1.25rem; }
+.prose-cruzar h3 { font-size: 1rem; font-weight: 600; }
+
+.prose-cruzar p {
+  color: var(--brand-ink-soft);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  margin-bottom: 1em;
+}
+
+.prose-cruzar ul,
+.prose-cruzar ol {
+  color: var(--brand-ink-soft);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+.prose-cruzar ul { list-style: disc; }
+.prose-cruzar ol { list-style: decimal; }
+
+.prose-cruzar li {
+  margin-bottom: 0.35em;
+}
+
+.prose-cruzar a {
+  color: var(--brand-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-cruzar strong {
+  color: var(--brand-ink);
+  font-weight: 600;
+}
+
+.prose-cruzar code {
+  font-family: var(--cruzar-mono), ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.85em;
+  background: var(--brand-paper-deep);
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+}
+
+.prose-cruzar hr {
+  border: none;
+  border-top: 1px solid var(--brand-hairline);
+  margin: 2em 0;
+}
