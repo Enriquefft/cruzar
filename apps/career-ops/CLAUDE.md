@@ -26,17 +26,21 @@ runApplication({ candidate, application, cvPath, answersPath, workspaceDir })
 
 Any code that hardcodes a name, email, phone, LinkedIn, GitHub, portfolio, or location is a bug. Reject the change.
 
-**Current debt:** `bin/fill-forms.mjs` still contains a hardcoded `candidate` block at lines ~36-46 carried over from the absorbed source. This is flagged in a header comment and will be parameterized in block M8 (fill-forms v2). Until M8 lands, this binary must not be run against real student applications. Do not add features on top of the hardcoded shape — fix the shape first.
+**Debt resolved (M8).** The hardcoded candidate block from P3 has been deleted. `fill-forms.mjs` v2 accepts `{ candidate, application, cvPath, answersPath, workspaceDir }` via JSON on stdin. The sanitization grep returns zero hits.
 
 ## Ethical submit gate (inviolable)
 
 `fill-forms.mjs` may click an element whose text matches `/submit|send|apply now/i` **only** when it is the job-listing-page "Apply" trigger that opens the actual application form. Every subsequent submit is Miura's manual click in the headed browser.
 
-Implementation invariant: the "Apply" click path must explicitly reject elements whose text includes "submit" (case-insensitive). See the existing guard in `fillForm()`:
+Implementation invariant: the `isApplyTriggerSafe()` function explicitly rejects elements whose text includes "submit", "send", or "apply now" (case-insensitive). See the guard in `fill-forms.mjs`:
 
 ```js
-if (!text.toLowerCase().includes('submit')) {
-  // safe to click — this is the listing-page "Apply" trigger
+function isApplyTriggerSafe(buttonText) {
+  const lower = buttonText.toLowerCase().trim();
+  if (lower.includes('submit')) return false;
+  if (lower.includes('send')) return false;
+  if (/apply\s*now/i.test(lower)) return false;
+  return lower.includes('apply');
 }
 ```
 
@@ -58,7 +62,7 @@ Runtime only. Pin exact versions. Do not add devDependencies unless strictly req
 
 Before any commit that touches this package, run the absorb-sanitization grep from the repo root. The canonical pattern is defined in [ADR-03](../../product/cruzar/adr/03-career-ops-absorb-scope.md) §Decision — source the pattern from there so this file never carries matching strings itself.
 
-After the M8 upgrade lands, the pattern must return zero hits. P3 (the absorb block) deliberately leaves the hardcoded candidate in place and flagged — the grep returns exactly the lines in the candidate block at the top of `bin/fill-forms.mjs` until M8 rewrites that block. Any hit outside that block is a bug and must be scrubbed before the PR merges.
+The M8 upgrade has landed: the hardcoded candidate block has been deleted and the sanitization grep returns zero hits across `apps/career-ops/`. Any future change that introduces matches to the sanitization pattern is a bug.
 
 In addition to grep, eyeball any file you edit for subtle profile leakage in prose and comments — phrasings like "N years of experience", "Software Engineer from Country", "<university> student", and similar details that silently bake one person's profile into multi-tenant code.
 

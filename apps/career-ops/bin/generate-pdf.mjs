@@ -6,7 +6,10 @@
  * Usage:
  *   node career-ops/generate-pdf.mjs <input.html> <output.pdf> [--format=letter|a4]
  *
- * Requires: @playwright/test (or playwright) installed.
+ * Output is written to the directory of <output.pdf>. No __dirname-relative
+ * runtime data writes — all output is determined by the caller's arguments.
+ *
+ * Requires: playwright installed.
  * Uses Chromium headless to render the HTML and produce a clean, ATS-parseable PDF.
  */
 
@@ -17,9 +20,6 @@ import { mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Ensure output directory exists (fresh setup)
-mkdirSync(resolve(__dirname, 'output'), { recursive: true });
 
 /**
  * Normalize text for ATS compatibility by converting problematic Unicode.
@@ -97,6 +97,9 @@ async function generatePDF() {
 
   inputPath = resolve(inputPath);
   outputPath = resolve(outputPath);
+
+  // Ensure the output directory exists (scoped to the caller's chosen path)
+  mkdirSync(dirname(outputPath), { recursive: true });
 
   // Validate format
   const validFormats = ['a4', 'letter'];

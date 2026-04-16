@@ -7,4 +7,9 @@ export {
   intakeBatchAnswers,
   students,
   englishCerts,
+  applications,
+  generatedCvs,
+  fillFormDrafts,
+  statusEvents,
+  profiles,
 } from "../../web/db/schema";
