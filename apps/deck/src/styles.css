@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cruzar-display: "Literata", ui-serif, Georgia, serif;
+  --cruzar-body: "Funnel Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--cruzar-body);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cz-serif {
+  font-family: var(--cruzar-display);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+.cz-sans {
+  font-family: var(--cruzar-body);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+.cz-tnum {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.cz-smallcaps {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
+}

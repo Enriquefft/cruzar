@@ -5,7 +5,7 @@ import {
   HAIRLINE,
   HAIRLINE_STRONG,
   INK,
-  INK_MUTE,
+  INK_LABEL,
   INK_SOFT,
   PAPER,
   SIGNAL,
@@ -22,17 +22,17 @@ import {
  *
  * Color, type, and spacing derive from `@cruzar/brand` modules (SSOT).
  * Note: the secondary register pairs body sans (Funnel Sans) with mono
- * (Fragment Mono) — the previous Geologica-as-sans choice has been folded
+ * (Geist Mono) — the previous Geologica-as-sans choice has been folded
  * into the shared body font for system coherence.
  */
 
-/** Local alias: field-report uses `dim`/`faint` as semantic names over INK_SOFT/INK_MUTE. */
+/** Local alias: field-report uses `dim`/`faint` as semantic names over INK_SOFT/INK_LABEL. */
 const C = {
   paper: PAPER,
   card: CARD,
   ink: INK,
   dim: INK_SOFT,
-  faint: INK_MUTE,
+  faint: INK_LABEL,
   hairline: HAIRLINE,
   hairlineStrong: HAIRLINE_STRONG,
   signal: SIGNAL,
@@ -611,7 +611,7 @@ export default function FieldReport() {
                 letterSpacing="-0.005em"
               />
               <SpecimenRow
-                family="Fragment Mono / 400"
+                family="Geist Mono / 400"
                 role="DATA · META"
                 sample="0123456789 · +$2,840 · ×4.1"
                 fontFamily="var(--cruzar-mono)"
@@ -619,7 +619,7 @@ export default function FieldReport() {
                 weight={400}
               />
               <SpecimenRow
-                family="Fragment Mono / label"
+                family="Geist Mono / label"
                 role="LABEL · ALL-CAPS"
                 sample="FIELD REPORT · BUILD 0001"
                 fontFamily="var(--cruzar-mono)"

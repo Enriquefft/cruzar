@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Cruzar wordmark — default (ink + accent period)
+
+  Approach B (text-based, font-dependent):
+    The glyphs are rendered as live <text> set in "Literata" at 400,
+    not as outlined paths. Rationale (committed, not a fallback regret):
+      · The canonical reference render in apps/brand/app/direction/editorial/
+        page.tsx is itself live <text> in Literata at weight 400 with
+        letter-spacing -0.045em; matching it with outlined paths would
+        require a Literata binary on disk + fontkit/opentype.js, both
+        absent here, and adding a devDep to emit a cached glyph per render
+        is duplication — the font file IS the SSOT for glyph shape.
+      · Every consuming surface in this system (apps/brand, apps/web,
+        deck, CV) already loads Literata via next/font, so the
+        asset has its dependency satisfied wherever it is used.
+      · Standalone browser open still renders correctly: the @font-face
+        block below fetches Literata 400 from Google Fonts.
+
+  Colors:
+    Wordmark  = currentColor (inherits from parent `color:` — lets the
+                consuming surface choose ink shade per context)
+    Period    = ACCENT = oklch(0.42 0.14 30), with hex fallback #892218
+
+  Geometry:
+    viewBox is normalized to 1000 wide × 240 tall. Baseline sits at y=180.
+    Cap height ≈ 140. Period diameter ≈ font dot. Letter-spacing applied
+    via `textLength`-free kerning — the font's own metrics carry it.
+    Height scales cleanly at any rendered size via viewBox preservation.
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1000 240"
+  role="img"
+  aria-label="Cruzar"
+  preserveAspectRatio="xMidYMid meet"
+  font-family="'Literata', ui-serif, Georgia, 'Times New Roman', serif"
+>
+  <defs>
+    <style><![CDATA[
+      @font-face {
+        font-family: 'Literata';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbBG_J_HWTA.woff2') format('woff2');
+      }
+      .cruzar-mark-glyph {
+        font-family: 'Literata', ui-serif, Georgia, 'Times New Roman', serif;
+        font-weight: 400;
+        font-size: 200px;
+        letter-spacing: -9px;
+      }
+    ]]></style>
+  </defs>
+  <text
+    class="cruzar-mark-glyph"
+    x="20"
+    y="180"
+    fill="currentColor"
+  >Cruzar</text>
+  <text
+    class="cruzar-mark-glyph"
+    x="20"
+    y="180"
+    style="fill: #892218; fill: oklch(0.42 0.14 30);"
+    aria-hidden="true"
+  ><tspan fill="transparent" stroke="none">Cruzar</tspan>.</text>
+</svg>

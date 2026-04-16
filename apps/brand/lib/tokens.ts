@@ -1,14 +1,22 @@
 /**
- * Cruzar — brand tokens (SSOT).
+ * Cruzar — brand tokens (SSOT). Locked 2026-04-15 for 24 months.
  *
- * The canonical definitions for color, typography references, spacing, and
- * type scale across every Cruzar surface: landing, deck, CV, email, dashboard.
+ * Canonical color, type references, spacing, and scale across every Cruzar
+ * surface: landing, deck, CV, email, dashboard. Consumed from `apps/web`,
+ * `apps/career-ops`, `apps/deck`, and `apps/brand` previews.
  *
- * Consumed from `apps/web`, `apps/career-ops`, and the `apps/brand` previews.
- * Change here → propagates everywhere. Never duplicate these values inline.
+ * Change here → propagates everywhere via `@cruzar/brand` workspace exports.
+ * Never duplicate these values inline.
+ *
+ * Locked through 5-layer brand-finalization process. See:
+ *   - `apps/brand/app/brand/logotype-studies/page.tsx`  (Capa 1)
+ *   - `apps/brand/app/brand/type-studies/page.tsx`     (Capa 2)
+ *   - `apps/brand/app/brand/color-studies/page.tsx`    (Capa 3)
+ *   - `product/cruzar/brand-voice.md`                  (Capa 4)
+ *   - `product/cruzar/brand-guidelines.md`             (Capa 5)
  */
 
-/* ─────────────────────────────  COLOR  ───────────────────────────── */
+/* ─────────────────────────────  COLOR · LIGHT  ────────────────────── */
 /* OKLCH. Neutrals tinted warm (hue ~80°) toward the brand paper tone. */
 
 export const PAPER = "oklch(0.97 0.012 85)";
@@ -18,13 +26,24 @@ export const CARD = "oklch(0.985 0.006 82)";
 
 export const INK = "oklch(0.18 0.01 80)";
 export const INK_SOFT = "oklch(0.38 0.012 80)";
-export const INK_MUTE = "oklch(0.55 0.012 80)";
+/**
+ * Decorative / label-only color — fails WCAG AA (3.3–3.5:1) on every Cruzar
+ * surface. NEVER use for body text or anything a user must read in long form.
+ * Sanctioned uses: small uppercase eyebrows, footer metadata, hairline-rule
+ * captions, table column headers in mono.
+ */
+export const INK_LABEL = "oklch(0.55 0.012 80)";
 
 export const HAIRLINE = "oklch(0.82 0.012 80)";
 /** Emphasized hairline — header/section dividers in dense layouts. */
 export const HAIRLINE_STRONG = "oklch(0.72 0.012 80)";
 
-/** The aged editorial red. Used surgically — wordmark period, section markers. */
+/**
+ * The aged editorial red. Contrast on every paper surface ≈ 4.0–4.25:1
+ * (sub-AA). LOCKED USE: wordmark period and `§` section markers ONLY. Never
+ * fill body text, never use as background unless paired with PAPER on top.
+ * Ban-zone: any background within ΔL < 0.2 or ΔH < 20° of this color.
+ */
 export const ACCENT = "oklch(0.42 0.14 30)";
 
 /** Terra/brick, same hue family as ACCENT but brighter for mono/operator contexts. */
@@ -38,7 +57,7 @@ export const color = {
   card: CARD,
   ink: INK,
   inkSoft: INK_SOFT,
-  inkMute: INK_MUTE,
+  inkLabel: INK_LABEL,
   hairline: HAIRLINE,
   hairlineStrong: HAIRLINE_STRONG,
   accent: ACCENT,
@@ -46,22 +65,74 @@ export const color = {
   signalDim: SIGNAL_DIM,
 } as const;
 
+/* ─────────────────────────────  COLOR · DARK  ─────────────────────── */
+/*
+ * Dark-register palette for operator dashboards used at night, deck rooms in
+ * dim light, or any future dark surface. Capa 3 stress-tested ACCENT at L=0.42
+ * on dark paper (≈2.2:1 — fails). ACCENT_DARK is lifted to L=0.68 / C=0.17 to
+ * read at ~5.9:1 on DARK_PAPER while preserving hue identity across CVD filters.
+ */
+
+export const DARK_PAPER = "oklch(0.19 0.012 80)";
+export const DARK_PAPER_DEEP = "oklch(0.155 0.012 80)";
+export const DARK_CARD = "oklch(0.225 0.012 80)";
+export const DARK_INK = "oklch(0.94 0.01 85)";
+export const DARK_INK_SOFT = "oklch(0.78 0.012 82)";
+/** Decorative / label-only on dark surfaces. Same constraints as INK_LABEL. */
+export const DARK_INK_LABEL = "oklch(0.6 0.012 80)";
+export const DARK_HAIRLINE = "oklch(0.32 0.012 80)";
+/** Wordmark period color on dark surfaces — DO NOT use ACCENT directly. */
+export const ACCENT_DARK = "oklch(0.68 0.17 32)";
+
+export const colorDark = {
+  paper: DARK_PAPER,
+  paperDeep: DARK_PAPER_DEEP,
+  card: DARK_CARD,
+  ink: DARK_INK,
+  inkSoft: DARK_INK_SOFT,
+  inkLabel: DARK_INK_LABEL,
+  hairline: DARK_HAIRLINE,
+  accent: ACCENT_DARK,
+} as const;
+
+/* ─────────────────────────────  CHART PALETTE  ────────────────────── */
+/*
+ * 4-color extended palette for charts and data-viz where ACCENT alone is
+ * insufficient. Hues spread ≥45° apart at matched mid-lightness; verified
+ * distinguishable under deuteranopia/protanopia/tritanopia simulation in
+ * Capa 3. Order is canonical — series 1 anchors with terra (closest to
+ * ACCENT), then olive / slate / ochre.
+ */
+
+export const CHART_1 = "oklch(0.50 0.15 30)"; // terra
+export const CHART_2 = "oklch(0.52 0.10 110)"; // olive
+export const CHART_3 = "oklch(0.45 0.08 235)"; // slate
+export const CHART_4 = "oklch(0.62 0.12 75)"; // ochre
+
+export const chart = [CHART_1, CHART_2, CHART_3, CHART_4] as const;
+
 /* ──────────────────────────  TYPOGRAPHY  ────────────────────────── */
 /*
- * Family references. Actual `next/font/google` imports live in each consuming
- * surface so Next can optimize per route; these names exist so callers don't
- * guess and so designers can grep a single file for "what font does Cruzar use".
+ * Family references. Actual `next/font/google` imports live in `lib/fonts.ts`;
+ * these names exist so callers don't guess and so designers can grep a single
+ * file for "what font does Cruzar use".
+ *
+ * Locked stack (Capa 2):
+ *  - display:    Literata     (editorial voice, x-height holds at 12px)
+ *  - body:       Funnel Sans  (warm grotesque, off reflex list)
+ *  - bodyDense:  Geologica    (instrument-panel voice for field register)
+ *  - mono:       Geist Mono   (2 weights for log hierarchy, off IBM-Plex monoculture)
  */
 
 export const FONT_FAMILY = {
-  /** Primary display serif — editorial voice, optical-size aware, tabular lining figures. */
-  display: "Source Serif 4",
-  /** Primary body sans — off the reflex-reject list, pairs against Source Serif 4. */
+  /** Primary display serif — editorial voice, designed for long-form screen reading. */
+  display: "Literata",
+  /** Primary body sans — pairs against Literata, off the reflex-reject list. */
   body: "Funnel Sans",
-  /** Field-register body sans — denser, instrument-panel voice for operator surfaces. */
+  /** Field-register body sans — instrument-panel voice for operator/CV surfaces. */
   bodyDense: "Geologica",
-  /** Mono companion — humanist, single-weight, for data-density surfaces (CV, operator, CSV). */
-  mono: "Fragment Mono",
+  /** Mono companion — 400/500 weights for log hierarchy on data-density surfaces. */
+  mono: "Geist Mono",
 } as const;
 
 /** CSS variable names apps expose after importing the Google fonts. Contract: these names. */
@@ -137,6 +208,10 @@ export const WORDMARK = {
   text: "Cruzar",
   /** The single red character; keep this the only accent instance per surface. */
   terminal: ".",
+  /** Minimum legible size for the wordmark, in px. Below this use mark-only variant. */
+  minSize: 20,
+  /** Tracking value for the wordmark in display font. */
+  tracking: "-0.045em",
 } as const;
 
 /* ────────────────────────  REGISTER  ─────────────────────────── */
@@ -145,7 +220,7 @@ export const WORDMARK = {
  *  - editorial → rector-facing, pitch deck, landing top-fold, MoUs
  *  - field     → operator dashboards, CV templates, employer-facing emails
  * Both share color, space, and type scale. They differ in layout density and
- * which font stack leads (display + body for editorial, body + mono for field).
+ * which font stack leads (display + body for editorial, bodyDense + mono for field).
  */
 
 export const REGISTER = {
@@ -155,8 +230,8 @@ export const REGISTER = {
     useAccent: true,
   },
   field: {
-    lead: "body",
-    body: "body",
+    lead: "bodyDense",
+    body: "bodyDense",
     mono: "mono",
     useAccent: false,
     useSignal: true,

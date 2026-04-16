@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Cruzar wordmark — inverted (paper tone on ink, accent period)
+
+  Paper-on-ink variant for dark contexts (operator dashboards,
+  cover-page registers, dark-hero marketing moments). The wordmark
+  fill defaults to PAPER = oklch(0.97 0.012 85) via currentColor
+  when a parent sets `color`; the accent period stays in ACCENT.
+
+  See cruzar-wordmark.svg for the full Approach B rationale.
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1000 240"
+  role="img"
+  aria-label="Cruzar"
+  preserveAspectRatio="xMidYMid meet"
+  font-family="'Literata', ui-serif, Georgia, 'Times New Roman', serif"
+>
+  <defs>
+    <style><![CDATA[
+      @font-face {
+        font-family: 'Literata';
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url('https://fonts.gstatic.com/s/literata/v40/or3PQ6P12-iJxAIgLa78DkrbXsDgk0oVDaDPYLanFLHpPf2TbBG_J_HWTA.woff2') format('woff2');
+      }
+      .cruzar-mark-glyph {
+        font-family: 'Literata', ui-serif, Georgia, 'Times New Roman', serif;
+        font-weight: 400;
+        font-size: 200px;
+        letter-spacing: -9px;
+      }
+    ]]></style>
+  </defs>
+  <text
+    class="cruzar-mark-glyph"
+    x="20"
+    y="180"
+    style="fill: #f9f5ec; fill: currentColor;"
+  >Cruzar</text>
+  <text
+    class="cruzar-mark-glyph"
+    x="20"
+    y="180"
+    style="fill: #892218; fill: oklch(0.42 0.14 30);"
+    aria-hidden="true"
+  ><tspan fill="transparent" stroke="none">Cruzar</tspan>.</text>
+</svg>

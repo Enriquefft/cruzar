@@ -1,6 +1,6 @@
 import { BRAND, PRICING, PROOF, QUOTE } from "@/lib/content";
 import { body, display } from "@/lib/fonts";
-import { ACCENT, HAIRLINE, INK, INK_MUTE, INK_SOFT, PAPER, PAPER_DEEP } from "@/lib/tokens";
+import { ACCENT, HAIRLINE, INK, INK_LABEL, INK_SOFT, PAPER, PAPER_DEEP } from "@/lib/tokens";
 
 /**
  * Direction: Editorial Institutional — Cruzar's primary register.
@@ -25,7 +25,7 @@ function SectionEyebrow({ no, label }: { no: string; label: string }) {
         fontSize: "0.7rem",
         letterSpacing: "0.22em",
         textTransform: "uppercase",
-        color: INK_MUTE,
+        color: INK_LABEL,
         fontFamily: "var(--cruzar-body)",
         fontVariantNumeric: "tabular-nums",
       }}
@@ -147,7 +147,7 @@ export default function EditorialDirection() {
                 fontSize: "0.72rem",
                 letterSpacing: "0.24em",
                 textTransform: "uppercase",
-                color: INK_MUTE,
+                color: INK_LABEL,
                 fontWeight: 600,
               }}
             >
@@ -185,12 +185,12 @@ export default function EditorialDirection() {
             style={{
               textAlign: "right",
               fontSize: "0.78rem",
-              color: INK_MUTE,
+              color: INK_LABEL,
               maxWidth: "22ch",
               lineHeight: 1.5,
             }}
           >
-            Set in Source Serif 4 at 400, with a single terminal accent in aged red to carry the
+            Set in Literata at 400, with a single terminal accent in aged red to carry the
             voice across long-form print and screen.
           </div>
         </div>
@@ -318,7 +318,7 @@ export default function EditorialDirection() {
                 fontSize: "0.72rem",
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: INK_MUTE,
+                color: INK_LABEL,
               }}
             >
               As of 2026-04-15
@@ -353,7 +353,7 @@ export default function EditorialDirection() {
                   top: "8px",
                   right: "-4px",
                   fontSize: "1.1rem",
-                  color: INK_MUTE,
+                  color: INK_LABEL,
                   fontWeight: 600,
                   fontVariantNumeric: "tabular-nums",
                 }}
@@ -457,7 +457,7 @@ export default function EditorialDirection() {
                   <span
                     style={{
                       fontSize: "0.5em",
-                      color: INK_MUTE,
+                      color: INK_LABEL,
                       fontWeight: 300,
                       marginLeft: "2px",
                     }}
@@ -481,7 +481,7 @@ export default function EditorialDirection() {
                   style={{
                     marginTop: "4px",
                     fontSize: item.scale === "lead" ? "0.88rem" : "0.78rem",
-                    color: INK_MUTE,
+                    color: INK_LABEL,
                     lineHeight: 1.45,
                   }}
                 >
@@ -528,7 +528,7 @@ export default function EditorialDirection() {
             <span
               aria-hidden
               style={{
-                color: INK_MUTE,
+                color: INK_LABEL,
                 fontWeight: 400,
                 marginRight: "0.04em",
               }}
@@ -536,7 +536,7 @@ export default function EditorialDirection() {
               &ldquo;
             </span>
             {QUOTE.es}
-            <span aria-hidden style={{ color: INK_MUTE, fontWeight: 400 }}>
+            <span aria-hidden style={{ color: INK_LABEL, fontWeight: 400 }}>
               &rdquo;
             </span>
           </blockquote>
@@ -608,17 +608,17 @@ export default function EditorialDirection() {
                 }}
               >
                 <span className="ed-serif" style={{ fontSize: "1.2rem", fontWeight: 600 }}>
-                  Source Serif 4
+                  Literata
                 </span>
                 <span
                   style={{
                     fontSize: "0.72rem",
                     letterSpacing: "0.18em",
                     textTransform: "uppercase",
-                    color: INK_MUTE,
+                    color: INK_LABEL,
                   }}
                 >
-                  Display · Frank Grießhammer
+                  Display · Type Together
                 </span>
               </div>
               <div className="ed-serif" style={{ display: "grid", gap: "16px", color: INK }}>
@@ -692,7 +692,7 @@ export default function EditorialDirection() {
                     fontSize: "0.68rem",
                     letterSpacing: "0.16em",
                     textTransform: "uppercase",
-                    color: INK_MUTE,
+                    color: INK_LABEL,
                   }}
                 >
                   Body · Google Fonts
@@ -837,7 +837,7 @@ export default function EditorialDirection() {
                       marginTop: "12px",
                       fontSize: "0.78rem",
                       fontVariantNumeric: "tabular-nums",
-                      color: INK_MUTE,
+                      color: INK_LABEL,
                     }}
                   >
                     oklch({c.value})
@@ -952,14 +952,14 @@ export default function EditorialDirection() {
               fontSize: "0.82rem",
               letterSpacing: "0.12em",
               textTransform: "uppercase",
-              color: INK_MUTE,
+              color: INK_LABEL,
               textAlign: "right",
               fontVariantNumeric: "tabular-nums",
             }}
           >
             <div>2026 · 04 · 15</div>
             <div style={{ marginTop: "4px" }}>Cruzar Brand Exploration</div>
-            <div style={{ marginTop: "4px" }}>Set in Source Serif 4 &amp; Funnel Sans</div>
+            <div style={{ marginTop: "4px" }}>Set in Literata &amp; Funnel Sans</div>
             <div style={{ marginTop: "4px" }}>Reach · {countryReach.join(" · ")}</div>
           </div>
         </div>

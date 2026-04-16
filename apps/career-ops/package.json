@@ -6,10 +6,12 @@
   "main": "./bin/fill-forms.mjs",
   "bin": {
     "fill-forms": "./bin/fill-forms.mjs",
-    "generate-pdf": "./bin/generate-pdf.mjs"
+    "generate-pdf": "./bin/generate-pdf.mjs",
+    "render-sample": "./bin/render-sample.mjs"
   },
   "scripts": {
-    "typecheck": "echo 'no-op until TS code lands'"
+    "typecheck": "echo 'no-op until TS code lands'",
+    "sample": "node bin/render-sample.mjs"
   },
   "dependencies": {
     "playwright": "1.59.1"

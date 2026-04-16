@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ARCHIVED_DIRECTIONS, DIRECTIONS } from "@/lib/content";
-import { HAIRLINE, INK, INK_MUTE, INK_SOFT, PAPER } from "@/lib/tokens";
+import { HAIRLINE, INK, INK_LABEL, INK_SOFT, PAPER } from "@/lib/tokens";
 
 export default function Index() {
   return (
@@ -19,7 +19,7 @@ export default function Index() {
             textTransform: "uppercase",
             letterSpacing: "0.18em",
             fontSize: "0.72rem",
-            color: INK_MUTE,
+            color: INK_LABEL,
             marginBottom: "1rem",
           }}
         >
@@ -82,7 +82,7 @@ export default function Index() {
                 justifyContent: "space-between",
                 fontSize: "0.7rem",
                 fontVariantNumeric: "tabular-nums",
-                color: INK_MUTE,
+                color: INK_LABEL,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
               }}
@@ -108,7 +108,7 @@ export default function Index() {
               style={{
                 marginTop: "auto",
                 fontSize: "0.85rem",
-                color: INK_MUTE,
+                color: INK_LABEL,
                 lineHeight: 1.5,
               }}
             >
@@ -132,7 +132,7 @@ export default function Index() {
               textTransform: "uppercase",
               letterSpacing: "0.18em",
               fontSize: "0.72rem",
-              color: INK_MUTE,
+              color: INK_LABEL,
               marginBottom: "1rem",
             }}
           >
@@ -152,7 +152,7 @@ export default function Index() {
         style={{
           marginTop: "5rem",
           fontSize: "0.78rem",
-          color: INK_MUTE,
+          color: INK_LABEL,
           maxWidth: "70ch",
           lineHeight: 1.6,
         }}
