@@ -160,6 +160,9 @@ export const intakeBatches = pgTable(
       .references(() => intakes.id, { onDelete: "cascade" }),
     batch_num: integer("batch_num").notNull(),
     prompt_text: text("prompt_text").notNull(),
+    questions_jsonb: jsonb("questions_jsonb")
+      .$type<Array<{ question_key: string; question_text: string; rationale: string }>>()
+      .notNull(),
     sent_at: timestamp("sent_at", { withTimezone: true }),
     raw_reply: text("raw_reply"),
     reply_at: timestamp("reply_at", { withTimezone: true }),
@@ -168,16 +171,20 @@ export const intakeBatches = pgTable(
   (t) => [uniqueIndex("intake_batches_unique").on(t.intake_id, t.batch_num)],
 );
 
-export const intakeBatchAnswers = pgTable("intake_batch_answers", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  batch_id: uuid("batch_id")
-    .notNull()
-    .references(() => intakeBatches.id, { onDelete: "cascade" }),
-  question_key: text("question_key").notNull(),
-  question_text: text("question_text").notNull(),
-  answer_text: text("answer_text").notNull(),
-  confidence: real("confidence").notNull(),
-});
+export const intakeBatchAnswers = pgTable(
+  "intake_batch_answers",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    batch_id: uuid("batch_id")
+      .notNull()
+      .references(() => intakeBatches.id, { onDelete: "cascade" }),
+    question_key: text("question_key").notNull(),
+    question_text: text("question_text").notNull(),
+    answer_text: text("answer_text").notNull(),
+    confidence: real("confidence").notNull(),
+  },
+  (t) => [uniqueIndex("intake_batch_answers_unique").on(t.batch_id, t.question_key)],
+);
 
 export const roles = pgTable(
   "roles",

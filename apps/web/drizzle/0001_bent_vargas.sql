@@ -1,0 +1,2 @@
+ALTER TABLE "intake_batches" ADD COLUMN "questions_jsonb" jsonb NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "intake_batch_answers_unique" ON "intake_batch_answers" USING btree ("batch_id","question_key");
