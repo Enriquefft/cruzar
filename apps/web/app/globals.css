@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/*
+ * Brand tokens mirror `@cruzar/brand/tokens`. Values are the locked OKLCH
+ * tokens (Capa 3, locked 2026-04-15 for 24 months). Keep in sync with
+ * `apps/brand/lib/tokens.ts` — that file is the SSOT; any change there
+ * propagates here via this file.
+ */
+:root {
+  --brand-paper: oklch(0.97 0.012 85);
+  --brand-paper-deep: oklch(0.945 0.014 82);
+  --brand-card: oklch(0.985 0.006 82);
+  --brand-ink: oklch(0.18 0.01 80);
+  --brand-ink-soft: oklch(0.38 0.012 80);
+  --brand-ink-label: oklch(0.55 0.012 80);
+  --brand-hairline: oklch(0.82 0.012 80);
+  --brand-hairline-strong: oklch(0.72 0.012 80);
+  --brand-accent: oklch(0.42 0.14 30);
+
+  --background: var(--brand-paper);
+  --foreground: var(--brand-ink);
+  --accent: var(--brand-accent);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --font-sans: var(--cruzar-body);
+  --font-serif: var(--cruzar-display);
+  --font-mono: var(--cruzar-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--cruzar-body), ui-sans-serif, system-ui, sans-serif;
+}
