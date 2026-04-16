@@ -10,7 +10,11 @@
       "drizzle-orm": ["../web/node_modules/drizzle-orm"],
       "drizzle-orm/*": ["../web/node_modules/drizzle-orm/*"],
       "@aws-sdk/client-s3": ["../web/node_modules/@aws-sdk/client-s3"],
-      "@aws-sdk/client-s3/*": ["../web/node_modules/@aws-sdk/client-s3/*"]
+      "@aws-sdk/client-s3/*": ["../web/node_modules/@aws-sdk/client-s3/*"],
+      "@aws-sdk/s3-request-presigner": ["../web/node_modules/@aws-sdk/s3-request-presigner"],
+      "@aws-sdk/s3-request-presigner/*": ["../web/node_modules/@aws-sdk/s3-request-presigner/*"],
+      "resend": ["../web/node_modules/resend"],
+      "resend/*": ["../web/node_modules/resend/*"]
     }
   },
   "include": ["**/*.ts"],
