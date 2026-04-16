@@ -466,6 +466,27 @@ En code review de cualquier PR que toque una superficie de marca:
 
 Cualquier desviación de esta guía que no esté documentada como excepción explícita en este archivo — con razón y fecha — es por default un bug, no una feature.
 
+### K.4 — Design system (shadcn + Cruzar tokens)
+
+El sistema de componentes vive en [`apps/brand/components/ui/`](../../apps/brand/components/ui/), basado en shadcn/ui sobre Tailwind v4. Los componentes son SSOT — ninguna otra `apps/*` workspace puede instalar shadcn localmente.
+
+Consumo:
+
+1. Añadir `"@cruzar/brand": "workspace:*"` a `dependencies`.
+2. Importar `@cruzar/brand/globals.css` en el layout raíz.
+3. Importar primitives con `import { Button } from "@cruzar/brand/ui"` (o `@cruzar/brand/ui/button` para un solo primitive tree-shake-friendly).
+4. Importar tokens con `import { PAPER } from "@cruzar/brand/tokens"`.
+
+Showcase navegable: `/system` en `apps/brand` (puerto 3100).
+
+Reglas de modificación:
+
+- Para cambiar un primitive, editarlo en `apps/brand/components/ui/<name>.tsx` y revisar su showcase en `/system/<category>`.
+- Para añadir un nuevo primitive, usar `bunx --bun shadcn@latest add <name>` desde `apps/brand/` y añadir bloque al showcase + línea al barrel (`components/ui/index.ts`).
+- Nunca añadir un primitive a una workspace consumidora.
+
+Las reglas duras y banned patterns para consumidores viven en [`apps/brand/CLAUDE.md`](../../apps/brand/CLAUDE.md) — este documento las referencia, no las duplica.
+
 ---
 
 ## Historial

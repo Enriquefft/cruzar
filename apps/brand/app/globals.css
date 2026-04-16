@@ -1,4 +1,25 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * ────────────────────────────────────────────────────────────────────────────
+ * Cruzar — runtime CSS tokens (mirror of `apps/brand/lib/tokens.ts`).
+ *
+ * SSOT for code consumers is `lib/tokens.ts`. SSOT for shadcn / utility-class
+ * consumers is THIS FILE. The two MUST stay synchronized — when a token value
+ * changes, change both files in the same edit. Token names below mirror the
+ * uppercase JS exports from `tokens.ts` (e.g. PAPER → --cruzar-paper).
+ *
+ * shadcn's semantic variables (--background, --foreground, --primary, etc.)
+ * are mapped onto Cruzar tokens further below. The mapping intentionally
+ * separates Cruzar's brand ACCENT (wordmark period — surgical use only) from
+ * shadcn's `--accent` (hover surfaces — frequent, subtle). Brand-specific
+ * tokens not covered by shadcn semantics are exposed under `--brand-*`.
+ * ────────────────────────────────────────────────────────────────────────────
+ */
 
 html,
 body {
@@ -14,4 +35,199 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+@theme inline {
+  /* Cruzar fonts → Tailwind/shadcn font defaults */
+  --font-sans: var(--cruzar-body), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--cruzar-display), ui-serif, Georgia, serif;
+  --font-mono: var(--cruzar-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans-dense: var(--cruzar-body-dense), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-serif);
+
+  /* shadcn semantic colors driven by Cruzar tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Brand-specific colors (Cruzar uses these directly, not via shadcn semantics) */
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-signal: var(--brand-signal);
+  --color-brand-signal-dim: var(--brand-signal-dim);
+  --color-brand-paper: var(--cruzar-paper);
+  --color-brand-paper-deep: var(--cruzar-paper-deep);
+  --color-brand-ink: var(--cruzar-ink);
+  --color-brand-ink-soft: var(--cruzar-ink-soft);
+  --color-brand-ink-label: var(--cruzar-ink-label);
+  --color-brand-hairline: var(--cruzar-hairline);
+  --color-brand-hairline-strong: var(--cruzar-hairline-strong);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* LIGHT MODE — Cruzar editorial / field default                              */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Cruzar tokens (mirror lib/tokens.ts) */
+  --cruzar-paper: oklch(0.97 0.012 85);
+  --cruzar-paper-deep: oklch(0.945 0.014 82);
+  --cruzar-card: oklch(0.985 0.006 82);
+  --cruzar-ink: oklch(0.18 0.01 80);
+  --cruzar-ink-soft: oklch(0.38 0.012 80);
+  --cruzar-ink-label: oklch(0.55 0.012 80);
+  --cruzar-hairline: oklch(0.82 0.012 80);
+  --cruzar-hairline-strong: oklch(0.72 0.012 80);
+
+  /* Brand accent — wordmark period, § markers, focus rings ONLY */
+  --brand-accent: oklch(0.42 0.14 30);
+  /* Field-register signal — terra brick */
+  --brand-signal: oklch(0.55 0.16 35);
+  --brand-signal-dim: oklch(0.55 0.16 35 / 0.12);
+
+  /* Wordmark constants (Capa 1 lock) */
+  --brand-wordmark-min: 20px;
+  --brand-wordmark-tracking: -0.045em;
+
+  /* shadcn semantic mapping — light */
+  --background: var(--cruzar-paper);
+  --foreground: var(--cruzar-ink);
+  --card: var(--cruzar-card);
+  --card-foreground: var(--cruzar-ink);
+  --popover: var(--cruzar-card);
+  --popover-foreground: var(--cruzar-ink);
+  /* Primary action: ink-on-paper button — institutional, restrained */
+  --primary: var(--cruzar-ink);
+  --primary-foreground: var(--cruzar-paper);
+  /* Secondary action: paper-deep surface */
+  --secondary: var(--cruzar-paper-deep);
+  --secondary-foreground: var(--cruzar-ink);
+  /* Muted: paper-deep surface for low-weight contexts */
+  --muted: var(--cruzar-paper-deep);
+  --muted-foreground: var(--cruzar-ink-soft);
+  /* shadcn `accent` = subtle hover surface (NOT the brand accent — that's --brand-accent) */
+  --accent: var(--cruzar-paper-deep);
+  --accent-foreground: var(--cruzar-ink);
+  /* Destructive: a brighter alert red, distinct from the editorial wordmark accent */
+  --destructive: oklch(0.55 0.20 27);
+  --border: var(--cruzar-hairline);
+  --input: var(--cruzar-hairline);
+  /* Focus ring uses the brand accent — the period color is the brand mark */
+  --ring: var(--brand-accent);
+  /* Chart palette (Capa 3, CVD-tested) */
+  --chart-1: oklch(0.50 0.15 30);   /* terra */
+  --chart-2: oklch(0.52 0.10 110);  /* olive */
+  --chart-3: oklch(0.45 0.08 235);  /* slate */
+  --chart-4: oklch(0.62 0.12 75);   /* ochre */
+  --chart-5: var(--cruzar-ink);
+  --radius: 0.5rem;
+  /* Sidebar — paper-deep canvas, ink type */
+  --sidebar: var(--cruzar-paper-deep);
+  --sidebar-foreground: var(--cruzar-ink);
+  --sidebar-primary: var(--cruzar-ink);
+  --sidebar-primary-foreground: var(--cruzar-paper);
+  --sidebar-accent: var(--cruzar-card);
+  --sidebar-accent-foreground: var(--cruzar-ink);
+  --sidebar-border: var(--cruzar-hairline);
+  --sidebar-ring: var(--brand-accent);
+}
+
+/* ────────────────────────────────────────────────────────────────────────── */
+/* DARK MODE — Cruzar dark-register                                           */
+/* ────────────────────────────────────────────────────────────────────────── */
+
+.dark {
+  --cruzar-paper: oklch(0.19 0.012 80);
+  --cruzar-paper-deep: oklch(0.155 0.012 80);
+  --cruzar-card: oklch(0.225 0.012 80);
+  --cruzar-ink: oklch(0.94 0.01 85);
+  --cruzar-ink-soft: oklch(0.78 0.012 82);
+  --cruzar-ink-label: oklch(0.6 0.012 80);
+  --cruzar-hairline: oklch(0.32 0.012 80);
+  --cruzar-hairline-strong: oklch(0.42 0.012 80);
+
+  /* Dark-mode accent is LIFTED — the light-mode 0.42 collapses on dark surfaces */
+  --brand-accent: oklch(0.68 0.17 32);
+  --brand-signal: oklch(0.68 0.17 32);
+  --brand-signal-dim: oklch(0.68 0.17 32 / 0.16);
+
+  --background: var(--cruzar-paper);
+  --foreground: var(--cruzar-ink);
+  --card: var(--cruzar-card);
+  --card-foreground: var(--cruzar-ink);
+  --popover: var(--cruzar-card);
+  --popover-foreground: var(--cruzar-ink);
+  --primary: var(--cruzar-ink);
+  --primary-foreground: var(--cruzar-paper);
+  --secondary: var(--cruzar-paper-deep);
+  --secondary-foreground: var(--cruzar-ink);
+  --muted: var(--cruzar-paper-deep);
+  --muted-foreground: var(--cruzar-ink-soft);
+  --accent: var(--cruzar-card);
+  --accent-foreground: var(--cruzar-ink);
+  --destructive: oklch(0.68 0.20 27);
+  --border: var(--cruzar-hairline);
+  --input: var(--cruzar-hairline-strong);
+  --ring: var(--brand-accent);
+  --chart-1: oklch(0.65 0.15 30);
+  --chart-2: oklch(0.68 0.10 110);
+  --chart-3: oklch(0.65 0.08 235);
+  --chart-4: oklch(0.75 0.12 75);
+  --chart-5: var(--cruzar-ink);
+  --sidebar: var(--cruzar-paper-deep);
+  --sidebar-foreground: var(--cruzar-ink);
+  --sidebar-primary: var(--cruzar-ink);
+  --sidebar-primary-foreground: var(--cruzar-paper);
+  --sidebar-accent: var(--cruzar-card);
+  --sidebar-accent-foreground: var(--cruzar-ink);
+  --sidebar-border: var(--cruzar-hairline);
+  --sidebar-ring: var(--brand-accent);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Display heading default — opt in via `font-serif` or component */
 }
