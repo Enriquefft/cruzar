@@ -1,0 +1,5 @@
+[install]
+# Use exact versions for reproducibility across Miura + Enrique machines.
+exact = true
+
+[install.scopes]
