@@ -65,7 +65,7 @@ export async function submitOnboarding(input: OnboardingInput): Promise<SubmitOn
     return {
       success: false,
       error:
-        "English level below B2 or unmappable. Cruzar currently requires B2 or above to onboard.",
+        "Tu nivel de inglés está por debajo de B2. Los roles remotos requieren B2+. Completa una certificación B2+ y vuelve.",
     };
   }
 
@@ -78,7 +78,7 @@ export async function submitOnboarding(input: OnboardingInput): Promise<SubmitOn
     });
     return {
       success: false,
-      error: "Attestation upload not confirmed. Try again.",
+      error: "No pudimos confirmar la subida de tu certificado. Intenta de nuevo.",
     };
   }
 
@@ -127,7 +127,7 @@ export async function submitOnboarding(input: OnboardingInput): Promise<SubmitOn
     });
     return {
       success: false,
-      error: "Something went wrong. Try again in a minute.",
+      error: "Algo salió mal. Intenta de nuevo en un minuto.",
     };
   }
 

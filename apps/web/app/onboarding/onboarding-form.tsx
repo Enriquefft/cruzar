@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { type CefrLevel, cefrLevels, mapCertToCefr, meetsB2 } from "@/lib/cefr-map";
 import { attestationMimeTypeValues, type AttestationMimeType } from "@/lib/r2";
@@ -9,6 +9,15 @@ import { onboardingInputSchema, type OnboardingInput } from "@/schemas/onboardin
 import { requestAttestationUpload, submitOnboarding } from "./actions";
 
 const MAX_BYTES = 10_000_000;
+
+function useDebounced<T>(value: T, ms: number): T {
+  const [v, setV] = useState(value);
+  useEffect(() => {
+    const id = setTimeout(() => setV(value), ms);
+    return () => clearTimeout(id);
+  }, [value, ms]);
+  return v;
+}
 
 type AttestationStatus =
   | { kind: "idle" }
@@ -21,6 +30,7 @@ interface FieldErrors {
   name?: string;
   whatsapp?: string;
   local_salary_usd?: string;
+  kind?: string;
   score?: string;
   issued_at?: string;
   attestation_r2_key?: string;
@@ -120,20 +130,24 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
   const nameRef = useRef<HTMLInputElement | null>(null);
   const whatsappRef = useRef<HTMLInputElement | null>(null);
   const salaryRef = useRef<HTMLInputElement | null>(null);
+  const kindRef = useRef<HTMLSelectElement | null>(null);
   const scoreRef = useRef<HTMLInputElement | null>(null);
   const issuedAtRef = useRef<HTMLInputElement | null>(null);
   const manualLevelRef = useRef<HTMLSelectElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const dropzoneRef = useRef<HTMLDivElement | null>(null);
 
+  const debouncedScore = useDebounced(score, 250);
+
   const derivedLevel = useMemo<CefrLevel | null>(() => {
-    if (certKind === "" || score.trim().length === 0) return null;
-    return mapCertToCefr(certKind, score);
-  }, [certKind, score]);
+    if (certKind === "" || debouncedScore.trim().length === 0) return null;
+    return mapCertToCefr(certKind, debouncedScore);
+  }, [certKind, debouncedScore]);
 
   const effectiveLevel: CefrLevel | null =
     derivedLevel ?? (manualLevel === "" ? null : manualLevel);
-  const needsManualLevel = certKind !== "" && score.trim().length > 0 && derivedLevel === null;
+  const needsManualLevel =
+    certKind !== "" && debouncedScore.trim().length > 0 && derivedLevel === null;
   const levelBelowB2 = effectiveLevel !== null && !meetsB2(effectiveLevel);
 
   const resetAttestation = useCallback(() => {
@@ -270,6 +284,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
     if (errors.name) nameRef.current?.focus();
     else if (errors.whatsapp) whatsappRef.current?.focus();
     else if (errors.local_salary_usd) salaryRef.current?.focus();
+    else if (errors.kind) kindRef.current?.focus();
     else if (errors.score) scoreRef.current?.focus();
     else if (errors.level) manualLevelRef.current?.focus();
     else if (errors.issued_at) issuedAtRef.current?.focus();
@@ -282,7 +297,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
     const errors: FieldErrors = {};
 
     if (certKind === "") {
-      errors.score = "Selecciona el tipo de certificación.";
+      errors.kind = "Selecciona el tipo de certificación.";
     }
 
     let salaryValue: number | undefined;
@@ -398,6 +413,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
   const nameErrId = `${rootId}-name-err`;
   const whatsappErrId = `${rootId}-whatsapp-err`;
   const salaryErrId = `${rootId}-salary-err`;
+  const kindErrId = `${rootId}-kind-err`;
   const scoreErrId = `${rootId}-score-err`;
   const issuedAtErrId = `${rootId}-issued-err`;
   const levelErrId = `${rootId}-level-err`;
@@ -524,6 +540,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           </label>
           <select
             id={`${rootId}-kind`}
+            ref={kindRef}
             value={certKind}
             onChange={(e) => {
               const next = e.target.value;
@@ -535,6 +552,8 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
               setScore("");
               setManualLevel("");
             }}
+            aria-invalid={fieldErrors.kind !== undefined}
+            aria-describedby={fieldErrors.kind ? kindErrId : undefined}
             className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <option value="">Selecciona tu certificación</option>
@@ -544,6 +563,11 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
               </option>
             ))}
           </select>
+          {fieldErrors.kind ? (
+            <p id={kindErrId} className="text-sm text-destructive">
+              {fieldErrors.kind}
+            </p>
+          ) : null}
         </div>
 
         {kindCopy ? (
@@ -566,7 +590,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
               />
               {effectiveLevel ? (
                 <span
-                  className={`inline-flex h-8 items-center rounded-md px-3 text-xs font-semibold ${
+                  className={`inline-flex h-11 items-center rounded-md px-3 text-sm font-semibold transition-opacity duration-200 ${
                     meetsB2(effectiveLevel)
                       ? "bg-secondary text-secondary-foreground"
                       : "bg-destructive text-destructive-foreground"
@@ -628,10 +652,11 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
         {levelBelowB2 ? (
           <div
             role="alert"
-            className="rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive"
+            className="rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive transition-opacity duration-200"
           >
-            <strong className="font-semibold">Nivel inferior a B2.</strong> Los roles remotos
-            requieren B2+ verificable. Completa una certificación B2+ y vuelve.
+            <strong className="font-semibold">Aún no estás listo para roles remotos.</strong> La
+            mayoría de nuestros estudiantes llegan a B2 en 3-6 meses. Te avisaremos al email que
+            registraste cuando certifiques.
           </div>
         ) : null}
 
@@ -660,136 +685,142 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           </div>
         ) : null}
 
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Sube tu certificado</p>
-          <div
-            ref={dropzoneRef}
-            role="button"
-            tabIndex={0}
-            aria-label="Sube tu certificado en PDF, PNG o JPEG"
-            aria-describedby={fieldErrors.attestation_r2_key ? attestationErrId : undefined}
-            data-drag-over={dragOver ? "true" : "false"}
-            onClick={openFilePicker}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
+        {certKind !== "" && effectiveLevel !== null && meetsB2(effectiveLevel) ? (
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Sube tu certificado</p>
+            <div
+              ref={dropzoneRef}
+              role="button"
+              tabIndex={0}
+              aria-label="Sube tu certificado en PDF, PNG o JPEG"
+              aria-describedby={fieldErrors.attestation_r2_key ? attestationErrId : undefined}
+              data-drag-over={dragOver ? "true" : "false"}
+              onClick={openFilePicker}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  openFilePicker();
+                }
+              }}
+              onDragOver={(e) => {
                 e.preventDefault();
-                openFilePicker();
-              }
-            }}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragOver(false);
-              const file = e.dataTransfer.files.item(0);
-              handleFileSelect(file);
-            }}
-            className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-input bg-background p-8 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[drag-over=true]:bg-muted"
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png,image/jpeg,application/pdf"
-              hidden
-              onChange={(e) => {
-                const file = e.target.files?.item(0) ?? null;
+                setDragOver(true);
+              }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOver(false);
+                const file = e.dataTransfer.files.item(0);
                 handleFileSelect(file);
               }}
-            />
-            {attestation.kind === "idle" ? (
-              <>
-                <span className="text-sm font-medium">Toca o arrastra tu certificado</span>
-                <span className="mt-1 text-sm text-muted-foreground">
-                  PDF, PNG o JPEG, máximo 10 MB. Lo verificamos manualmente.
+              className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-input bg-background p-8 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring data-[drag-over=true]:bg-muted"
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,application/pdf"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files?.item(0) ?? null;
+                  handleFileSelect(file);
+                }}
+              />
+              {attestation.kind === "idle" ? (
+                <>
+                  <span className="text-sm font-medium">Toca o arrastra tu certificado</span>
+                  <span className="mt-1 text-sm text-muted-foreground">
+                    PDF, PNG o JPEG, máximo 10 MB. Lo verificamos manualmente.
+                  </span>
+                </>
+              ) : null}
+
+              {attestation.kind === "preparing" ? (
+                <span className="text-sm text-muted-foreground">
+                  Preparando subida de {attestation.filename}...
                 </span>
-              </>
-            ) : null}
+              ) : null}
 
-            {attestation.kind === "preparing" ? (
-              <span className="text-sm text-muted-foreground">
-                Preparando subida de {attestation.filename}...
-              </span>
-            ) : null}
-
-            {attestation.kind === "uploading" ? (
-              <div className="flex w-full flex-col gap-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="truncate font-medium">{attestation.filename}</span>
-                  <span className="text-muted-foreground">
-                    {formatBytes(attestation.sizeBytes)} • {attestation.percent}%
-                  </span>
-                </div>
-                <div
-                  role="progressbar"
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={attestation.percent}
-                  className="h-2 w-full overflow-hidden rounded-full bg-muted"
-                >
+              {attestation.kind === "uploading" ? (
+                <div className="flex w-full flex-col gap-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="truncate font-medium">{attestation.filename}</span>
+                    <span className="text-muted-foreground">
+                      {formatBytes(attestation.sizeBytes)} • {attestation.percent}%
+                    </span>
+                  </div>
                   <div
-                    className="h-full bg-foreground transition-[width]"
-                    style={{ width: `${attestation.percent}%` }}
-                  />
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={attestation.percent}
+                    className="h-2 w-full overflow-hidden rounded-full bg-muted"
+                  >
+                    <div
+                      className="h-full bg-foreground transition-[width]"
+                      style={{ width: `${attestation.percent}%` }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      resetAttestation();
+                    }}
+                    className="self-start text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                  >
+                    Cancelar
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    resetAttestation();
-                  }}
-                  className="self-start text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
-                >
-                  Cancelar
-                </button>
-              </div>
-            ) : null}
+              ) : null}
 
-            {attestation.kind === "done" ? (
-              <div className="flex w-full items-center justify-between gap-3 text-sm">
-                <div className="flex min-w-0 flex-col">
-                  <span className="truncate font-medium">{attestation.filename}</span>
-                  <span className="text-muted-foreground">
-                    {formatBytes(attestation.sizeBytes)} • listo
-                  </span>
+              {attestation.kind === "done" ? (
+                <div className="flex w-full items-center justify-between gap-3 text-sm">
+                  <div className="flex min-w-0 flex-col">
+                    <span className="truncate font-medium">{attestation.filename}</span>
+                    <span className="text-muted-foreground">
+                      {formatBytes(attestation.sizeBytes)} • listo
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      resetAttestation();
+                    }}
+                    className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                  >
+                    Cambiar
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    resetAttestation();
-                  }}
-                  className="text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground"
-                >
-                  Cambiar
-                </button>
-              </div>
-            ) : null}
+              ) : null}
 
-            {attestation.kind === "error" ? (
-              <div className="flex w-full flex-col gap-2 text-sm text-destructive">
-                <span>{attestation.message}</span>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    resetAttestation();
-                  }}
-                  className="self-start underline underline-offset-2"
-                >
-                  Reintentar
-                </button>
-              </div>
+              {attestation.kind === "error" ? (
+                <div className="flex w-full flex-col gap-2 text-sm text-destructive">
+                  <span>{attestation.message}</span>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      resetAttestation();
+                    }}
+                    className="self-start underline underline-offset-2"
+                  >
+                    Reintentar
+                  </button>
+                </div>
+              ) : null}
+            </div>
+            {fieldErrors.attestation_r2_key ? (
+              <p id={attestationErrId} className="text-sm text-destructive">
+                {fieldErrors.attestation_r2_key}
+              </p>
             ) : null}
           </div>
-          {fieldErrors.attestation_r2_key ? (
-            <p id={attestationErrId} className="text-sm text-destructive">
-              {fieldErrors.attestation_r2_key}
-            </p>
-          ) : null}
-        </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Adjuntarás tu certificado una vez que el sistema confirme tu nivel.
+          </p>
+        )}
       </section>
 
       <section className="space-y-2">
@@ -834,7 +865,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           type="submit"
           disabled={!formReady || submitting}
           aria-disabled={!formReady || submitting}
-          className="flex h-11 w-full items-center justify-center rounded-md bg-foreground text-base font-medium text-background transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-12 w-full items-center justify-center rounded-md bg-primary text-base font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {submitting ? "Enviando..." : "Enviar y empezar mi intake"}
         </button>
