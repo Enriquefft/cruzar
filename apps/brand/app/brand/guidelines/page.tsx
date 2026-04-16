@@ -1605,7 +1605,7 @@ export default function BrandGuidelinesPage() {
                   fontFamily: "var(--cruzar-mono)",
                 }}
               >
-                cruzar.io · enrique@cruzar.io
+                cruzarapp.com · enrique@cruzarapp.com
               </div>
             </div>
           }
@@ -1652,7 +1652,7 @@ export default function BrandGuidelinesPage() {
               </div>
             </div>
           }
-          doCaption="Name · role · wordmark (inline SVG) · cruzar.io and email in mono. Nothing else."
+          doCaption="Name · role · wordmark (inline SVG) · cruzarapp.com and email in mono. Nothing else."
           dontCaption="Motivational quote, attached image signature, mobile-sent disclaimer — every anti-pattern stacked."
         />
       </section>
@@ -1668,7 +1668,7 @@ export default function BrandGuidelinesPage() {
           <SectionHeader
             no="H"
             title="Social handles"
-            lede="Conventions fixed now so registration — whenever it happens — matches. Web is cruzar.io. Do not register the handles today."
+            lede="Conventions fixed now so registration — whenever it happens — matches. Web is cruzarapp.com. Do not register the handles today."
           />
           <div
             style={{
@@ -1679,11 +1679,11 @@ export default function BrandGuidelinesPage() {
             }}
           >
             {[
-              ["WEB", "cruzar.io", "canonical"],
-              ["EMAIL", "<name>@cruzar.io", "canonical"],
+              ["WEB", "cruzarapp.com", "canonical"],
+              ["EMAIL", "<name>@cruzarapp.com", "canonical"],
               ["TWITTER / X", "@cruzar · @cruzarHQ fallback", "display: Cruzar."],
               ["LINKEDIN", "/company/cruzar · fallback /company/cruzarHQ", "display: Cruzar."],
-              ["INSTAGRAM", "@cruzar · @cruzar.io fallback", "display: Cruzar."],
+              ["INSTAGRAM", "@cruzar · @cruzarapp.com fallback", "display: Cruzar."],
               ["GITHUB", "cruzar · fallback cruzar-io", "display: Cruzar."],
               ["YOUTUBE", "@cruzar · @cruzarHQ fallback", "display: Cruzar."],
             ].map(([k, v, note], i, arr) => (

@@ -88,7 +88,7 @@ function Colophon({ text }: { text: string }) {
         paddingTop: 10,
       }}
     >
-      <span>cruzar.io</span>
+      <span>cruzarapp.com</span>
       <span>{text}</span>
       <span>2026 · 04 · 15</span>
     </div>
@@ -1865,7 +1865,7 @@ const slides = (
                 letterSpacing: "-0.01em",
               }}
             >
-              hello@cruzar.io
+              enrique@cruzarapp.com
             </span>
             <span
               className="cz-serif"
@@ -1875,7 +1875,7 @@ const slides = (
                 letterSpacing: "-0.01em",
               }}
             >
-              cruzar.io
+              cruzarapp.com
             </span>
             <span
               style={{
@@ -1957,9 +1957,9 @@ const slides = (
             color: INK_LABEL,
           }}
         >
-          <span>cruzar.io</span>
+          <span>cruzarapp.com</span>
           <span>— {BRAND.meaning} —</span>
-          <span>hello@cruzar.io</span>
+          <span>enrique@cruzarapp.com</span>
         </div>
       </div>
       <Notes>

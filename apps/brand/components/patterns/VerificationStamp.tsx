@@ -1,5 +1,5 @@
 /**
- * VerificationStamp — "Verified by Cruzar · cruzar.io/v/<hash>" mark.
+ * VerificationStamp — "Verified by Cruzar · cruzarapp.com/v/<hash>" mark.
  *
  * Used on CVs, emails, and externally-shared artifacts to anchor the
  * verification claim to a public canonical URL. Hash is rendered in
@@ -29,7 +29,7 @@ const VERB: Record<Lang, string> = {
   en: "Verified by Cruzar",
 };
 
-const URL_BASE = "cruzar.io/v/";
+const URL_BASE = "cruzarapp.com/v/";
 
 export function VerificationStamp({
   hash,

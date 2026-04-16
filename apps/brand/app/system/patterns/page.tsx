@@ -278,7 +278,7 @@ type Props = { status: PlacementStatus; lang?: "es" | "en" };`}
       <PatternBlock
         no="7"
         title="VerificationStamp"
-        description="The cruzar.io/v/<hash> mark used on CVs and externally-shared artifacts. Inline placement for masthead pinning; footer placement for stacked PDF endcaps. Hash always set in mono."
+        description="The cruzarapp.com/v/<hash> mark used on CVs and externally-shared artifacts. Inline placement for masthead pinning; footer placement for stacked PDF endcaps. Hash always set in mono."
         signature={`type Props = {
   hash: string;
   placement?: "inline" | "footer";
@@ -428,7 +428,7 @@ type Props = { status: PlacementStatus; lang?: "es" | "en" };`}
         <EmailSignature
           name="Enrique Flores-Talavera"
           role="Co-founder · Product & Engineering"
-          email="enrique@cruzar.io"
+          email="enrique@cruzarapp.com"
         />
       </PatternBlock>
 

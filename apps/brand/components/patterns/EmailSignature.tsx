@@ -5,7 +5,7 @@
  *   <Name>
  *   <Role>
  *   Cruzar.            ← wordmark inline, height ~18px (font-size matched)
- *   cruzar.io · <email>
+ *   cruzarapp.com · <email>
  *
  * Hard rules enforced:
  *  - No motivational quote / mobile disclaimer (G.2).
@@ -24,7 +24,7 @@ type Props = {
   className?: string;
 };
 
-const DOMAIN = "cruzar.io";
+const DOMAIN = "cruzarapp.com";
 
 export function EmailSignature({ name, role, email, className }: Props) {
   return (

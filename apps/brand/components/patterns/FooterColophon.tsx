@@ -5,7 +5,7 @@
  * field-register CV. Renders:
  *   - Wordmark (display3) on the left.
  *   - "verb · español · to cross" meaning beneath it.
- *   - Canonical metadata strip on the right: cruzar.io · MMXXVI · register.
+ *   - Canonical metadata strip on the right: cruzarapp.com · MMXXVI · register.
  *
  * Editorial register uses serif voice for the meaning; field register
  * swaps to mono.
@@ -48,7 +48,7 @@ export function FooterColophon({ register = "editorial", className }: Props) {
         </p>
       </div>
       <div className="flex flex-col gap-1 font-mono text-xs uppercase tracking-[0.14em] text-brand-ink-label tabular-nums md:items-end">
-        <div>cruzar.io</div>
+        <div>cruzarapp.com</div>
         <div>{YEAR_ROMAN}</div>
         <div>
           <span aria-hidden>· </span>

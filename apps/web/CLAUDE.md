@@ -76,7 +76,7 @@ If the block cannot land in one session + 50% slack, escalate per `roadmap.md §
 - `better-auth` — email + magic link. Handler at `app/api/auth/[...all]/route.ts`. Config in `lib/auth.ts`.
 - LLM access via `lib/llm.ts` (fetch → Z.ai OpenAI-compatible API). Two tiers: strong (`AI_STRONG_MODEL`) + weak (`AI_WEAK_MODEL`).
 - `@vercel/og` — available for future OG runtime (not wired in MVP 0).
-- `resend` — transactional email from `hello@cruzar.io`.
+- `resend` — transactional email from `enrique@cruzarapp.com`.
 - `postgres` — Neon driver used by Drizzle.
 - `@biomejs/biome` — lint + format. `bun run format`.
 - `zod` — v4 API. Use `z.infer<typeof X>` for types, `X.parse(...)` for validation.

@@ -35,7 +35,7 @@ const FIXTURE = {
   LOCATION: 'Arequipa, PE · UTC−5',
   LANG_TAGS: 'ES native · EN C1',
   PHONE: '+51 9xx xxx 214',
-  EMAIL: 'renata.salcedo@candidate.cruzar.io',
+  EMAIL: 'renata.salcedo@candidate.cruzarapp.com',
   LINKEDIN_URL: 'https://linkedin.com/in/rsalcedo',
   LINKEDIN_DISPLAY: 'linkedin.com/in/rsalcedo',
   PORTFOLIO_URL: 'https://rsalcedo.dev',

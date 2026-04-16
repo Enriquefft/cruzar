@@ -317,8 +317,8 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 **Dependencies:** all prior M blocks.
 
 **Acceptance:**
-- [ ] `cruzar.io` resolves with valid TLS.
-- [ ] Magic-link email from `hello@cruzar.io` reaches a non-technical Gmail test inbox in Primary (not Spam/Promotions).
+- [ ] `cruzarapp.com` resolves with valid TLS.
+- [ ] Magic-link email from `enrique@cruzarapp.com` reaches a non-technical Gmail test inbox in Primary (not Spam/Promotions).
 - [ ] Sentry receives a test error from a canary route.
 - [ ] Uptime pings report healthy.
 - [ ] `bun typecheck` green across the repo from pre-commit.
@@ -326,7 +326,7 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 
 **CC prompt template:**
 
-> Block M11. Finalize quality floor per Architecture §Observability + §Deployment + §Security. Configure Resend DKIM/SPF/DMARC on `cruzar.io` before testing magic link. R2 CORS for `https://cruzar.io`. Rate limits. Deploy. Verify end-to-end with a real Gmail test account.
+> Block M11. Finalize quality floor per Architecture §Observability + §Deployment + §Security. Configure Resend DKIM/SPF/DMARC on `cruzarapp.com` before testing magic link. R2 CORS for `https://cruzarapp.com`. Rate limits. Deploy. Verify end-to-end with a real Gmail test account.
 
 ### M12 — Onboard 3+ real students + launch — 1h
 

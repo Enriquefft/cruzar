@@ -326,7 +326,7 @@ Plantilla canónica (HTML, consumida desde `@cruzar/brand/tokens` para colores y
 <Nombre del founder>
 <Rol>
 Cruzar.  ← wordmark inline, SVG embebido, height=18px
-cruzar.io · <email>
+cruzarapp.com · <email>
 ```
 
 **Ejemplo:**
@@ -335,7 +335,7 @@ cruzar.io · <email>
 Enrique Flores-Talavera
 Co-founder · Product & Engineering
 Cruzar.
-cruzar.io · enrique@cruzar.io
+cruzarapp.com · enrique@cruzarapp.com
 ```
 
 Reglas del render:
@@ -358,8 +358,8 @@ Reglas del render:
 
 ### H.1 Web
 
-- **Dominio canónico**: `cruzar.io`.
-- **Email corporativo**: `<name>@cruzar.io`.
+- **Dominio canónico**: `cruzarapp.com`.
+- **Email corporativo**: `<name>@cruzarapp.com`.
 
 ### H.2 Convenciones para plataformas (aún no registradas)
 
@@ -369,7 +369,7 @@ Cuando se registren, los handles deben coincidir con la siguiente convención:
 | --- | --- | --- |
 | Twitter / X | `@cruzar` (fallback `@cruzarHQ` si el primero no está disponible) | `Cruzar.` |
 | LinkedIn | `/company/cruzar` (fallback `/company/cruzarHQ`) | `Cruzar.` |
-| Instagram | `@cruzar` (fallback `@cruzar.io`) | `Cruzar.` |
+| Instagram | `@cruzar` (fallback `@cruzarapp.com`) | `Cruzar.` |
 | GitHub | `cruzar` (fallback `cruzar-io`) | `Cruzar.` |
 | YouTube | `@cruzar` (fallback `@cruzarHQ`) | `Cruzar.` |
 

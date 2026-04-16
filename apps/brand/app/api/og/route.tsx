@@ -98,7 +98,7 @@ function Footer() {
         ...TABULAR,
       }}
     >
-      <span>cruzar.io</span>
+      <span>cruzarapp.com</span>
       <span>MMXXVI</span>
     </div>
   );
