@@ -7,6 +7,7 @@ Documento canónico para el uso de la identidad Cruzar. Cualquier integrante del
 - **SSOT de contenido:** [`apps/brand/lib/content.ts`](../../apps/brand/lib/content.ts) (nombre, tagline, promesa, proof, pricing).
 - **Referencia visual navegable:** `/brand/guidelines` en `apps/brand` (Deliverable 2 de Capa 5).
 - **Contexto de diseño:** [`.impeccable.md`](../../.impeccable.md).
+- **Preguntas no-resueltas y plan de re-validación:** [`brand-open-questions.md`](./brand-open-questions.md). El lock actual no fue validado con audiencia real; ese archivo documenta las hipótesis no testeadas, alternativas no exploradas, y trigger-conditions para re-abrir antes del 2027-04-15.
 
 Idioma del documento: español. Tokens, nombres de archivos y encabezados estructurales (`Status`, `Historial`, `Open questions`) permanecen en inglés para preservar grep.
 
