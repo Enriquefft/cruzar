@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "typeRoots": ["../web/node_modules/@types"],
+    "paths": {
+      "@/*": ["../web/*"],
+      "zod": ["../web/node_modules/zod"],
+      "zod/*": ["../web/node_modules/zod/*"],
+      "drizzle-orm": ["../web/node_modules/drizzle-orm"],
+      "drizzle-orm/*": ["../web/node_modules/drizzle-orm/*"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}
