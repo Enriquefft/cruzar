@@ -11,6 +11,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { z } from "zod";
+import { attestationMimeTypeSchema } from "./attestation-mime";
 import { env } from "./env";
 
 let cached: S3Client | undefined;
@@ -45,10 +46,6 @@ export function publicUrl(key: string): string {
   const { publicBase } = requireR2Env();
   return `${publicBase.replace(/\/$/, "")}/${encodeURI(key).replace(/^\//, "")}`;
 }
-
-export const attestationMimeTypeValues = ["image/png", "image/jpeg", "application/pdf"] as const;
-export type AttestationMimeType = (typeof attestationMimeTypeValues)[number];
-export const attestationMimeTypeSchema = z.enum(attestationMimeTypeValues);
 
 const ATTESTATION_MAX_BYTES = 10_000_000;
 const ATTESTATION_EXPIRES_IN_SECONDS = 300;

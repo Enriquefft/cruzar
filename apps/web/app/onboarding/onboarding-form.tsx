@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { type CefrLevel, cefrLevels, mapCertToCefr, meetsB2 } from "@/lib/cefr-map";
-import { attestationMimeTypeValues, type AttestationMimeType } from "@/lib/r2";
+import { attestationMimeTypeValues, type AttestationMimeType } from "@/lib/attestation-mime";
 import { type EnglishCertKind, englishCertKindValues } from "@/schemas/_shared";
 import { onboardingInputSchema, type OnboardingInput } from "@/schemas/onboarding";
 import { requestAttestationUpload, submitOnboarding } from "./actions";

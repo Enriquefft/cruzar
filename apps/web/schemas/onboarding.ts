@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { attestationMimeTypeSchema } from "@/lib/r2";
+import { attestationMimeTypeSchema } from "@/lib/attestation-mime";
 import { englishCertSchema } from "./english-cert";
 import { studentSchema } from "./student";
 
