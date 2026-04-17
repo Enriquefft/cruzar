@@ -60,8 +60,8 @@ export default async function StatusPage() {
           </h1>
           <div className="mt-10 rounded-lg border border-[color:var(--brand-hairline)] bg-[color:var(--brand-card)] px-6 py-10 md:px-10 md:py-14">
             <p className="text-base leading-relaxed text-[color:var(--brand-ink-soft)] md:text-lg md:leading-8">
-              Aún no tienes aplicaciones en curso. Cuando Miura envíe tus primeras postulaciones, las
-              verás aquí.
+              Aún no tienes aplicaciones en curso. Cuando Miura envíe tus primeras postulaciones,
+              las verás aquí.
             </p>
           </div>
         </div>

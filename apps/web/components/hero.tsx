@@ -8,8 +8,8 @@ export function Hero() {
         <span className="text-[color:var(--brand-ink)]">
           Cruzar<span className="text-[color:var(--accent)]">.</span>
         </span>{" "}
-        <span className="text-[color:var(--brand-hairline-strong)]">·</span> placement
-        internacional remoto
+        <span className="text-[color:var(--brand-hairline-strong)]">·</span> placement internacional
+        remoto
       </p>
 
       <h1
@@ -22,8 +22,8 @@ export function Hero() {
       </h1>
 
       <p className="max-w-2xl text-pretty text-base leading-relaxed text-[color:var(--brand-ink-soft)] md:text-lg md:leading-8">
-        Diagnóstico, validación en escenarios reales y postulación autónoma a empresas que
-        contratan en USD. Cobramos solo cuando firmas oferta.
+        Diagnóstico, validación en escenarios reales y postulación autónoma a empresas que contratan
+        en USD. Cobramos solo cuando firmas oferta.
       </p>
     </section>
   );

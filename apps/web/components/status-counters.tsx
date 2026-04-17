@@ -25,7 +25,12 @@ interface StatusCountersProps {
   interviewInvited: number;
 }
 
-export function StatusCounters({ applied, viewed, rejected, interviewInvited }: StatusCountersProps) {
+export function StatusCounters({
+  applied,
+  viewed,
+  rejected,
+  interviewInvited,
+}: StatusCountersProps) {
   const cells: ReadonlyArray<StatusCounterCellProps> = [
     { label: "Aplicaciones enviadas", value: applied },
     { label: "Vistas por empresas", value: viewed },

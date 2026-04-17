@@ -37,10 +37,7 @@ interface ToggleState {
   pending: boolean;
 }
 
-async function handleToggle(
-  prev: ToggleState,
-  _formData: FormData,
-): Promise<ToggleState> {
+async function handleToggle(prev: ToggleState, _formData: FormData): Promise<ToggleState> {
   const newConsent = !prev.consent;
   const result = await togglePublicProfile(newConsent);
   if (result.success) {
@@ -76,8 +73,7 @@ export function ProfileReady({
         )
       : null;
 
-  const salaryDelta =
-    localSalaryUsd && avgRoleComp ? avgRoleComp - localSalaryUsd : null;
+  const salaryDelta = localSalaryUsd && avgRoleComp ? avgRoleComp - localSalaryUsd : null;
 
   return (
     <div className="space-y-10">
@@ -159,9 +155,7 @@ export function ProfileReady({
             <span
               aria-hidden="true"
               className={`inline-block h-3 w-6 rounded-full transition-colors ${
-                shareState.consent
-                  ? "bg-green-600"
-                  : "bg-[color:var(--brand-hairline-strong)]"
+                shareState.consent ? "bg-green-600" : "bg-[color:var(--brand-hairline-strong)]"
               }`}
             >
               <span

@@ -93,11 +93,7 @@ export async function generateRuntimeDir(studentId: string): Promise<string> {
       comp_max_usd: m.comp_max_usd,
     })),
   };
-  await writeFile(
-    join(dir, "profile.yml"),
-    serializeYml(profileYml),
-    "utf-8",
-  );
+  await writeFile(join(dir, "profile.yml"), serializeYml(profileYml), "utf-8");
 
   // Load application history
   const appRows = await db
@@ -164,9 +160,7 @@ function renderApplicationsMd(rows: AppRow[]): string {
 
   const lines: string[] = ["# Applications", ""];
   for (const row of rows) {
-    const appliedStr = row.applied_at
-      ? row.applied_at.toISOString().split("T")[0]
-      : "pending";
+    const appliedStr = row.applied_at ? row.applied_at.toISOString().split("T")[0] : "pending";
     lines.push(
       `- **${row.company_name}** | ${row.role_normalized} | ${row.platform} | ${row.status} | ${appliedStr} | ${row.job_url}`,
     );

@@ -3,13 +3,7 @@ import { z } from "zod";
 import { parseFlags } from "./_shared/args";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
-import {
-  englishCerts,
-  intakeBatchAnswers,
-  intakeBatches,
-  intakes,
-  students,
-} from "@/db/schema";
+import { englishCerts, intakeBatchAnswers, intakeBatches, intakes, students } from "@/db/schema";
 import { llmJsonCompletion } from "@/lib/llm";
 import { logDone, logError } from "./_shared/logger";
 import {
@@ -280,9 +274,7 @@ async function main(): Promise<void> {
     // --- Persist: role_matches ------------------------------------------------
     // Delete prior matches for this profile before inserting fresh ones
     if (existingProfile) {
-      await db
-        .delete(schema.roleMatches)
-        .where(eq(schema.roleMatches.profile_id, profileId));
+      await db.delete(schema.roleMatches).where(eq(schema.roleMatches.profile_id, profileId));
     }
 
     const roleMatchValues = roleMatchResult.matches.map((match) => ({
@@ -323,9 +315,7 @@ async function main(): Promise<void> {
   }
 
   // --- Next step suggestion -------------------------------------------------
-  process.stderr.write(
-    `Next step: /cruzar-email-profile-live ${student.id}\n`,
-  );
+  process.stderr.write(`Next step: /cruzar-email-profile-live ${student.id}\n`);
 
   // --- Done -----------------------------------------------------------------
   logDone({

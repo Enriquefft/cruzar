@@ -95,12 +95,16 @@ export function renderMarkdown(md: string): string {
     if (isUl(line)) {
       const items: string[] = [];
       while (i < lines.length && isUl(lineAt(lines, i))) {
-        items.push(renderInline(lineAt(lines, i).trim().replace(/^[-*+]\s+/, "")));
+        items.push(
+          renderInline(
+            lineAt(lines, i)
+              .trim()
+              .replace(/^[-*+]\s+/, ""),
+          ),
+        );
         i++;
       }
-      htmlParts.push(
-        `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`,
-      );
+      htmlParts.push(`<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`);
       continue;
     }
 
@@ -108,12 +112,16 @@ export function renderMarkdown(md: string): string {
     if (isOl(line)) {
       const items: string[] = [];
       while (i < lines.length && isOl(lineAt(lines, i))) {
-        items.push(renderInline(lineAt(lines, i).trim().replace(/^\d+\.\s+/, "")));
+        items.push(
+          renderInline(
+            lineAt(lines, i)
+              .trim()
+              .replace(/^\d+\.\s+/, ""),
+          ),
+        );
         i++;
       }
-      htmlParts.push(
-        `<ol>${items.map((item) => `<li>${item}</li>`).join("")}</ol>`,
-      );
+      htmlParts.push(`<ol>${items.map((item) => `<li>${item}</li>`).join("")}</ol>`);
       continue;
     }
 

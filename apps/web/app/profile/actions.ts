@@ -12,9 +12,7 @@ export interface TogglePublicProfileResult {
   publicUrl?: string;
 }
 
-export async function togglePublicProfile(
-  consent: boolean,
-): Promise<TogglePublicProfileResult> {
+export async function togglePublicProfile(consent: boolean): Promise<TogglePublicProfileResult> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     return { success: false };

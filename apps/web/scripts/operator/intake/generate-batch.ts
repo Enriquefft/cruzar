@@ -2,13 +2,7 @@ import { and, asc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { parseFlags } from "../_shared/args";
 import { db } from "@/db/client";
-import {
-  englishCerts,
-  intakeBatchAnswers,
-  intakeBatches,
-  intakes,
-  students,
-} from "@/db/schema";
+import { englishCerts, intakeBatchAnswers, intakeBatches, intakes, students } from "@/db/schema";
 import { llmJsonCompletion } from "@/lib/llm";
 import { logDone, logError } from "../_shared/logger";
 import {

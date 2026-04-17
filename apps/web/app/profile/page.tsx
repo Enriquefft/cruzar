@@ -80,16 +80,13 @@ export default async function ProfilePage() {
 
     const cefrLevel = certRows[0]?.level ?? "B2";
 
-    const showcaseCvUrl = profile.showcase_cv_r2_key
-      ? publicUrl(profile.showcase_cv_r2_key)
-      : null;
+    const showcaseCvUrl = profile.showcase_cv_r2_key ? publicUrl(profile.showcase_cv_r2_key) : null;
 
     const profileMdHtml = renderMarkdown(profile.profile_md);
 
-    const studentPublicUrl =
-      student.consent_public_profile
-        ? `${env().BETTER_AUTH_URL}/p/${student.public_slug}`
-        : null;
+    const studentPublicUrl = student.consent_public_profile
+      ? `${env().BETTER_AUTH_URL}/p/${student.public_slug}`
+      : null;
 
     return (
       <main className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">

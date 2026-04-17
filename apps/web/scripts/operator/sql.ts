@@ -67,9 +67,7 @@ async function main(): Promise<void> {
 
     // Run EXPLAIN for row count estimate
     try {
-      const explainRows = await db.execute(
-        sql.raw(`EXPLAIN ${flags.query}`),
-      );
+      const explainRows = await db.execute(sql.raw(`EXPLAIN ${flags.query}`));
       process.stderr.write("EXPLAIN output:\n");
       for (const row of explainRows) {
         const queryPlan = (row as Record<string, unknown>)["QUERY PLAN"];
@@ -81,9 +79,7 @@ async function main(): Promise<void> {
       process.stderr.write("  (EXPLAIN failed -- query may have syntax errors)\n");
     }
 
-    process.stderr.write(
-      `\nType CONFIRM to execute the write query: `,
-    );
+    process.stderr.write(`\nType CONFIRM to execute the write query: `);
 
     const confirmation = await readLine();
     if (confirmation.trim() !== "CONFIRM") {

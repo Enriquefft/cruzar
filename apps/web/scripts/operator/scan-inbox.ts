@@ -20,9 +20,7 @@ const STATUS_MAP: Record<string, "viewed" | "rejected" | "interview_invited"> = 
 
 async function main(): Promise<void> {
   // --- Read threads from stdin ------------------------------------------------
-  process.stderr.write(
-    "Paste email threads below (Ctrl+D when done):\n",
-  );
+  process.stderr.write("Paste email threads below (Ctrl+D when done):\n");
   const threads = await readStdin();
   if (threads.trim().length === 0) {
     logError("empty_input", "No email threads provided on stdin");
@@ -69,26 +67,20 @@ async function main(): Promise<void> {
       );
     }
     if (matchedApp) {
-      process.stderr.write(
-        `  Matched application: ${matchedApp.id}\n`,
-      );
+      process.stderr.write(`  Matched application: ${matchedApp.id}\n`);
     } else if (classification.application_match) {
       process.stderr.write(
         "  WARNING: No matching application found in DB. Status event will have no application_id.\n",
       );
     }
     if (classification.interview_time) {
-      process.stderr.write(
-        `  Interview time: ${classification.interview_time}\n`,
-      );
+      process.stderr.write(`  Interview time: ${classification.interview_time}\n`);
     }
 
     process.stderr.write(`  Proposed flip: ${eventKind}\n`);
 
     if (classification.confidence < 0.7) {
-      process.stderr.write(
-        "  LOW CONFIDENCE (<0.7) -- review carefully.\n",
-      );
+      process.stderr.write("  LOW CONFIDENCE (<0.7) -- review carefully.\n");
     }
 
     process.stderr.write("  Confirm? (Y/N): ");
@@ -103,9 +95,7 @@ async function main(): Promise<void> {
     // --- Write status_event ----------------------------------------------------
     const studentId = matchedApp?.student_id;
     if (!studentId) {
-      process.stderr.write(
-        "  Cannot write status_event without a student_id. Skipping.\n",
-      );
+      process.stderr.write("  Cannot write status_event without a student_id. Skipping.\n");
       skippedCount++;
       continue;
     }
@@ -138,9 +128,7 @@ async function main(): Promise<void> {
 
     // Suggest interview skill for interview classifications
     if (eventKind === "interview_invited" && matchedApp) {
-      process.stderr.write(
-        `  Suggestion: run /cruzar interview --application ${matchedApp.id}\n`,
-      );
+      process.stderr.write(`  Suggestion: run /cruzar interview --application ${matchedApp.id}\n`);
     }
   }
 
@@ -157,9 +145,7 @@ interface MatchedApp {
   student_id: string;
 }
 
-async function findApplication(
-  classification: InboxClassification,
-): Promise<MatchedApp | null> {
+async function findApplication(classification: InboxClassification): Promise<MatchedApp | null> {
   if (!classification.application_match) return null;
 
   const { company, role, job_url } = classification.application_match;
@@ -191,17 +177,13 @@ async function findApplication(
       student_id: applications.student_id,
     })
     .from(applications)
-    .where(
-      eq(sql`lower(${applications.company_normalized})`, companyNormalized),
-    )
+    .where(eq(sql`lower(${applications.company_normalized})`, companyNormalized))
     .limit(3);
 
   if (fuzzyRows.length === 1 && fuzzyRows[0]) return fuzzyRows[0];
 
   if (fuzzyRows.length > 1) {
-    process.stderr.write(
-      `  Multiple matches for company "${company}". Listing top candidates:\n`,
-    );
+    process.stderr.write(`  Multiple matches for company "${company}". Listing top candidates:\n`);
     for (const row of fuzzyRows) {
       process.stderr.write(`    - application_id: ${row.id}\n`);
     }

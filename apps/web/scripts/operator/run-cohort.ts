@@ -7,13 +7,7 @@ import { z } from "zod";
 
 import { parseFlags } from "./_shared/args";
 import { db } from "@/db/client";
-import {
-  applications,
-  fillFormDrafts,
-  profiles,
-  statusEvents,
-  students,
-} from "@/db/schema";
+import { applications, fillFormDrafts, profiles, statusEvents, students } from "@/db/schema";
 import { logDone, logError } from "./_shared/logger";
 import { tailorCvForJd } from "./_shared/cv-tailor";
 import { generateRuntimeDir, cleanupRuntimeDir } from "./_shared/runtime-dir";
@@ -119,10 +113,7 @@ async function main(): Promise<void> {
     }
 
     // Invoke fill-forms.mjs subprocess
-    const fillFormsPath = resolve(
-      thisDir,
-      "../../../career-ops/bin/fill-forms.mjs",
-    );
+    const fillFormsPath = resolve(thisDir, "../../../career-ops/bin/fill-forms.mjs");
 
     const stdinPayload = JSON.stringify({
       candidate: {
@@ -145,8 +136,7 @@ async function main(): Promise<void> {
       });
       fillFormsStdout = result.stdout;
     } catch (cause) {
-      const message =
-        cause instanceof Error ? cause.message : String(cause);
+      const message = cause instanceof Error ? cause.message : String(cause);
       logError("fill_forms_failed", `fill-forms subprocess failed: ${message}`, {
         student_id: flags.student,
       });
@@ -158,8 +148,7 @@ async function main(): Promise<void> {
       const parsed: unknown = JSON.parse(fillFormsStdout);
       fillResult = fillFormsResultSchema.parse(parsed);
     } catch (cause) {
-      const message =
-        cause instanceof Error ? cause.message : String(cause);
+      const message = cause instanceof Error ? cause.message : String(cause);
       logError("fill_forms_parse_failed", `Could not parse fill-forms output: ${message}`, {
         student_id: flags.student,
       });
@@ -235,9 +224,7 @@ async function main(): Promise<void> {
   });
 }
 
-function normalizePlatform(
-  raw: string,
-): "greenhouse" | "lever" | "ashby" | "workable" | "other" {
+function normalizePlatform(raw: string): "greenhouse" | "lever" | "ashby" | "workable" | "other" {
   const lower = raw.toLowerCase();
   if (lower.includes("greenhouse")) return "greenhouse";
   if (lower.includes("lever")) return "lever";

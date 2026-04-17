@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 export const intakeBatchQuestionSchema = z.object({
-  question_key: z
-    .string()
-    .regex(/^[a-z0-9_]+$/, "question_key must be snake_case alphanumerics"),
+  question_key: z.string().regex(/^[a-z0-9_]+$/, "question_key must be snake_case alphanumerics"),
   question_text: z.string().min(10),
   rationale: z.string().min(10),
 });

@@ -101,10 +101,9 @@ async function requestJson({
   try {
     parsed = JSON.parse(raw);
   } catch (cause) {
-    throw new Error(
-      `LLM returned invalid JSON for schema '${schemaName}' on tier '${tier}'`,
-      { cause },
-    );
+    throw new Error(`LLM returned invalid JSON for schema '${schemaName}' on tier '${tier}'`, {
+      cause,
+    });
   }
   return { parsed, raw };
 }
