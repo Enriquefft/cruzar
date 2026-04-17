@@ -24,7 +24,7 @@ description: Onboard a new Cruzar student. Reads the students row + english_cert
 
 1. Run the script:
    ```bash
-   bun run apps/operator-scripts/onboard.ts --student <id>
+   bun run apps/web/scripts/operator/onboard.ts --student <id>
    ```
 2. The script:
    a. Loads `students` and `english_certs` rows.

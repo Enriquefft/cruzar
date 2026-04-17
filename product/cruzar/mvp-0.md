@@ -36,7 +36,7 @@ Neon Postgres. Drizzle tables derived from Zod schemas (SSOT). R2 for every blob
 ### Surface 3 — Claude Code operator playbook
 
 - `.claude/skills/cruzar-*/SKILL.md` — one per operator action.
-- `apps/operator-scripts/*.ts` — typed entrypoints invoked by skills. Zod-validated I/O. Idempotent on documented keys.
+- `apps/web/scripts/operator/*.ts` — typed entrypoints invoked by skills. Zod-validated I/O. Idempotent on documented keys.
 - `apps/career-ops/` — absorbed critical-path scripts.
 - Optional per-session MCP: Postgres MCP for ad-hoc reads; any Gmail access is handled by Miura in his own inbox and pasted into CC when a skill needs it (no OAuth in MVP 0).
 
@@ -110,7 +110,7 @@ Three subcommands per student:
 ### Inbox scan — `/cruzar scan-inbox`
 - Miura exports or pastes recent threads from the shared cohort Gmail into CC.
 - CC classifies each thread (Viewed / Rejected / Interview / Other), proposes status flips, awaits Miura confirmation.
-- Confirmed flips call `apps/operator-scripts/flip-status.ts` → `status_events` row emitted.
+- Confirmed flips call `apps/web/scripts/operator/flip-status.ts` → `status_events` row emitted.
 
 ### Interview invite — `/cruzar interview <application_id>`
 - CC extracts company, role, time, link from the pasted email thread.
@@ -282,7 +282,7 @@ Hard — all ship-blocking:
 - [ ] `/profile` renders correctly for each of the three verdicts (Ready / Presentation gap / Experience gap) with real data from at least one student in each (or two states minimum).
 - [ ] Per-JD CV customization pipeline produces a tailored PDF per application. Master `cv_markdown` and per-JD `generated_cvs` both persisted.
 - [ ] `.claude/skills/cruzar-*/SKILL.md` × 7 authored: `onboard`, `intake`, `assess`, `run-cohort`, `scan-inbox`, `interview`, `sql`, `counters-sanity`. Each invocable from a fresh CC session.
-- [ ] `apps/operator-scripts/*.ts` backing each skill, Zod-validated I/O, idempotent on documented keys.
+- [ ] `apps/web/scripts/operator/*.ts` backing each skill, Zod-validated I/O, idempotent on documented keys.
 - [ ] `apps/career-ops/` absorbed (critical-path only), sanitized (grep + prose-diff), committed. Fresh `apps/career-ops/CLAUDE.md` authored.
 - [ ] fill-forms v2 multi-tenant + Greenhouse adapter + per-JD CV customization operational end-to-end on a real Greenhouse posting against a real student.
 - [ ] PostHog + Better Stack uptime wired.

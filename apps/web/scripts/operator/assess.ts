@@ -1,16 +1,16 @@
 import { and, asc, eq, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { parseFlags } from "./_shared/args";
+import { db } from "@/db/client";
+import * as schema from "@/db/schema";
 import {
-  db,
-  schema,
   englishCerts,
   intakeBatchAnswers,
   intakeBatches,
   intakes,
   students,
-} from "./_shared/db";
-import { llmJsonCompletion } from "./_shared/llm";
+} from "@/db/schema";
+import { llmJsonCompletion } from "@/lib/llm";
 import { logDone, logError } from "./_shared/logger";
 import {
   PROMPT_VERSION,

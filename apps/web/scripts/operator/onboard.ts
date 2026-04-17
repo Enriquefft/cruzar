@@ -2,7 +2,8 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { parseFlags } from "./_shared/args";
-import { db, students, englishCerts } from "./_shared/db";
+import { db } from "@/db/client";
+import { englishCerts, students } from "@/db/schema";
 import { logDone, logError } from "./_shared/logger";
 import { assertAttestationExists } from "@/lib/r2";
 import { mapCertToCefr, meetsB2, type CefrLevel } from "@/lib/cefr-map";

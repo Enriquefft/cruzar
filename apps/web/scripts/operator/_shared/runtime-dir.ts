@@ -2,10 +2,12 @@ import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { asc, desc, eq } from "drizzle-orm";
-import { db, schema, profiles, applications, students } from "./db";
+import { db } from "@/db/client";
+import * as schema from "@/db/schema";
+import { applications, profiles } from "@/db/schema";
 
 const thisDir = dirname(fileURLToPath(import.meta.url));
-const RUNTIME_ROOT = resolve(thisDir, "../../../.cruzar-runtime");
+const RUNTIME_ROOT = resolve(thisDir, "../../../../../.cruzar-runtime");
 
 function runtimePath(studentId: string): string {
   return join(RUNTIME_ROOT, studentId);

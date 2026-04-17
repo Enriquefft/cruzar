@@ -17,7 +17,7 @@ CC already has: conversational context, multi-step orchestration, Bash execution
 The operator surface is:
 
 - **Skills.** `.claude/skills/cruzar-*/SKILL.md` — one per operator action. Each brief CC on goal, inputs, steps, scripts to invoke, success criteria.
-- **Scripts.** `apps/operator-scripts/*.ts` — typed entrypoints invoked by skills. Read + write the DB through Drizzle, call LLMs, shell out to `apps/career-ops/`, upload to R2. Every mutation routes through a script; no raw SQL from skills except via the explicit `/cruzar sql` escape hatch, which requires `--write` + confirmation for mutations.
+- **Scripts.** `apps/web/scripts/operator/*.ts` — typed entrypoints invoked by skills. Read + write the DB through Drizzle, call LLMs, shell out to `apps/career-ops/`, upload to R2. Every mutation routes through a script; no raw SQL from skills except via the explicit `/cruzar sql` escape hatch, which requires `--write` + confirmation for mutations.
 - **MCP (optional, per session).** Postgres MCP for ad-hoc reads; Gmail access is paste-in only in MVP 0 (no OAuth).
 
 Skills ship in MVP 0:

@@ -22,7 +22,7 @@ description: Classify pasted email threads from the cohort inbox into viewed/rej
 
 1. Run the script:
    ```bash
-   bun run apps/operator-scripts/scan-inbox.ts
+   bun run apps/web/scripts/operator/scan-inbox.ts
    ```
 2. When prompted, paste one or more email threads (sender, subject, body), then press Ctrl+D.
 3. The script:

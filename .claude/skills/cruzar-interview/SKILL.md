@@ -24,7 +24,7 @@ description: Handle an interview invite. Extracts company/role/time/link from th
 
 1. Run the script:
    ```bash
-   bun run apps/operator-scripts/send-interview-email.ts --application <id>
+   bun run apps/web/scripts/operator/send-interview-email.ts --application <id>
    ```
 2. When prompted, paste the interview email thread, then press Ctrl+D.
 3. The script:

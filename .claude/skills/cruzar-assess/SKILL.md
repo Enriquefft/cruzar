@@ -22,7 +22,7 @@ description: Run the assessment pipeline on a finalized intake. Classifies readi
 
 ## Procedure
 
-1. Invoke `bun run apps/operator-scripts/assess.ts --student <student_id>`.
+1. Invoke `bun run apps/web/scripts/operator/assess.ts --student <student_id>`.
 2. The script loads `students`, `english_certs`, `intakes` (asserts `finalized_at IS NOT NULL`), and all `intake_batch_answers`. Fails fast on missing data.
 3. LLM call 1: **Readiness classification** (strong tier) — produces `{ verdict, confidence, gaps[] }`.
 4. If verdict is `presentation_gap` or `experience_gap`:
@@ -40,7 +40,7 @@ description: Run the assessment pipeline on a finalized intake. Classifies readi
 
 ## Scripts invoked
 
-- `/home/hybridz/Projects/cruzar/apps/operator-scripts/assess.ts`
+- `/home/hybridz/Projects/cruzar/apps/web/scripts/operator/assess.ts`
 
 ## Success criteria
 

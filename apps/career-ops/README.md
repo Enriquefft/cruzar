@@ -1,6 +1,6 @@
 # @cruzar/career-ops
 
-Multi-tenant critical-path subset of the job-application pipeline absorbed from `~/Projects/jobs/` per [ADR-03](../../product/cruzar/adr/03-career-ops-absorb-scope.md). Driven by `apps/operator-scripts/run-cohort.ts` — not invoked standalone.
+Multi-tenant critical-path subset of the job-application pipeline absorbed from `~/Projects/jobs/` per [ADR-03](../../product/cruzar/adr/03-career-ops-absorb-scope.md). Driven by `apps/web/scripts/operator/run-cohort.ts` — not invoked standalone.
 
 Full operator rules and invariants live in [CLAUDE.md](./CLAUDE.md). Read that before editing any file here.
 

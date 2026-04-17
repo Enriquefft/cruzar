@@ -2,12 +2,12 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { parseFlags } from "./_shared/args";
-import { db, applications, statusEvents, students } from "./_shared/db";
-import { llmJsonCompletion } from "./_shared/llm";
+import { db } from "@/db/client";
+import { applications, statusEvents, students } from "@/db/schema";
+import { llmJsonCompletion, type LlmMessage } from "@/lib/llm";
 import { logDone, logError } from "./_shared/logger";
-import { uploadFileToR2 } from "./_shared/r2";
+import { uploadFileToR2 } from "@/lib/r2";
 import { env } from "@/lib/env";
-import type { LlmMessage } from "@/lib/llm";
 
 const PROMPT_VERSION = "interview-extract-v1" as const;
 

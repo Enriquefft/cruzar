@@ -1,16 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import {
-  CreateBucketCommand,
-  GetBucketCorsCommand,
-  HeadBucketCommand,
-  type CORSRule,
-  PutBucketCorsCommand,
-} from "@aws-sdk/client-s3";
 import { z } from "zod";
 
-import { r2 } from "@/lib/r2";
 import { env } from "@/lib/env";
+import {
+  type R2CorsRule,
+  applyBucketCors,
+  ensureBucket,
+  readBucketCors,
+} from "@/lib/r2";
 import { parseFlags } from "./_shared/args";
 import { logDone, logError } from "./_shared/logger";
 
@@ -30,20 +28,19 @@ const corsConfigSchema = z.object({
   CORSRules: z.array(corsRuleSchema).min(1),
 });
 
-const CORS_FILE_URL = new URL("../web/r2-cors.json", import.meta.url);
+const CORS_FILE_URL = new URL("../../r2-cors.json", import.meta.url);
 
-async function loadCorsConfig(): Promise<{ CORSRules: CORSRule[] }> {
+async function loadDesiredCors(): Promise<R2CorsRule[]> {
   const path = fileURLToPath(CORS_FILE_URL);
   const raw = await readFile(path, "utf-8");
-  const parsed = corsConfigSchema.parse(JSON.parse(raw));
-  return { CORSRules: parsed.CORSRules };
+  return corsConfigSchema.parse(JSON.parse(raw)).CORSRules;
 }
 
-function rulesEqual(a: CORSRule[], b: CORSRule[]): boolean {
+function rulesEqual(a: R2CorsRule[], b: R2CorsRule[]): boolean {
   return JSON.stringify(normalize(a)) === JSON.stringify(normalize(b));
 }
 
-function normalize(rules: CORSRule[]): CORSRule[] {
+function normalize(rules: R2CorsRule[]): R2CorsRule[] {
   return [...rules]
     .map((r) => ({
       ID: r.ID,
@@ -56,38 +53,6 @@ function normalize(rules: CORSRule[]): CORSRule[] {
     .sort((x, y) => (x.ID ?? "").localeCompare(y.ID ?? ""));
 }
 
-async function ensureBucket(bucket: string, apply: boolean): Promise<"existed" | "created" | "missing"> {
-  const client = r2();
-  try {
-    await client.send(new HeadBucketCommand({ Bucket: bucket }));
-    return "existed";
-  } catch (err) {
-    const name = err instanceof Error ? err.name : "UnknownError";
-    if (!apply) return "missing";
-    if (name !== "NotFound" && name !== "NoSuchBucket" && name !== "404") {
-      throw err;
-    }
-    await client.send(
-      new CreateBucketCommand({
-        Bucket: bucket,
-        CreateBucketConfiguration: { LocationConstraint: "ENAM" },
-      }),
-    );
-    return "created";
-  }
-}
-
-async function readCurrentCors(bucket: string): Promise<CORSRule[] | null> {
-  try {
-    const out = await r2().send(new GetBucketCorsCommand({ Bucket: bucket }));
-    return out.CORSRules ?? [];
-  } catch (err) {
-    const name = err instanceof Error ? err.name : "UnknownError";
-    if (name === "NoSuchCORSConfiguration") return null;
-    throw err;
-  }
-}
-
 async function main(): Promise<void> {
   const flags = parseFlags(flagsSchema);
   const e = env();
@@ -96,11 +61,11 @@ async function main(): Promise<void> {
     logError("missing_env", "R2_BUCKET is unset. Populate the R2_* keys in .env first.");
   }
 
-  const desired = await loadCorsConfig();
+  const desired = await loadDesiredCors();
 
-  let bucketState: "existed" | "created" | "missing";
+  let bucketState: Awaited<ReturnType<typeof ensureBucket>>;
   try {
-    bucketState = await ensureBucket(bucket, flags.apply);
+    bucketState = await ensureBucket(flags.apply);
   } catch (cause) {
     const message = cause instanceof Error ? cause.message : String(cause);
     logError("bucket_check_failed", `HeadBucket/CreateBucket failed: ${message}`, { bucket });
@@ -114,8 +79,8 @@ async function main(): Promise<void> {
     );
   }
 
-  const current = bucketState === "created" ? null : await readCurrentCors(bucket);
-  const corsAlreadyMatches = current !== null && rulesEqual(current, desired.CORSRules);
+  const current = bucketState === "created" ? null : await readBucketCors();
+  const corsAlreadyMatches = current !== null && rulesEqual(current, desired);
 
   if (corsAlreadyMatches) {
     logDone({
@@ -123,7 +88,7 @@ async function main(): Promise<void> {
       bucket_state: bucketState,
       cors_state: "matches",
       apply: flags.apply,
-      rule_count: desired.CORSRules.length,
+      rule_count: desired.length,
     });
   }
 
@@ -131,7 +96,7 @@ async function main(): Promise<void> {
     process.stderr.write(
       `\n--- DRY RUN ---\nbucket=${bucket} state=${bucketState}\n` +
         `cors_current=${current === null ? "(none)" : `${current.length} rules`}\n` +
-        `cors_desired=${desired.CORSRules.length} rules from apps/web/r2-cors.json\n` +
+        `cors_desired=${desired.length} rules from apps/web/r2-cors.json\n` +
         `Re-run with --apply to mutate.\n--- end ---\n`,
     );
     logDone({
@@ -139,17 +104,12 @@ async function main(): Promise<void> {
       bucket_state: bucketState,
       cors_state: current === null ? "absent" : "drift",
       apply: false,
-      rule_count: desired.CORSRules.length,
+      rule_count: desired.length,
     });
   }
 
   try {
-    await r2().send(
-      new PutBucketCorsCommand({
-        Bucket: bucket,
-        CORSConfiguration: { CORSRules: desired.CORSRules },
-      }),
-    );
+    await applyBucketCors(desired);
   } catch (cause) {
     const message = cause instanceof Error ? cause.message : String(cause);
     logError("put_cors_failed", `PutBucketCors failed: ${message}`, { bucket });
@@ -160,7 +120,7 @@ async function main(): Promise<void> {
     bucket_state: bucketState,
     cors_state: "applied",
     apply: true,
-    rule_count: desired.CORSRules.length,
+    rule_count: desired.length,
   });
 }
 

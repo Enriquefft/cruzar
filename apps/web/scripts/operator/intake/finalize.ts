@@ -1,7 +1,8 @@
 import { and, asc, eq, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { parseFlags } from "../_shared/args";
-import { db, intakeBatchAnswers, intakeBatches, intakes } from "../_shared/db";
+import { db } from "@/db/client";
+import { intakeBatchAnswers, intakeBatches, intakes } from "@/db/schema";
 import { logDone, logError } from "../_shared/logger";
 
 const flagsSchema = z.object({

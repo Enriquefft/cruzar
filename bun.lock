@@ -52,10 +52,6 @@
         "playwright": "1.59.1",
       },
     },
-    "apps/operator-scripts": {
-      "name": "@cruzar/operator-scripts",
-      "version": "0.0.0",
-    },
     "apps/web": {
       "name": "@cruzar/web",
       "version": "0.0.0",
@@ -281,8 +277,6 @@
     "@cruzar/brand": ["@cruzar/brand@workspace:apps/brand"],
 
     "@cruzar/career-ops": ["@cruzar/career-ops@workspace:apps/career-ops"],
-
-    "@cruzar/operator-scripts": ["@cruzar/operator-scripts@workspace:apps/operator-scripts"],
 
     "@cruzar/web": ["@cruzar/web@workspace:apps/web"],
 

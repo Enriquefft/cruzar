@@ -11,7 +11,7 @@ Each top-level area has its own `CLAUDE.md` with rules specific to that discipli
 - `business/` — research, market, competitive, positioning, personas, problems
 - `product/` — per-product spec, MSP, UX decisions (one subdir per product, e.g. `product/cruzar/`)
 - `company/` — legal, finance, captable, partnerships, team, grants, internal meetings
-- `apps/` — all code workspaces (web app, career-ops binaries, operator-scripts)
+- `apps/` — all code workspaces (web app with operator scripts under `apps/web/scripts/operator/`, career-ops binaries)
 
 ## Hard rules
 

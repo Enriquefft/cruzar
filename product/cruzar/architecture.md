@@ -19,7 +19,7 @@ Three surfaces sharing one data layer.
                                  │   Neon Postgres + R2                   │
  miura  ──> Claude Code ─────────┤   (Zod SSOT contracts)                 │
             ├─ .claude/skills/   │                                        │
-            ├─ apps/operator-scripts/*.ts      └────────────────────────────────────────┘
+            ├─ apps/web/scripts/operator/*.ts └────────────────────────────────────────┘
             └─ apps/career-ops/        ▲
                                            │
                                            ▼
@@ -44,7 +44,7 @@ cruzar/
 ├── .gitignore                    # excludes .cruzar-runtime/, node_modules/, .next/, drizzle/
 │
 ├── apps/                         # all code workspaces live here
-│   ├── web/                      # @cruzar/web — student-facing Next 16 app
+│   ├── web/                      # @cruzar/web — student-facing Next 16 app + operator scripts
 │   │   ├── app/                  # Next 16 App Router routes
 │   │   │   ├── (public)/         # landing, /p/<slug>
 │   │   │   ├── onboarding/
@@ -53,37 +53,40 @@ cruzar/
 │   │   │   └── api/              # auth, counter, webhook (future)
 │   │   ├── db/                   # Drizzle schema files, migrations, client
 │   │   ├── schemas/              # Zod schemas (SSOT)
-│   │   ├── lib/                  # domain helpers: cefr-map, normalizers, prompts
+│   │   ├── lib/                  # domain helpers: cefr-map, normalizers, prompts, r2, llm, env
 │   │   ├── components/           # shadcn + ours
+│   │   ├── scripts/              # typed entrypoints that share apps/web's node_modules
+│   │   │   └── operator/         # CC-invoked operator surface
+│   │   │       ├── intake/
+│   │   │       │   ├── generate-batch.ts
+│   │   │       │   ├── record-batch.ts
+│   │   │       │   └── finalize.ts
+│   │   │       ├── assess.ts
+│   │   │       ├── run-cohort.ts
+│   │   │       ├── onboard.ts
+│   │   │       ├── scan-inbox.ts
+│   │   │       ├── send-interview-email.ts
+│   │   │       ├── sql.ts
+│   │   │       ├── counters-sanity.ts
+│   │   │       ├── r2-setup.ts
+│   │   │       └── _shared/      # args parser, logger, runtime-dir gen, cv-tailor
 │   │   ├── AGENTS.md             # Next 16 pointer (ships with Next)
 │   │   ├── CLAUDE.md             # conventions CC inherits per session
 │   │   ├── next.config.ts
 │   │   ├── tsconfig.json
 │   │   └── package.json
 │   │
-│   ├── career-ops/               # @cruzar/career-ops — absorbed critical path (ADR-03)
-│   │   ├── bin/
-│   │   │   ├── fill-forms.mjs    # staged-never-committed + v2 multi-tenant upgrade
-│   │   │   └── generate-pdf.mjs
-│   │   ├── templates/
-│   │   │   ├── cv-template.html
-│   │   │   └── states.yml
-│   │   ├── fonts/
-│   │   ├── CLAUDE.md             # multi-tenant rules, ethical submit gate
-│   │   ├── package.json
-│   │   └── README.md
-│   │
-│   └── operator-scripts/         # @cruzar/operator-scripts — typed operator entrypoints (CC invokes)
-│       ├── intake/
-│       │   ├── generate-batch.ts
-│       │   ├── record-batch.ts
-│       │   └── finalize.ts
-│       ├── assess.ts
-│       ├── run-cohort.ts
-│       ├── flip-status.ts
-│       ├── send-interview-email.ts
-│       ├── counters-sanity.ts
-│       └── _shared/              # DB client, R2 client, LLM wrappers, runtime-dir gen
+│   └── career-ops/               # @cruzar/career-ops — absorbed critical path (ADR-03)
+│       ├── bin/
+│       │   ├── fill-forms.mjs    # multi-tenant via stdin candidate JSON (M8)
+│       │   └── generate-pdf.mjs
+│       ├── templates/
+│       │   ├── cv-template.html
+│       │   └── states.yml
+│       ├── fonts/
+│       ├── CLAUDE.md             # multi-tenant rules, ethical submit gate
+│       ├── package.json
+│       └── README.md
 │
 ├── .claude/
 │   └── skills/
@@ -105,7 +108,7 @@ cruzar/
 └── business/, company/           # non-build docs
 ```
 
-`.cruzar-runtime/<student_id>/` — gitignored, created at runtime by `apps/operator-scripts/_shared/runtime-dir.ts`, consumed by `apps/career-ops/bin/*`, deleted or retained for debugging after each run.
+`.cruzar-runtime/<student_id>/` — gitignored, created at runtime by `apps/web/scripts/operator/_shared/runtime-dir.ts`, consumed by `apps/career-ops/bin/*`, deleted or retained for debugging after each run.
 
 ---
 
@@ -294,7 +297,7 @@ Three subcommands sharing `intakes` + `intake_batches` state.
 ```
 /cruzar run-cohort --student <id>
  → assert profiles.readiness_verdict = "ready"
- → apps/operator-scripts/_shared/runtime-dir.ts:
+ → apps/web/scripts/operator/_shared/runtime-dir.ts:
     → mkdir .cruzar-runtime/<id>
     → render profile.md from profiles.profile_md (the narrative SSOT)
     → render profile.yml from profiles + role_matches
@@ -385,12 +388,14 @@ Prefer server actions for form submissions that mutate user state (`/onboarding`
 
 Canonical config at [`apps/web/r2-cors.json`](../../apps/web/r2-cors.json). Two rules: prod (`https://cruzarapp.com`) + dev (`http://localhost:3000`). Methods: `GET, PUT` (PUT for presigned attestation upload). Allowed headers: `Content-Type, Content-Length`. Exposed headers: `ETag`. Max age: 3000s.
 
-Apply via [`apps/operator-scripts/r2-setup.ts`](../../apps/operator-scripts/r2-setup.ts) — idempotent on bucket creation + CORS rule equality. Dry-run by default; `--apply` mutates.
+Apply via [`apps/web/scripts/operator/r2-setup.ts`](../../apps/web/scripts/operator/r2-setup.ts) — idempotent on bucket creation + CORS rule equality. Dry-run by default; `--apply` mutates.
 
 ```bash
-bun run apps/operator-scripts/r2-setup.ts          # report drift
-bun run apps/operator-scripts/r2-setup.ts --apply  # create bucket if missing + apply CORS
+bun run apps/web/scripts/operator/r2-setup.ts          # report drift
+bun run apps/web/scripts/operator/r2-setup.ts --apply  # create bucket if missing + apply CORS
 ```
+
+After creation, verify the bucket location in the Cloudflare dashboard is `ENAM` or `WNAM` (LATAM-closest). The AWS S3 SDK's typed `LocationConstraint` does not include R2's location values, so the script does not pin a location at creation — Cloudflare picks based on the first-write region. Recreate the bucket if the auto-picked location is wrong (cheap pre-launch).
 
 ---
 
@@ -404,16 +409,16 @@ Every skill file contains:
 - **When to use** — trigger phrases Miura types to invoke it
 - **Inputs** — student id, subcommand, paste payloads
 - **Procedure** — step-by-step for CC to execute (read scripts to invoke, DB tables to query, outputs to print)
-- **Scripts invoked** — absolute paths (`apps/operator-scripts/intake/generate-batch.ts`, etc.)
+- **Scripts invoked** — absolute paths (`apps/web/scripts/operator/intake/generate-batch.ts`, etc.)
 - **Success criteria** — what the skill must verify before reporting done
 - **Failure modes** — how to surface errors to Miura
 
 Skills never mutate the DB directly. Every mutation happens through a script.
 
-### Script conventions (`apps/operator-scripts/*.ts`)
+### Script conventions (`apps/web/scripts/operator/*.ts`)
 
-- Written in TypeScript, run via `bun run apps/operator-scripts/<...>.ts`.
-- Import shared DB client, R2 client, LLM wrapper from `apps/operator-scripts/_shared/`.
+- Written in TypeScript, run via `bun run apps/web/scripts/operator/<...>.ts`. Scripts live inside the `apps/web` workspace and reuse its `node_modules` directly — no separate workspace, no path-alias hacks.
+- Import the shared DB client (`@/db/client`), schema tables (`@/db/schema`), R2 helpers (`@/lib/r2`), LLM wrapper (`@/lib/llm`), env (`@/lib/env`), and prompts (`@/lib/prompts/<name>`) directly from `apps/web/`. Script-specific helpers (args parser, logger, runtime-dir generator, cv-tailor) live under `_shared/` colocated with the scripts.
 - Validate every input with Zod at the script boundary.
 - Idempotent on the keys documented in §Idempotency keys.
 - Exit code 0 = success. Non-zero = failure with a structured JSON error on stdout for CC to read.
@@ -421,12 +426,12 @@ Skills never mutate the DB directly. Every mutation happens through a script.
 
 ### apps/career-ops contract
 
-Binaries invoked via subprocess from `apps/operator-scripts/run-cohort.ts`:
+Binaries invoked via subprocess from `apps/web/scripts/operator/run-cohort.ts`:
 
 - `bin/fill-forms.mjs --workspace <path>` — reads candidate from `<workspace>/profile.yml`, applications from `<workspace>/data/applications.md`, answers from `<workspace>/answers/`, CV from `<workspace>/cv.md`. Writes drafts + screenshots to `<workspace>/output/`.
 - `bin/generate-pdf.mjs --in <md> --out <pdf>` — stateless CV renderer. Fonts loaded from `apps/career-ops/fonts/` (pinned) for determinism.
 
-The package exports nothing as importable TypeScript — only binaries. `apps/operator-scripts/run-cohort.ts` shells out, reads stdout/stderr, writes to DB.
+The package exports nothing as importable TypeScript — only binaries. `apps/web/scripts/operator/run-cohort.ts` shells out, reads stdout/stderr, writes to DB.
 
 ---
 
@@ -441,7 +446,7 @@ The package exports nothing as importable TypeScript — only binaries. `apps/op
 ## Observability
 
 - PostHog on `apps/web` — browser SDK (`instrumentation-client.ts`) for pageviews + autocapture + session replay; Node SDK (`instrumentation.ts`) for server `onRequestError` captures. Single `NEXT_PUBLIC_POSTHOG_KEY` powers both. Form inputs masked in session replay.
-- Operator scripts (`apps/operator-scripts/`, `apps/career-ops/`) run on Miura's laptop and print structured exit codes to CC stdout — no remote error sink in MVP 0.
+- Operator scripts (`apps/web/scripts/operator/`, `apps/career-ops/`) run on Miura's laptop and print structured exit codes to CC stdout — no remote error sink in MVP 0.
 - Better Stack uptime pinging `/` and `/status` endpoints.
 - Every script logs its invocation, inputs (IDs only, never PII), duration, outcome.
 
@@ -491,7 +496,7 @@ NODE_ENV=development
 - **apps/web** — Vercel project, connected to this repo. Builds `apps/web` on push to `main`. Preview deploys on PRs. Custom domain `cruzarapp.com` with Resend DKIM/SPF/DMARC configured on the DNS before first magic link sends.
 - **Neon** — branch-per-deploy optional; MVP 0 uses a single `main` branch.
 - **R2** — single bucket, CORS configured for `https://cruzarapp.com`, public CDN subdomain `cdn.cruzarapp.com`.
-- **Operator laptop** — Miura clones the repo, `bun install`, runs `bun run apps/operator-scripts/<...>.ts` inside CC sessions. Playwright binary cached in `~/.cache/playwright`. No special setup beyond Node + Bun + the cloned repo.
+- **Operator laptop** — Miura clones the repo, `bun install`, runs `bun run apps/web/scripts/operator/<...>.ts` inside CC sessions. Playwright binary cached in `~/.cache/playwright`. No special setup beyond Node + Bun + the cloned repo.
 
 ---
 

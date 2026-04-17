@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { parseFlags } from "./_shared/args";
-import { db } from "./_shared/db";
+import { db } from "@/db/client";
 import { logDone, logError } from "./_shared/logger";
 
 const flagsSchema = z.object({

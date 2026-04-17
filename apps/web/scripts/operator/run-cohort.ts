@@ -6,7 +6,14 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { parseFlags } from "./_shared/args";
-import { db, schema, profiles, students, applications, statusEvents, fillFormDrafts } from "./_shared/db";
+import { db } from "@/db/client";
+import {
+  applications,
+  fillFormDrafts,
+  profiles,
+  statusEvents,
+  students,
+} from "@/db/schema";
 import { logDone, logError } from "./_shared/logger";
 import { tailorCvForJd } from "./_shared/cv-tailor";
 import { generateRuntimeDir, cleanupRuntimeDir } from "./_shared/runtime-dir";
@@ -114,7 +121,7 @@ async function main(): Promise<void> {
     // Invoke fill-forms.mjs subprocess
     const fillFormsPath = resolve(
       thisDir,
-      "../career-ops/bin/fill-forms.mjs",
+      "../../../career-ops/bin/fill-forms.mjs",
     );
 
     const stdinPayload = JSON.stringify({

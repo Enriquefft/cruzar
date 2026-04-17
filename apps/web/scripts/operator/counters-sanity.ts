@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { z } from "zod";
 
-import { db } from "./_shared/db";
+import { db } from "@/db/client";
 import { logDone, logError } from "./_shared/logger";
 
 // Same schema as apps/web/lib/counter.ts -- the canonical aggregate

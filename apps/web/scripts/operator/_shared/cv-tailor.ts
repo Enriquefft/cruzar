@@ -6,13 +6,11 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { desc, eq } from "drizzle-orm";
 
-import { llmJsonCompletion } from "./llm";
-import { uploadFileToR2 } from "./r2";
-import { db, schema } from "./db";
-import {
-  cvTailorSchema,
-  renderCvTailorPrompt,
-} from "../../web/lib/prompts/cv-tailor";
+import { llmJsonCompletion } from "@/lib/llm";
+import { uploadFileToR2 } from "@/lib/r2";
+import { db } from "@/db/client";
+import * as schema from "@/db/schema";
+import { cvTailorSchema, renderCvTailorPrompt } from "@/lib/prompts/cv-tailor";
 
 const execFileAsync = promisify(execFile);
 
@@ -77,7 +75,7 @@ export async function tailorCvForJd({
     const thisDir = dirname(fileURLToPath(import.meta.url));
     const generatePdfPath = resolve(
       thisDir,
-      "../../career-ops/bin/generate-pdf.mjs",
+      "../../../../career-ops/bin/generate-pdf.mjs",
     );
     await execFileAsync("node", [generatePdfPath, mdPath, pdfPath]);
 

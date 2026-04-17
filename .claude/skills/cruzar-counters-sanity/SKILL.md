@@ -22,7 +22,7 @@ description: Reconcile the public landing counter against the raw SQL aggregates
 
 1. Run the script:
    ```bash
-   bun run apps/operator-scripts/counters-sanity.ts
+   bun run apps/web/scripts/operator/counters-sanity.ts
    ```
 2. The script:
    a. Runs the ISR counter aggregate query (identical SQL as `apps/web/lib/counter.ts`).

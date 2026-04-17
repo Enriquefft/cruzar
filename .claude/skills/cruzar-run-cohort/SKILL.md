@@ -26,7 +26,7 @@ description: Run the per-student application pipeline. Generates a disposable ru
 
 1. Run the script:
    ```bash
-   bun run apps/operator-scripts/run-cohort.ts --student <id> --job-url <url>
+   bun run apps/web/scripts/operator/run-cohort.ts --student <id> --job-url <url>
    ```
 2. The script:
    a. Asserts `profiles.readiness_verdict = "ready"`.

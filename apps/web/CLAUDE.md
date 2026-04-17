@@ -26,7 +26,7 @@ Do not guess from Next 15 knowledge. Read the current docs.
 2. **Never `any`.** Use `unknown` + narrowing, generics, or an explicit type.
 3. **Never `as` casting.** `as const` is allowed. Everything else uses type guards, Zod parses, or structural fixes. If a third-party type is wrong, file a patch or add a typed wrapper — do not cast around it.
 4. **Every LLM structured output is Zod-validated.** One retry on validation fail. Then an honest error + Sentry. No silent `JSON.parse`.
-5. **Every mutation is typed.** Student-side: server actions with Zod-validated input. Operator-side: scripts under `../operator-scripts/` with Zod-validated I/O.
+5. **Every mutation is typed.** Student-side: server actions with Zod-validated input. Operator-side: scripts under `./scripts/operator/` with Zod-validated I/O.
 6. **Prefer server actions over API routes.** API routes only for third-party webhooks and presigned-URL handoffs.
 7. **Idempotency keys are the ones in Architecture.** `applications` on `(student_id, company_normalized, role_normalized, job_url)`. `intake_batches` on `(intake_id, batch_num)`. Never invent new keys without updating Architecture.
 8. **PII never logs.** No `email`, `name`, `whatsapp`, `local_salary_usd`, `attestation_r2_key` in Sentry breadcrumbs, stdout, or any log line. IDs only.

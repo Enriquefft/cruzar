@@ -19,7 +19,7 @@ description: Escape hatch for ad-hoc Postgres queries. Read-only by default. Mut
 
 1. Run the script:
    ```bash
-   bun run apps/operator-scripts/sql.ts --query "SELECT ..." [--write] [--destructive]
+   bun run apps/web/scripts/operator/sql.ts --query "SELECT ..." [--write] [--destructive]
    ```
 2. The script:
    a. Validates flags via Zod.

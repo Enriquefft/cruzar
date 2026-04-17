@@ -1,8 +1,9 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { parseFlags } from "../_shared/args";
-import { db, intakeBatchAnswers, intakeBatches } from "../_shared/db";
-import { llmJsonCompletion } from "../_shared/llm";
+import { db } from "@/db/client";
+import { intakeBatchAnswers, intakeBatches } from "@/db/schema";
+import { llmJsonCompletion } from "@/lib/llm";
 import { logDone, logError } from "../_shared/logger";
 import {
   PROMPT_VERSION,

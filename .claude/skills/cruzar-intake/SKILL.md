@@ -28,28 +28,28 @@ description: Drive the Wizard-of-Oz intake loop over WhatsApp. Generates adaptiv
 
 ### `--generate` — author and persist the next batch
 
-1. Invoke `bun run apps/operator-scripts/intake/generate-batch.ts --student <student_id>` (optionally add `--batch <1..4>`).
+1. Invoke `bun run apps/web/scripts/operator/intake/generate-batch.ts --student <student_id>` (optionally add `--batch <1..4>`).
 2. The script reads `students`, `english_certs`, prior `intake_batches` + `intake_batch_answers`. It fails fast if the student is missing, not onboarded, or lacks an english_certs row.
 3. On the happy path it calls Claude with the `intake-batch-v1` prompt, Zod-validates the 10 questions, persists the `intake_batches` row (idempotent on `(intake_id, batch_num)`), and prints the paste-ready WhatsApp payload to stdout followed by a JSON success envelope.
 4. Copy the payload (everything before the final JSON line) to WhatsApp and send it to the student.
 
 ### `--record` — ingest a pasted reply
 
-1. Pipe the student's verbatim WhatsApp reply into `bun run apps/operator-scripts/intake/record-batch.ts --batch <batch_id>` (stdin). Add `--overwrite` when replacing a prior reply for the same batch.
+1. Pipe the student's verbatim WhatsApp reply into `bun run apps/web/scripts/operator/intake/record-batch.ts --batch <batch_id>` (stdin). Add `--overwrite` when replacing a prior reply for the same batch.
 2. The script validates the stdin reply (1..20_000 chars), updates `intake_batches.raw_reply` + `reply_at`, calls Claude with the `intake-batch-v1` reply-parse prompt, and upserts `intake_batch_answers` rows keyed by `(batch_id, question_key)`.
 3. The JSON envelope reports `answer_count`, `mean_confidence`, and `unmatched_notes_length` so Miura can eyeball parse quality before moving on.
 
 ### `--finalize` — close the 4-batch loop
 
-1. Invoke `bun run apps/operator-scripts/intake/finalize.ts --student <student_id>` (add `--force` only when a batch has <8 answers but you accept shipping at ≥5).
+1. Invoke `bun run apps/web/scripts/operator/intake/finalize.ts --student <student_id>` (add `--force` only when a batch has <8 answers but you accept shipping at ≥5).
 2. The script asserts exactly 4 batches, each with a non-null `raw_reply`, and an answer count ≥8 per batch (≥5 under `--force`). Batches below 10 answers emit a single-line JSON `level:"warn"` on stderr but are not fatal.
 3. On success it sets `intakes.finalized_at = now()` and echoes the suggested next step in the JSON envelope.
 
 ## Scripts invoked
 
-- `/home/hybridz/Projects/cruzar/apps/operator-scripts/intake/generate-batch.ts`
-- `/home/hybridz/Projects/cruzar/apps/operator-scripts/intake/record-batch.ts`
-- `/home/hybridz/Projects/cruzar/apps/operator-scripts/intake/finalize.ts`
+- `/home/hybridz/Projects/cruzar/apps/web/scripts/operator/intake/generate-batch.ts`
+- `/home/hybridz/Projects/cruzar/apps/web/scripts/operator/intake/record-batch.ts`
+- `/home/hybridz/Projects/cruzar/apps/web/scripts/operator/intake/finalize.ts`
 
 ## Success criteria
 

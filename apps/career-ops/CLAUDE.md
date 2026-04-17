@@ -1,6 +1,6 @@
 # apps/career-ops — operator rules
 
-This package is absorbed critical-path tooling from an external personal pipeline per [ADR-03](../../product/cruzar/adr/03-career-ops-absorb-scope.md). It is **not** one-person tooling; it is multi-tenant infrastructure driven by `apps/operator-scripts/run-cohort.ts` in `apps/web`-adjacent code, on behalf of any student in the cohort.
+This package is absorbed critical-path tooling from an external personal pipeline per [ADR-03](../../product/cruzar/adr/03-career-ops-absorb-scope.md). It is **not** one-person tooling; it is multi-tenant infrastructure driven by `apps/web/scripts/operator/run-cohort.ts`, on behalf of any student in the cohort.
 
 If you are about to change a file in this package, read this file first.
 

@@ -10,11 +10,36 @@ This document answers: *what comes next, in what order, with what acceptance, an
 
 ## Current position
 
-**Phase:** P — Pre-handoff **Complete**. Phase M — **M1 in progress** (schema authored, migration + seed + auth round-trip pending env).
-**Done:** P1 (monorepo scaffold), P2 (`apps/web/CLAUDE.md`), **P3** (career-ops absorb — commits `976d09d` + `a26a0fd`), P4 (ADRs 01–08), P5 (Architecture + Roadmap authored, spec archived), P6 (operator playbook dirs + lib shells + skill stubs).
-**Post-P3 refactor:** code roots collapsed under `apps/` — `packages/career-ops/` → `apps/career-ops/`, root `scripts/` → `apps/operator-scripts/`. Path references updated repo-wide.
-**M1 partial:** 11 Zod entity schemas under `apps/web/schemas/` (enums + student + english-cert + intake + profile + role + application + status-event), 8 Cruzar Drizzle tables derived + 4 Better Auth tables (`user`/`session`/`account`/`verification`) in `apps/web/db/schema.ts`, role catalog seed at `apps/web/db/seed.ts` wired to `bun run db:seed`. Typecheck green. **Pending M1 runtime steps:** `bun run db:push` against Neon, load seed, verify magic-link round trip end-to-end.
-**Blocked on:** `DATABASE_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `AI_API_KEY` before the M1 runtime steps above.
+**Date of update:** 2026-04-17
+**Phase:** P — Pre-handoff **Complete**. Phase M — **M1–M11 Complete**. **M12 pending — manual end-to-end test + ≥3 real Aprendly students + public counter non-zero.**
+
+**Done (Phase M):**
+- M1 — schema + Better Auth magic link (`a696c80`, with M1 runtime fixes on top of prior schema work).
+- M2 — onboarding: backend server action + R2 presigned PUT + slug gen (`8a82a66`), frontend form + `/thanks` (`0315f2d`), polish (Spanish errors, softer B2 copy, debounced CEFR, gated dropzone — `174f43c`).
+- M3 — landing + ISR counter + brand-wired layout + ADR-05 fix (`615b3ea`).
+- M4 — intake skill suite: generate-batch / record-batch / finalize (`75972a7`) + schema prep `intake_batches.questions_jsonb` + answers unique index (`672a1be`).
+- M5 — assessment pipeline: readiness + plan + role match + `profile_md` (`dcd087d`).
+- M6 — `/profile` three verdicts + `/p/<slug>` public + CV download (`773e005`).
+- M7 — `/status` page: counters + timeline + empty state (`3663cdd`).
+- M8 — fill-forms v2 multi-tenant + Greenhouse adapter + per-JD CV (`fadc9cc`).
+- M9 + M10 — run-cohort + onboard + scan-inbox + interview + sql + counters-sanity skills + scripts (`f2a0e48`).
+- M11 — PostHog observability + R2 setup script (`162cf84`, current HEAD).
+
+**Extras landed alongside Phase M (not originally in the 24h plan):**
+- Brand lock 5-layer (24-month commitment; `bd370ac`) + design system on shadcn + patterns layer with 13 Cruzar compositions (`a69a6e8`, `6dfd56e`) + fonts extracted to `lib/fonts.ts` (`1381675`).
+- Domain flip `cruzar.io` → `cruzarapp.com`, operator email → `enrique@cruzarapp.com` (`a65235e`, `e714926`).
+- `company/` docs — equity, team, traction, meetings, partnerships (`8fdec64`).
+- Monorepo root tooling: bun, biome, lefthook, tsconfig (`5668b59`).
+- `apps/` philosophy + operator-scripts contract documented (`20c6244`).
+- Prez skills added to the repo (`98098ac`).
+
+**Post-P3 path refactor:** code roots collapsed under `apps/` — `packages/career-ops/` → `apps/career-ops/`, root `scripts/` → `apps/web/scripts/operator/`. Path references updated repo-wide.
+
+**Pending for M12 launch:**
+- Manual end-to-end flow test (landing → onboarding → intake → assess → run-cohort → scan-inbox → interview) against a live environment. Catch rough edges before real students.
+- ≥ 3 Aprendly students processed end-to-end; ≥ 1 student Ready with a real submitted application + `status_events` row.
+- Public counter renders non-zero values at launch.
+- Internal announcement (Miura + Enrique).
 
 Update this section at the start of every session.
 
@@ -106,7 +131,7 @@ Each block lists: **Goal**, **Files**, **Dependencies**, **Acceptance**, **Statu
 - `apps/web/drizzle.config.ts`
 - `apps/web/app/api/auth/[...all]/route.ts` (Better Auth Next handler)
 - Empty route dirs: `app/onboarding/`, `app/profile/`, `app/status/`, `app/p/[slug]/`
-- `apps/operator-scripts/README.md`, `apps/operator-scripts/_shared/README.md`
+- `apps/web/scripts/operator/README.md`, `apps/web/scripts/operator/_shared/README.md`
 - `.claude/skills/cruzar-{onboard,intake,assess,run-cohort,scan-inbox,interview,sql,counters-sanity}/SKILL.md`
 - `apps/career-ops/package.json` + `README.md` (absorb target shell)
 
@@ -184,26 +209,26 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 
 **Goal:** Three scripts + one skill file covering the full intake loop.
 
-**Files:** `apps/operator-scripts/intake/generate-batch.ts`, `apps/operator-scripts/intake/record-batch.ts`, `apps/operator-scripts/intake/finalize.ts`, `apps/operator-scripts/_shared/db.ts`, `apps/operator-scripts/_shared/llm.ts`, `.claude/skills/cruzar-intake/SKILL.md`, `apps/web/lib/prompts/intake-batch.ts` (or `apps/operator-scripts/_shared/prompts/`).
+**Files:** `apps/web/scripts/operator/intake/generate-batch.ts`, `apps/web/scripts/operator/intake/record-batch.ts`, `apps/web/scripts/operator/intake/finalize.ts`, `apps/web/scripts/operator/_shared/db.ts`, `apps/web/scripts/operator/_shared/llm.ts`, `.claude/skills/cruzar-intake/SKILL.md`, `apps/web/lib/prompts/intake-batch.ts` (or `apps/web/scripts/operator/_shared/prompts/`).
 
 **Dependencies:** M1.
 
 **Acceptance:**
-- [ ] `bun run apps/operator-scripts/intake/generate-batch.ts --student <id>` generates a Zod-validated batch and persists `intake_batches` row.
-- [ ] `bun run apps/operator-scripts/intake/record-batch.ts --batch <id> --reply <path>` persists `raw_reply` + parsed `intake_batch_answers`.
-- [ ] `bun run apps/operator-scripts/intake/finalize.ts --student <id>` asserts 4 batches exist, sets `intakes.finalized_at`.
+- [ ] `bun run apps/web/scripts/operator/intake/generate-batch.ts --student <id>` generates a Zod-validated batch and persists `intake_batches` row.
+- [ ] `bun run apps/web/scripts/operator/intake/record-batch.ts --batch <id> --reply <path>` persists `raw_reply` + parsed `intake_batch_answers`.
+- [ ] `bun run apps/web/scripts/operator/intake/finalize.ts --student <id>` asserts 4 batches exist, sets `intakes.finalized_at`.
 - [ ] `.claude/skills/cruzar-intake/SKILL.md` tested in a fresh CC session; each subcommand invocable.
 - [ ] Idempotent: re-running `generate-batch` for the same batch_num returns the existing row (no duplicate batches).
 
 **CC prompt template:**
 
-> Block M4. Build the intake skill + three scripts per Architecture §Flow B + ADR-02. Prompts live in `apps/web/lib/prompts/intake-batch.ts` (or `apps/operator-scripts/_shared/prompts/`, pick one and document). Zod-validated LLM output. Idempotent on `(intake_id, batch_num)`. Test the skill end-to-end in a fresh CC session with one test student.
+> Block M4. Build the intake skill + three scripts per Architecture §Flow B + ADR-02. Prompts live in `apps/web/lib/prompts/intake-batch.ts` (or `apps/web/scripts/operator/_shared/prompts/`, pick one and document). Zod-validated LLM output. Idempotent on `(intake_id, batch_num)`. Test the skill end-to-end in a fresh CC session with one test student.
 
 ### M5 — Assessment pipeline — 3h
 
-**Goal:** `apps/operator-scripts/assess.ts` + `.claude/skills/cruzar-assess/SKILL.md`. Readiness classifier + per-category plan + Ready-path triggers (role match, master CV markdown, PDF render, R2 upload).
+**Goal:** `apps/web/scripts/operator/assess.ts` + `.claude/skills/cruzar-assess/SKILL.md`. Readiness classifier + per-category plan + Ready-path triggers (role match, master CV markdown, PDF render, R2 upload).
 
-**Files:** `apps/operator-scripts/assess.ts`, `apps/operator-scripts/_shared/cv-pipeline.ts`, `apps/web/lib/prompts/readiness.ts`, `apps/web/lib/prompts/plan.ts`, `apps/web/lib/prompts/role-match.ts`, `apps/web/lib/prompts/cv-master.ts`, `.claude/skills/cruzar-assess/SKILL.md`.
+**Files:** `apps/web/scripts/operator/assess.ts`, `apps/web/scripts/operator/_shared/cv-pipeline.ts`, `apps/web/lib/prompts/readiness.ts`, `apps/web/lib/prompts/plan.ts`, `apps/web/lib/prompts/role-match.ts`, `apps/web/lib/prompts/cv-master.ts`, `.claude/skills/cruzar-assess/SKILL.md`.
 
 **Dependencies:** M4 (intake data) + P3 (`generate-pdf.mjs`).
 
@@ -215,7 +240,7 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 
 **CC prompt template:**
 
-> Block M5. Implement `apps/operator-scripts/assess.ts` per Architecture §Flow C + ADR-09 (synthesize `profile_md` + version stamp; no master CV on profiles). Zod-validated outputs. Shell out to `apps/career-ops/bin/generate-pdf.mjs` only when rendering the optional `showcase_cv_r2_key`. Test each of the three verdict branches.
+> Block M5. Implement `apps/web/scripts/operator/assess.ts` per Architecture §Flow C + ADR-09 (synthesize `profile_md` + version stamp; no master CV on profiles). Zod-validated outputs. Shell out to `apps/career-ops/bin/generate-pdf.mjs` only when rendering the optional `showcase_cv_r2_key`. Test each of the three verdict branches.
 
 ### M6 — Profile + share — 3h
 
@@ -255,7 +280,7 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 
 **Goal:** Apply the multi-tenant upgrade diff to `apps/career-ops/bin/fill-forms.mjs` (delete hardcoded candidate, parameterize by workspace). Build the Greenhouse adapter. Wire per-JD CV customization as part of the fill-forms run. Persist `generated_cvs` + `fill_form_drafts`.
 
-**Files:** `apps/career-ops/bin/fill-forms.mjs` (upgraded in place), `apps/career-ops/bin/adapters/greenhouse.mjs` (new), `apps/career-ops/bin/adapters/generic.mjs` (extracted fallback), `apps/operator-scripts/_shared/cv-tailor.ts` (LLM chain for per-JD CV).
+**Files:** `apps/career-ops/bin/fill-forms.mjs` (upgraded in place), `apps/career-ops/bin/adapters/greenhouse.mjs` (new), `apps/career-ops/bin/adapters/generic.mjs` (extracted fallback), `apps/web/scripts/operator/_shared/cv-tailor.ts` (LLM chain for per-JD CV).
 
 **Dependencies:** P3, M5.
 
@@ -271,13 +296,13 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 
 **CC prompt template:**
 
-> Block M8. Upgrade `apps/career-ops/bin/fill-forms.mjs` per ADR-08. Add Greenhouse adapter. Wire per-JD CV tailor (`apps/operator-scripts/_shared/cv-tailor.ts`) into the form-fill loop. Persist `generated_cvs` + `fill_form_drafts`. Idempotency + ethical submit gate per Architecture §WOZ.
+> Block M8. Upgrade `apps/career-ops/bin/fill-forms.mjs` per ADR-08. Add Greenhouse adapter. Wire per-JD CV tailor (`apps/web/scripts/operator/_shared/cv-tailor.ts`) into the form-fill loop. Persist `generated_cvs` + `fill_form_drafts`. Idempotency + ethical submit gate per Architecture §WOZ.
 
 ### M9 — run-cohort skill + ingest — 2h
 
-**Goal:** `apps/operator-scripts/run-cohort.ts` + `.claude/skills/cruzar-run-cohort/SKILL.md`. Runtime-dir generation, shells out to fill-forms, collects outputs, upserts `applications` + `status_events`.
+**Goal:** `apps/web/scripts/operator/run-cohort.ts` + `.claude/skills/cruzar-run-cohort/SKILL.md`. Runtime-dir generation, shells out to fill-forms, collects outputs, upserts `applications` + `status_events`.
 
-**Files:** `apps/operator-scripts/run-cohort.ts`, `apps/operator-scripts/_shared/runtime-dir.ts`, `.claude/skills/cruzar-run-cohort/SKILL.md`.
+**Files:** `apps/web/scripts/operator/run-cohort.ts`, `apps/web/scripts/operator/_shared/runtime-dir.ts`, `.claude/skills/cruzar-run-cohort/SKILL.md`.
 
 **Dependencies:** M8.
 
@@ -288,13 +313,13 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 
 **CC prompt template:**
 
-> Block M9. Build `run-cohort` per Architecture §Flow D. Runtime-dir generation in `apps/operator-scripts/_shared/runtime-dir.ts`. Subprocess-invokes `fill-forms.mjs`. Ingests outputs into DB. Test end-to-end on one real student + one real Greenhouse posting.
+> Block M9. Build `run-cohort` per Architecture §Flow D. Runtime-dir generation in `apps/web/scripts/operator/_shared/runtime-dir.ts`. Subprocess-invokes `fill-forms.mjs`. Ingests outputs into DB. Test end-to-end on one real student + one real Greenhouse posting.
 
 ### M10 — Remaining operator skills — 2h
 
 **Goal:** `cruzar-onboard`, `cruzar-scan-inbox`, `cruzar-interview`, `cruzar-sql`, `cruzar-counters-sanity` — skills + scripts.
 
-**Files:** `.claude/skills/cruzar-onboard/SKILL.md` + `apps/operator-scripts/onboard.ts`; `.claude/skills/cruzar-scan-inbox/SKILL.md` + `apps/operator-scripts/scan-inbox.ts`; `.claude/skills/cruzar-interview/SKILL.md` + `apps/operator-scripts/send-interview-email.ts`; `.claude/skills/cruzar-sql/SKILL.md` + `apps/operator-scripts/sql.ts`; `.claude/skills/cruzar-counters-sanity/SKILL.md` + `apps/operator-scripts/counters-sanity.ts`.
+**Files:** `.claude/skills/cruzar-onboard/SKILL.md` + `apps/web/scripts/operator/onboard.ts`; `.claude/skills/cruzar-scan-inbox/SKILL.md` + `apps/web/scripts/operator/scan-inbox.ts`; `.claude/skills/cruzar-interview/SKILL.md` + `apps/web/scripts/operator/send-interview-email.ts`; `.claude/skills/cruzar-sql/SKILL.md` + `apps/web/scripts/operator/sql.ts`; `.claude/skills/cruzar-counters-sanity/SKILL.md` + `apps/web/scripts/operator/counters-sanity.ts`.
 
 **Dependencies:** M9.
 
@@ -356,18 +381,18 @@ Tick this at the end of every block.
 | P4 | ADRs 01–08 | — | Done |
 | P5 | Architecture + Roadmap + archive spec | — | Done |
 | P6 | Operator + app scaffold extension | — | Done |
-| M1 | Schema + Better Auth | 2 | Not started |
-| M2 | Onboarding form | 2 | Not started |
-| M3 | Landing + counter | 2 | Not started |
-| M4 | Intake skill suite | 3 | Not started |
-| M5 | Assessment pipeline | 3 | Not started |
-| M6 | Profile + share | 3 | Not started |
-| M7 | Status page | 1 | Not started |
-| M8 | fill-forms v2 + per-JD CV | 4 | Not started |
-| M9 | run-cohort skill + ingest | 2 | Not started |
-| M10 | Remaining operator skills | 2 | Not started |
-| M11 | Quality + deploy | 2 | Not started |
-| M12 | Onboard 3+ + launch | 1 | Not started |
+| M1 | Schema + Better Auth | 2 | Done |
+| M2 | Onboarding form | 2 | Done |
+| M3 | Landing + counter | 2 | Done |
+| M4 | Intake skill suite | 3 | Done |
+| M5 | Assessment pipeline | 3 | Done |
+| M6 | Profile + share | 3 | Done |
+| M7 | Status page | 1 | Done |
+| M8 | fill-forms v2 + per-JD CV | 4 | Done |
+| M9 | run-cohort skill + ingest | 2 | Done |
+| M10 | Remaining operator skills | 2 | Done |
+| M11 | Quality + deploy | 2 | Done |
+| M12 | Onboard 3+ + launch | 1 | **In progress — manual E2E test first** |
 | **Total Phase M** | | **27** | |
 
 ---

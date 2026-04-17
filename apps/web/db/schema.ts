@@ -311,7 +311,7 @@ export const statusEvents = pgTable(
   },
   (t) => [
     // Per-day idempotency on (application_id, kind) is enforced at the script
-    // boundary (apps/operator-scripts/_shared/status-events.ts), not at the DB
+    // boundary (apps/web/scripts/operator/_shared/status-events.ts), not at the DB
     // level — Postgres rejects `timestamptz::date` in a unique index expression
     // because the cast is not IMMUTABLE (session-timezone dependent).
     index("status_events_student_created_idx").on(t.student_id, t.created_at.desc()),

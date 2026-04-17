@@ -1,4 +1,14 @@
-import { HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { readFile } from "node:fs/promises";
+import {
+  type CORSRule,
+  CreateBucketCommand,
+  GetBucketCorsCommand,
+  HeadBucketCommand,
+  HeadObjectCommand,
+  PutBucketCorsCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { z } from "zod";
 import { env } from "./env";
@@ -91,4 +101,69 @@ export async function assertAttestationExists(key: string): Promise<void> {
     const name = err instanceof Error ? err.name : "UnknownError";
     throw new Error(`R2 attestation not found (${name})`);
   }
+}
+
+// ----------------------------------------------------------------------------
+// Admin operations — invoked once by `apps/web/scripts/operator/r2-setup.ts`
+// to provision the bucket + apply the canonical CORS config from
+// `apps/web/r2-cors.json`. Not used by the runtime app.
+// ----------------------------------------------------------------------------
+
+export type R2CorsRule = CORSRule;
+export type BucketState = "existed" | "created" | "missing";
+
+export async function ensureBucket(apply: boolean): Promise<BucketState> {
+  const { bucket } = requireR2Env();
+  const client = r2();
+  try {
+    await client.send(new HeadBucketCommand({ Bucket: bucket }));
+    return "existed";
+  } catch (err) {
+    const name = err instanceof Error ? err.name : "UnknownError";
+    if (!apply) return "missing";
+    if (name !== "NotFound" && name !== "NoSuchBucket" && name !== "404") {
+      throw err;
+    }
+    await client.send(new CreateBucketCommand({ Bucket: bucket }));
+    return "created";
+  }
+}
+
+export async function readBucketCors(): Promise<CORSRule[] | null> {
+  const { bucket } = requireR2Env();
+  try {
+    const out = await r2().send(new GetBucketCorsCommand({ Bucket: bucket }));
+    return out.CORSRules ?? [];
+  } catch (err) {
+    const name = err instanceof Error ? err.name : "UnknownError";
+    if (name === "NoSuchCORSConfiguration") return null;
+    throw err;
+  }
+}
+
+export async function applyBucketCors(rules: CORSRule[]): Promise<void> {
+  const { bucket } = requireR2Env();
+  await r2().send(
+    new PutBucketCorsCommand({
+      Bucket: bucket,
+      CORSConfiguration: { CORSRules: rules },
+    }),
+  );
+}
+
+export async function uploadFileToR2(
+  key: string,
+  filePath: string,
+  contentType: string,
+): Promise<void> {
+  const { bucket } = requireR2Env();
+  const body = await readFile(filePath);
+  await r2().send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: body,
+      ContentType: contentType,
+    }),
+  );
 }
