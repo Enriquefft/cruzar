@@ -3,6 +3,7 @@ import {
   type CORSRule,
   CreateBucketCommand,
   GetBucketCorsCommand,
+  GetObjectCommand,
   HeadBucketCommand,
   HeadObjectCommand,
   PutBucketCorsCommand,
@@ -16,19 +17,29 @@ import { env } from "./env";
 
 let cached: S3Client | undefined;
 
+export type R2BucketKind = "public" | "private";
+
 function requireR2Env() {
   const e = env();
   const accountId = e.R2_ACCOUNT_ID;
   const accessKeyId = e.R2_ACCESS_KEY_ID;
   const secretAccessKey = e.R2_SECRET_ACCESS_KEY;
-  const bucket = e.R2_BUCKET;
+  const publicBucket = e.R2_PUBLIC_BUCKET;
+  const privateBucket = e.R2_PRIVATE_BUCKET;
   const publicBase = e.R2_PUBLIC_URL;
-  if (!accountId || !accessKeyId || !secretAccessKey || !bucket || !publicBase) {
+  if (
+    !accountId ||
+    !accessKeyId ||
+    !secretAccessKey ||
+    !publicBucket ||
+    !privateBucket ||
+    !publicBase
+  ) {
     throw new Error(
-      "R2 env missing. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET, R2_PUBLIC_URL in .env.",
+      "R2 env missing. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_PUBLIC_BUCKET, R2_PRIVATE_BUCKET, R2_PUBLIC_URL in .env.",
     );
   }
-  return { accountId, accessKeyId, secretAccessKey, bucket, publicBase };
+  return { accountId, accessKeyId, secretAccessKey, publicBucket, privateBucket, publicBase };
 }
 
 export function r2(): S3Client {
@@ -42,13 +53,24 @@ export function r2(): S3Client {
   return cached;
 }
 
+function resolveBucket(kind: R2BucketKind): string {
+  const { publicBucket, privateBucket } = requireR2Env();
+  return kind === "public" ? publicBucket : privateBucket;
+}
+
+export function bucketNames(): { publicBucket: string; privateBucket: string } {
+  const { publicBucket, privateBucket } = requireR2Env();
+  return { publicBucket, privateBucket };
+}
+
 export function publicUrl(key: string): string {
   const { publicBase } = requireR2Env();
   return `${publicBase.replace(/\/$/, "")}/${encodeURI(key).replace(/^\//, "")}`;
 }
 
 const ATTESTATION_MAX_BYTES = 10_000_000;
-const ATTESTATION_EXPIRES_IN_SECONDS = 300;
+const ATTESTATION_PUT_EXPIRES_IN_SECONDS = 300;
+const ATTESTATION_GET_EXPIRES_IN_SECONDS = 300;
 
 const presignAttestationInputSchema = z.object({
   studentId: z.string().min(1),
@@ -64,6 +86,11 @@ export interface PresignedAttestationPut {
   expiresIn: number;
 }
 
+export interface PresignedAttestationGet {
+  url: string;
+  expiresIn: number;
+}
+
 function sanitizeFilename(raw: string): string {
   const stripped = raw.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
   const safe = stripped.replace(/[^A-Za-z0-9._-]+/g, "-").replace(/-+/g, "-");
@@ -76,7 +103,7 @@ export async function presignAttestationPut(
   input: PresignAttestationInput,
 ): Promise<PresignedAttestationPut> {
   const parsed = presignAttestationInputSchema.parse(input);
-  const { bucket } = requireR2Env();
+  const bucket = resolveBucket("private");
   const key = `attestations/${parsed.studentId}/${crypto.randomUUID()}-${sanitizeFilename(parsed.filename)}`;
   const command = new PutObjectCommand({
     Bucket: bucket,
@@ -85,13 +112,22 @@ export async function presignAttestationPut(
     ContentLength: parsed.sizeBytes,
   });
   const url = await getSignedUrl(r2(), command, {
-    expiresIn: ATTESTATION_EXPIRES_IN_SECONDS,
+    expiresIn: ATTESTATION_PUT_EXPIRES_IN_SECONDS,
   });
-  return { url, key, expiresIn: ATTESTATION_EXPIRES_IN_SECONDS };
+  return { url, key, expiresIn: ATTESTATION_PUT_EXPIRES_IN_SECONDS };
+}
+
+export async function presignAttestationGet(key: string): Promise<PresignedAttestationGet> {
+  const bucket = resolveBucket("private");
+  const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+  const url = await getSignedUrl(r2(), command, {
+    expiresIn: ATTESTATION_GET_EXPIRES_IN_SECONDS,
+  });
+  return { url, expiresIn: ATTESTATION_GET_EXPIRES_IN_SECONDS };
 }
 
 export async function assertAttestationExists(key: string): Promise<void> {
-  const { bucket } = requireR2Env();
+  const bucket = resolveBucket("private");
   try {
     await r2().send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
   } catch (err) {
@@ -102,18 +138,17 @@ export async function assertAttestationExists(key: string): Promise<void> {
 
 // ----------------------------------------------------------------------------
 // Admin operations — invoked once by `apps/web/scripts/operator/r2-setup.ts`
-// to provision the bucket + apply the canonical CORS config from
-// `apps/web/r2-cors.json`. Not used by the runtime app.
+// to provision the public + private buckets and apply the canonical CORS
+// config from `apps/web/r2-cors.json`. Not used by the runtime app.
 // ----------------------------------------------------------------------------
 
 export type R2CorsRule = CORSRule;
 export type BucketState = "existed" | "created" | "missing";
 
-export async function ensureBucket(apply: boolean): Promise<BucketState> {
-  const { bucket } = requireR2Env();
+export async function ensureBucket(bucketName: string, apply: boolean): Promise<BucketState> {
   const client = r2();
   try {
-    await client.send(new HeadBucketCommand({ Bucket: bucket }));
+    await client.send(new HeadBucketCommand({ Bucket: bucketName }));
     return "existed";
   } catch (err) {
     const name = err instanceof Error ? err.name : "UnknownError";
@@ -121,15 +156,14 @@ export async function ensureBucket(apply: boolean): Promise<BucketState> {
     if (name !== "NotFound" && name !== "NoSuchBucket" && name !== "404") {
       throw err;
     }
-    await client.send(new CreateBucketCommand({ Bucket: bucket }));
+    await client.send(new CreateBucketCommand({ Bucket: bucketName }));
     return "created";
   }
 }
 
-export async function readBucketCors(): Promise<CORSRule[] | null> {
-  const { bucket } = requireR2Env();
+export async function readBucketCors(bucketName: string): Promise<CORSRule[] | null> {
   try {
-    const out = await r2().send(new GetBucketCorsCommand({ Bucket: bucket }));
+    const out = await r2().send(new GetBucketCorsCommand({ Bucket: bucketName }));
     return out.CORSRules ?? [];
   } catch (err) {
     const name = err instanceof Error ? err.name : "UnknownError";
@@ -138,11 +172,10 @@ export async function readBucketCors(): Promise<CORSRule[] | null> {
   }
 }
 
-export async function applyBucketCors(rules: CORSRule[]): Promise<void> {
-  const { bucket } = requireR2Env();
+export async function applyBucketCors(bucketName: string, rules: CORSRule[]): Promise<void> {
   await r2().send(
     new PutBucketCorsCommand({
-      Bucket: bucket,
+      Bucket: bucketName,
       CORSConfiguration: { CORSRules: rules },
     }),
   );
@@ -152,8 +185,9 @@ export async function uploadFileToR2(
   key: string,
   filePath: string,
   contentType: string,
+  kind: R2BucketKind,
 ): Promise<void> {
-  const { bucket } = requireR2Env();
+  const bucket = resolveBucket(kind);
   const body = await readFile(filePath);
   await r2().send(
     new PutObjectCommand({

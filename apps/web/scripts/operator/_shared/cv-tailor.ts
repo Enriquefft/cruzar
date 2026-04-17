@@ -73,15 +73,12 @@ export async function tailorCvForJd({
 
     // generate-pdf.mjs accepts <input> <output> positional args
     const thisDir = dirname(fileURLToPath(import.meta.url));
-    const generatePdfPath = resolve(
-      thisDir,
-      "../../../../career-ops/bin/generate-pdf.mjs",
-    );
+    const generatePdfPath = resolve(thisDir, "../../../../career-ops/bin/generate-pdf.mjs");
     await execFileAsync("node", [generatePdfPath, mdPath, pdfPath]);
 
     // Upload PDF to R2
     const r2Key = `generated-cvs/${studentId}/${applicationId}/v${nextVersion}.pdf`;
-    await uploadFileToR2(r2Key, pdfPath, "application/pdf");
+    await uploadFileToR2(r2Key, pdfPath, "application/pdf", "private");
 
     // Persist generated_cvs row
     await db.insert(schema.generatedCvs).values({

@@ -65,9 +65,7 @@ async function main(): Promise<void> {
   }
 
   // --- Read interview email from stdin ----------------------------------------
-  process.stderr.write(
-    "Paste the interview email thread below (Ctrl+D when done):\n",
-  );
+  process.stderr.write("Paste the interview email thread below (Ctrl+D when done):\n");
   const emailThread = await readStdin();
   if (emailThread.trim().length === 0) {
     logError("empty_input", "No email thread provided on stdin");
@@ -144,7 +142,7 @@ Keep it actionable and concise. Output strict JSON:
   const { writeFile, rm } = await import("node:fs/promises");
   await writeFile(tmpPath, prepResult.prep_markdown, "utf-8");
   try {
-    await uploadFileToR2(prepR2Key, tmpPath, "text/markdown");
+    await uploadFileToR2(prepR2Key, tmpPath, "text/markdown", "public");
   } finally {
     await rm(tmpPath, { force: true }).catch(() => {});
   }
@@ -190,9 +188,7 @@ Keep it actionable and concise. Output strict JSON:
   process.stderr.write(
     `\n--- Email draft ---\nTo: [student email]\nSubject: ${emailSubject}\n\n${emailBody}\n--- end draft ---\n`,
   );
-  process.stderr.write(
-    "\nSend this email via Resend? (Y/N): ",
-  );
+  process.stderr.write("\nSend this email via Resend? (Y/N): ");
 
   const confirmation = await readLine();
   if (confirmation.trim().toUpperCase() !== "Y") {

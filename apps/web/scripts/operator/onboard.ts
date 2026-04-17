@@ -5,7 +5,7 @@ import { parseFlags } from "./_shared/args";
 import { db } from "@/db/client";
 import { englishCerts, students } from "@/db/schema";
 import { logDone, logError } from "./_shared/logger";
-import { assertAttestationExists } from "@/lib/r2";
+import { assertAttestationExists, presignAttestationGet } from "@/lib/r2";
 import { mapCertToCefr, meetsB2, type CefrLevel } from "@/lib/cefr-map";
 
 const flagsSchema = z.object({
@@ -66,14 +66,23 @@ async function main(): Promise<void> {
     });
   }
 
-  // --- Verify attestation exists in R2 ----------------------------------------
+  // --- Verify attestation exists in R2 + issue short-lived review URL ---------
   try {
     await assertAttestationExists(cert.attestation_r2_key);
   } catch {
-    logError("attestation_missing", "Attestation file not found in R2. Cannot verify without attestation.", {
-      student_id: student.id,
-    });
+    logError(
+      "attestation_missing",
+      "Attestation file not found in R2. Cannot verify without attestation.",
+      {
+        student_id: student.id,
+      },
+    );
   }
+
+  const review = await presignAttestationGet(cert.attestation_r2_key);
+  process.stderr.write(
+    `\nAttestation review URL (expires in ${review.expiresIn}s):\n${review.url}\n`,
+  );
 
   // --- Verify CEFR mapping ----------------------------------------------------
   const derivedLevel = mapCertToCefr(cert.kind, cert.score);
@@ -123,10 +132,7 @@ async function main(): Promise<void> {
     .set({ verified: true, level: verifiedLevel })
     .where(eq(englishCerts.id, cert.id));
 
-  await db
-    .update(students)
-    .set({ onboarded_at: new Date() })
-    .where(eq(students.id, student.id));
+  await db.update(students).set({ onboarded_at: new Date() }).where(eq(students.id, student.id));
 
   // --- Output WhatsApp welcome message ----------------------------------------
   const welcomeMessage = renderWelcomeMessage(student.name);

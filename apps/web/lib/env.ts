@@ -3,7 +3,10 @@ import { z } from "zod";
 // Treat the empty string as "unset" across optional keys — dotenv parsers hand
 // us `""` for unfilled lines, which a bare `.optional()` would still reject
 // when paired with `.url()` or `.min(1)`.
-const optionalString = z.preprocess((v) => (v === "" ? undefined : v), z.string().min(1).optional());
+const optionalString = z.preprocess(
+  (v) => (v === "" ? undefined : v),
+  z.string().min(1).optional(),
+);
 const optionalUrl = z.preprocess((v) => (v === "" ? undefined : v), z.string().url().optional());
 
 const envSchema = z.object({
@@ -26,7 +29,8 @@ const envSchema = z.object({
   R2_ACCOUNT_ID: optionalString,
   R2_ACCESS_KEY_ID: optionalString,
   R2_SECRET_ACCESS_KEY: optionalString,
-  R2_BUCKET: optionalString,
+  R2_PUBLIC_BUCKET: optionalString,
+  R2_PRIVATE_BUCKET: optionalString,
   R2_PUBLIC_URL: optionalUrl,
 
   NEXT_PUBLIC_POSTHOG_KEY: optionalString,

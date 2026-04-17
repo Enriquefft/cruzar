@@ -384,18 +384,25 @@ Prefer server actions for form submissions that mutate user state (`/onboarding`
 - Attestation upload: 10 MB max, MIME allowlist `{ image/png, image/jpeg, application/pdf }`.
 - Public counter ISR: `revalidate: 30`.
 
-### R2 CORS
+### R2 buckets + CORS
 
-Canonical config at [`apps/web/r2-cors.json`](../../apps/web/r2-cors.json). Two rules: prod (`https://cruzarapp.com`) + dev (`http://localhost:3000`). Methods: `GET, PUT` (PUT for presigned attestation upload). Allowed headers: `Content-Type, Content-Length`. Exposed headers: `ETag`. Max age: 3000s.
+Two buckets, different access models:
 
-Apply via [`apps/web/scripts/operator/r2-setup.ts`](../../apps/web/scripts/operator/r2-setup.ts) — idempotent on bucket creation + CORS rule equality. Dry-run by default; `--apply` mutates.
+- **`R2_PUBLIC_BUCKET`** (default name `cruzar`) — custom domain `cdn.cruzarapp.com`. Holds `showcase-cvs/<student_id>.pdf` and `interview-prep/<student_id>/<app_id>.md`. Objects here are world-readable by anyone who knows the key; only place objects here when the student has consented to the surface that links to them.
+- **`R2_PRIVATE_BUCKET`** (default name `cruzar-private`) — no custom domain. Holds `attestations/<student_id>/<uuid>-<filename>` (PII), `generated-cvs/<student_id>/<app_id>/v<N>.pdf`, future `fill-forms/...` screenshots, future `career-ops-reports/...`. Access is server-side only via the S3 API (operator scripts) or short-lived presigned URLs (attestation upload from the onboarding form, attestation review from `onboard.ts`).
+
+Never connect a Cloudflare custom domain to the private bucket — the prefix split is the only thing protecting attestations from being world-readable under `cdn.cruzarapp.com`.
+
+Canonical CORS config at [`apps/web/r2-cors.json`](../../apps/web/r2-cors.json). Two rules: prod (`https://cruzarapp.com`) + dev (`http://localhost:3000`). Methods: `GET, PUT` (PUT for presigned attestation upload). Allowed headers: `Content-Type, Content-Length`. Exposed headers: `ETag`. Max age: 3000s. Applied to both buckets.
+
+Provision via [`apps/web/scripts/operator/r2-setup.ts`](../../apps/web/scripts/operator/r2-setup.ts) — idempotent on bucket creation + CORS rule equality for each bucket. Dry-run by default; `--apply` mutates.
 
 ```bash
-bun run apps/web/scripts/operator/r2-setup.ts          # report drift
-bun run apps/web/scripts/operator/r2-setup.ts --apply  # create bucket if missing + apply CORS
+bun run apps/web/scripts/operator/r2-setup.ts          # report drift on both buckets
+bun run apps/web/scripts/operator/r2-setup.ts --apply  # create missing buckets + apply CORS
 ```
 
-After creation, verify the bucket location in the Cloudflare dashboard is `ENAM` or `WNAM` (LATAM-closest). The AWS S3 SDK's typed `LocationConstraint` does not include R2's location values, so the script does not pin a location at creation — Cloudflare picks based on the first-write region. Recreate the bucket if the auto-picked location is wrong (cheap pre-launch).
+After creation, verify the bucket location of each in the Cloudflare dashboard is `ENAM` or `WNAM` (LATAM-closest). The AWS S3 SDK's typed `LocationConstraint` does not include R2's location values, so the script does not pin a location at creation — Cloudflare picks based on the first-write region. Recreate the bucket if the auto-picked location is wrong (cheap pre-launch).
 
 ---
 
@@ -475,8 +482,9 @@ ANTHROPIC_API_KEY=
 R2_ACCOUNT_ID=
 R2_ACCESS_KEY_ID=
 R2_SECRET_ACCESS_KEY=
-R2_BUCKET=cruzar
-R2_PUBLIC_URL=https://cdn.cruzarapp.com  # CNAME pointing at R2
+R2_PUBLIC_BUCKET=cruzar            # custom domain cdn.cruzarapp.com
+R2_PRIVATE_BUCKET=cruzar-private   # no custom domain, server-side + presigned only
+R2_PUBLIC_URL=https://cdn.cruzarapp.com
 
 # Observability
 NEXT_PUBLIC_POSTHOG_KEY=
@@ -495,7 +503,7 @@ NODE_ENV=development
 
 - **apps/web** — Vercel project, connected to this repo. Builds `apps/web` on push to `main`. Preview deploys on PRs. Custom domain `cruzarapp.com` with Resend DKIM/SPF/DMARC configured on the DNS before first magic link sends.
 - **Neon** — branch-per-deploy optional; MVP 0 uses a single `main` branch.
-- **R2** — single bucket, CORS configured for `https://cruzarapp.com`, public CDN subdomain `cdn.cruzarapp.com`.
+- **R2** — two buckets. `R2_PUBLIC_BUCKET` behind `cdn.cruzarapp.com` for consent-published assets; `R2_PRIVATE_BUCKET` with no custom domain for PII + per-application artifacts. Both buckets share the CORS rules in `apps/web/r2-cors.json`.
 - **Operator laptop** — Miura clones the repo, `bun install`, runs `bun run apps/web/scripts/operator/<...>.ts` inside CC sessions. Playwright binary cached in `~/.cache/playwright`. No special setup beyond Node + Bun + the cloned repo.
 
 ---
