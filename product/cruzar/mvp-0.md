@@ -227,7 +227,7 @@ Public counter = SQL aggregate over real rows, ISR at 30s. No denormalized count
 
 ## Quality floor (non-negotiable)
 
-- Zod SSOT for every entity and every LLM structured output. One retry on Zod-fail, then honest error + Sentry alert.
+- Zod SSOT for every entity and every LLM structured output. One retry on Zod-fail, then honest error captured by PostHog via `onRequestError`.
 - Zero `any`. Zero `as` except `as const`. Zero duplicated types. Enforced by `bun typecheck` in pre-commit.
 - Idempotency key `(student_id, company_normalized, role_normalized, job_url)` on every applications write.
 - `profile_md` persisted on `profiles` as the per-student SSOT (ADR-09). Regeneration bumps `profile_md_version`, never silent.
@@ -236,7 +236,7 @@ Public counter = SQL aggregate over real rows, ISR at 30s. No denormalized count
 - R2 CORS configured for `cruzarapp.com` (attestation uploads + CV PDF download).
 - Magic-link rate limit 5/hr/email. Attestation upload size cap 10 MB.
 - Public counter: ISR `revalidate: 30`, never SSR-on-every-request.
-- Sentry + Better Stack uptime on `apps/web`. Operator-side errors from scripts always print to CC stdout with structured exit codes.
+- PostHog (product analytics + session replay + error tracking) + Better Stack uptime on `apps/web`. Operator-side errors from scripts always print to CC stdout with structured exit codes.
 
 Out of MVP 0 quality scope: a11y sweep beyond keyboard nav, mobile polish beyond Tailwind defaults, i18n, broader integration test suite, analytics.
 
@@ -285,7 +285,7 @@ Hard — all ship-blocking:
 - [ ] `apps/operator-scripts/*.ts` backing each skill, Zod-validated I/O, idempotent on documented keys.
 - [ ] `apps/career-ops/` absorbed (critical-path only), sanitized (grep + prose-diff), committed. Fresh `apps/career-ops/CLAUDE.md` authored.
 - [ ] fill-forms v2 multi-tenant + Greenhouse adapter + per-JD CV customization operational end-to-end on a real Greenhouse posting against a real student.
-- [ ] Sentry + Better Stack uptime wired.
+- [ ] PostHog + Better Stack uptime wired.
 - [ ] Typecheck clean. `bun typecheck` in pre-commit.
 - [ ] **3+ Aprendly students through the full flow end-to-end.** Non-zero public counter at launch. At least one student with a real submitted application and a `status_events` row for it.
 
@@ -305,7 +305,7 @@ Soft:
 - Cloudflare R2 (attestations, CV PDFs, fill-forms screenshots, interview-prep files).
 - Resend (transactional email).
 - `apps/career-ops/` (Node/Playwright, absorbed critical path).
-- Sentry + Better Stack.
+- PostHog + Better Stack.
 - Biome for lint/format.
 
 Not wired in MVP 0: Deepgram, OpenAI Realtime, LiveKit, Trigger.dev/Fly, OG image runtime, Meta WhatsApp Cloud API.
@@ -333,7 +333,7 @@ Not wired in MVP 0: Deepgram, OpenAI Realtime, LiveKit, Trigger.dev/Fly, OG imag
 8. fill-forms v2 upgrade applied to absorbed file + per-JD CV customization + Greenhouse adapter.
 9. Run-cohort skill + script + runtime-dir generation + ingest round-trip.
 10. Scan-inbox + interview-invite + counters-sanity + sql skills.
-11. Quality floor + deploy (Sentry, uptime, rate limits, CORS, Resend DKIM, Vercel, domain).
+11. Quality floor + deploy (PostHog, uptime, rate limits, CORS, Resend DKIM, Vercel, domain).
 12. Onboard 3+ Aprendly students end-to-end; verify non-zero counter at launch.
 
 ---

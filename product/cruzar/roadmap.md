@@ -310,16 +310,16 @@ Clock starts when P1–P5 are all `Done`. Each block sized for one focused CC se
 
 ### M11 — Quality floor + deploy — 2h
 
-**Goal:** Sentry, Better Stack uptime, Resend DKIM/SPF/DMARC, R2 CORS, rate limits, Vercel deploy, custom domain, magic-link smoke test from an external inbox.
+**Goal:** PostHog, Better Stack uptime, Resend DKIM/SPF/DMARC, R2 CORS, rate limits, Vercel deploy, custom domain, magic-link smoke test from an external inbox.
 
-**Files:** `apps/web/sentry.*.config.ts`, `apps/web/middleware.ts` (rate limit), DNS records, Vercel project settings.
+**Files:** `apps/web/instrumentation.ts` + `apps/web/instrumentation-client.ts` (PostHog), `apps/web/middleware.ts` (rate limit), DNS records, Vercel project settings.
 
 **Dependencies:** all prior M blocks.
 
 **Acceptance:**
 - [ ] `cruzarapp.com` resolves with valid TLS.
 - [ ] Magic-link email from `enrique@cruzarapp.com` reaches a non-technical Gmail test inbox in Primary (not Spam/Promotions).
-- [ ] Sentry receives a test error from a canary route.
+- [ ] PostHog receives a test `$exception` event from a canary route + a session replay with form inputs masked.
 - [ ] Uptime pings report healthy.
 - [ ] `bun typecheck` green across the repo from pre-commit.
 - [ ] `.gitignore` honored; `.cruzar-runtime/` and `drizzle/` not tracked.

@@ -1,0 +1,20 @@
+{
+  "CORSRules": [
+    {
+      "ID": "cruzar-prod",
+      "AllowedOrigins": ["https://cruzarapp.com"],
+      "AllowedMethods": ["GET", "PUT"],
+      "AllowedHeaders": ["Content-Type", "Content-Length"],
+      "ExposeHeaders": ["ETag"],
+      "MaxAgeSeconds": 3000
+    },
+    {
+      "ID": "cruzar-dev",
+      "AllowedOrigins": ["http://localhost:3000"],
+      "AllowedMethods": ["GET", "PUT"],
+      "AllowedHeaders": ["Content-Type", "Content-Length"],
+      "ExposeHeaders": ["ETag"],
+      "MaxAgeSeconds": 3000
+    }
+  ]
+}

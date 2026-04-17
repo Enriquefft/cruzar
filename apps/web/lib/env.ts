@@ -29,9 +29,8 @@ const envSchema = z.object({
   R2_BUCKET: optionalString,
   R2_PUBLIC_URL: optionalUrl,
 
-  SENTRY_DSN: optionalUrl,
-  SENTRY_ORG: optionalString,
-  SENTRY_PROJECT: optionalString,
+  NEXT_PUBLIC_POSTHOG_KEY: optionalString,
+  NEXT_PUBLIC_POSTHOG_HOST: optionalUrl,
 
   OPERATOR_EMAILS: z.string().transform((raw) =>
     raw

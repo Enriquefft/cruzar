@@ -19,7 +19,8 @@ apps/operator-scripts/
 ├── scan-inbox.ts          (block M10)
 ├── send-interview-email.ts (block M10)
 ├── sql.ts                 (block M10)
-└── counters-sanity.ts     (block M10)
+├── counters-sanity.ts     (block M10)
+└── r2-setup.ts            (one-shot: create bucket + apply CORS from apps/web/r2-cors.json)
 ```
 
 ## Rules

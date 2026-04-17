@@ -132,7 +132,7 @@ Better Auth owns `user` + `session`. `student.id` carries the FK relationship to
 
 ### LLM structured-output contracts
 
-Every Claude call that produces structured data returns a Zod-validated shape. One retry on validation fail, then an honest error and Sentry alert.
+Every Claude call that produces structured data returns a Zod-validated shape. One retry on validation fail, then an honest error captured by PostHog via `onRequestError`.
 
 - **Adaptive intake batch** — `{ batch_num, questions: Array<{ question_key, question_text, rationale }> }`, 10 entries per batch.
 - **Readiness classification** — `{ verdict: "ready"|"presentation_gap"|"experience_gap", confidence, gaps: Array<{ category, severity, evidence }> }`.
@@ -163,7 +163,7 @@ Prompt version stamped on every row that persists LLM output.
 | Anthropic API (Claude Sonnet) | apps/web + scripts | LLM for all structured outputs |
 | Resend | apps/web | Transactional email |
 | Better Auth | apps/web | Email + magic link |
-| Sentry | apps/web + scripts | Error tracking |
+| PostHog | apps/web | Product analytics, session replay, error tracking |
 | Better Stack | Vercel | Uptime |
 | Playwright | apps/career-ops | fill-forms + PDF render (on Miura's laptop) |
 
@@ -383,7 +383,14 @@ Prefer server actions for form submissions that mutate user state (`/onboarding`
 
 ### R2 CORS
 
-Allowed origin: `https://cruzarapp.com`. Methods: `GET, PUT` (PUT for presigned upload of attestations). Configured during deploy.
+Canonical config at [`apps/web/r2-cors.json`](../../apps/web/r2-cors.json). Two rules: prod (`https://cruzarapp.com`) + dev (`http://localhost:3000`). Methods: `GET, PUT` (PUT for presigned attestation upload). Allowed headers: `Content-Type, Content-Length`. Exposed headers: `ETag`. Max age: 3000s.
+
+Apply via [`apps/operator-scripts/r2-setup.ts`](../../apps/operator-scripts/r2-setup.ts) — idempotent on bucket creation + CORS rule equality. Dry-run by default; `--apply` mutates.
+
+```bash
+bun run apps/operator-scripts/r2-setup.ts          # report drift
+bun run apps/operator-scripts/r2-setup.ts --apply  # create bucket if missing + apply CORS
+```
 
 ---
 
@@ -433,10 +440,10 @@ The package exports nothing as importable TypeScript — only binaries. `apps/op
 
 ## Observability
 
-- Sentry on `apps/web` and on every script (Node SDK). Structured errors with student_id + action context.
+- PostHog on `apps/web` — browser SDK (`instrumentation-client.ts`) for pageviews + autocapture + session replay; Node SDK (`instrumentation.ts`) for server `onRequestError` captures. Single `NEXT_PUBLIC_POSTHOG_KEY` powers both. Form inputs masked in session replay.
+- Operator scripts (`apps/operator-scripts/`, `apps/career-ops/`) run on Miura's laptop and print structured exit codes to CC stdout — no remote error sink in MVP 0.
 - Better Stack uptime pinging `/` and `/status` endpoints.
 - Every script logs its invocation, inputs (IDs only, never PII), duration, outcome.
-- No custom analytics in MVP 0.
 
 ---
 
@@ -467,9 +474,8 @@ R2_BUCKET=cruzar
 R2_PUBLIC_URL=https://cdn.cruzarapp.com  # CNAME pointing at R2
 
 # Observability
-SENTRY_DSN=
-SENTRY_ORG=
-SENTRY_PROJECT=
+NEXT_PUBLIC_POSTHOG_KEY=
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
 
 # Operator allowlist (emails permitted to run operator skills — used by sql escape + internal health routes if any)
 OPERATOR_EMAILS=miura@cruzarapp.com,enrique@cruzarapp.com
@@ -505,7 +511,7 @@ Formal integration test suite is Phase 1 continuation.
 
 ## Security
 
-- PII fields: `email`, `name`, `whatsapp`, `local_salary_usd`, `attestation_r2_key`. Never logged. Never in Sentry breadcrumbs.
+- PII fields: `email`, `name`, `whatsapp`, `local_salary_usd`, `attestation_r2_key`. Never logged. Never in PostHog events, breadcrumbs, or session replay (form inputs masked, autocapture text is structural only).
 - Operator emails allowlisted in `OPERATOR_EMAILS`; the sql escape hatch is available only when running scripts from the local machine with those emails in env.
 - Magic link rate limited (5/hour/email).
 - R2 objects are private by default; attestations are accessed only via time-limited presigned URLs server-side.
