@@ -31,12 +31,7 @@ const VERB: Record<Lang, string> = {
 
 const URL_BASE = "cruzarapp.com/v/";
 
-export function VerificationStamp({
-  hash,
-  placement = "inline",
-  lang = "en",
-  className,
-}: Props) {
+export function VerificationStamp({ hash, placement = "inline", lang = "en", className }: Props) {
   if (placement === "footer") {
     return (
       <div
@@ -78,7 +73,9 @@ export function VerificationStamp({
         aria-hidden
       />
       <span>{VERB[lang]}</span>
-      <span aria-hidden className="text-brand-ink-label">·</span>
+      <span aria-hidden className="text-brand-ink-label">
+        ·
+      </span>
       <a
         href={`https://${URL_BASE}${hash}`}
         className="font-mono normal-case tracking-normal text-brand-ink-soft underline-offset-2 hover:underline"

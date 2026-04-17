@@ -151,8 +151,6 @@ const allFontVariables = [
 const HEADLINE = "Cruza del salario local al internacional.";
 const EDITORIAL_LEDE_ES =
   "Cruzar diagnostica tu inglés y tus habilidades blandas, valida tu capacidad en escenarios reales de trabajo remoto internacional, y postula en tu nombre a empleos con nómina extranjera. No prometemos: verificamos con carta-oferta firmada y captura del primer pago en USD.";
-const EDITORIAL_LEDE_EN =
-  "Cruzar diagnoses your English and soft skills, validates your capacity against real international remote-work scenarios, and applies on your behalf to roles with foreign payroll. We do not promise outcomes — we verify them with a signed offer letter and a screenshot of the first USD payroll event.";
 
 const ES_STRESS = "España, mañana, ¿cómo está?, niño, año, día, sábado, miércoles, café, después.";
 const ES_GLYPHS = "á é í ó ú ñ Ñ ¿ ¡ ü « » — –";
@@ -434,7 +432,9 @@ function BodyParagraphs({ cssVar }: { cssVar: string }) {
         >
           +$2,840
         </span>
-        <span style={{ fontSize: "0.8rem", color: INK_LABEL }}>USD / month · delta · cohort 02</span>
+        <span style={{ fontSize: "0.8rem", color: INK_LABEL }}>
+          USD / month · delta · cohort 02
+        </span>
       </div>
     </div>
   );
@@ -573,7 +573,10 @@ function NumericTable({ cssVar }: { cssVar: string }) {
           </tr>
         ))}
         <tr>
-          <td colSpan={2} style={{ padding: "12px 12px 0 0", fontSize: "0.78rem", color: INK_LABEL }}>
+          <td
+            colSpan={2}
+            style={{ padding: "12px 12px 0 0", fontSize: "0.78rem", color: INK_LABEL }}
+          >
             Totals · 87.4% verified
           </td>
           <td style={{ padding: "12px 12px 0", textAlign: "right", fontWeight: 600 }}>
@@ -814,11 +817,11 @@ export default function TypeStudiesPage() {
             lineHeight: 1.55,
           }}
         >
-          <strong style={{ color: INK }}>Source Serif Pro</strong> is listed separately in
-          the brief but is not a distinct Google Fonts family — Adobe superseded Source Serif Pro
-          with Source Serif 4 in 2021, and Google Fonts serves only the latter under the
-          <em> Source_Serif_4 </em>entry. Rendering it as a second panel would duplicate the
-          CURRENT panel above. Omitted by design, not by oversight.
+          <strong style={{ color: INK }}>Source Serif Pro</strong> is listed separately in the brief
+          but is not a distinct Google Fonts family — Adobe superseded Source Serif Pro with Source
+          Serif 4 in 2021, and Google Fonts serves only the latter under the
+          <em> Source_Serif_4 </em>entry. Rendering it as a second panel would duplicate the CURRENT
+          panel above. Omitted by design, not by oversight.
         </p>
       </section>
 
@@ -973,8 +976,8 @@ export default function TypeStudiesPage() {
             Note on candidate set: <strong style={{ color: INK }}>Commit Mono</strong> and{" "}
             <strong style={{ color: INK }}>Iosevka</strong> are excellent free monos but are not
             distributed via Google Fonts (Commit Mono is hosted at commitmono.com; Iosevka via
-            GitHub releases). This page is constrained to Google Fonts only, so they are
-            substituted with the closest-character Google-hosted alternatives:{" "}
+            GitHub releases). This page is constrained to Google Fonts only, so they are substituted
+            with the closest-character Google-hosted alternatives:{" "}
             <strong style={{ color: INK }}>Geist Mono</strong> in place of Commit Mono (warm,
             designed for code), and <strong style={{ color: INK }}>Martian Mono</strong> in place of
             Iosevka (technical, narrow, geometric).
@@ -1153,8 +1156,8 @@ export default function TypeStudiesPage() {
           At 12px, Literata holds its weight — the taller x-height was drawn for exactly this size
           range and it pays off. Funnel Sans holds at 14px but thins visibly at 12px; most editorial
           surfaces should not drop below 14px. Geologica is the strongest of the four at 12px
-          (explicitly designed for dense UI). Geist Mono is legible at 12px and the correct floor for
-          CV footer text.
+          (explicitly designed for dense UI). Geist Mono is legible at 12px and the correct floor
+          for CV footer text.
         </p>
       </section>
 
@@ -1208,28 +1211,28 @@ export default function TypeStudiesPage() {
             }}
           >
             <LockCard
-              role="DISPLAY"
+              usage="DISPLAY"
               family="Literata"
               verdict="SWAP"
               weights="400 / 500 / 600 · italic 400"
               reason="Editorial register needs a serif with a voice. Source Serif 4 is neutral to the point of anonymous — the brand leans on the red period to feel owned. Literata was drawn for long-form on screen, has open counters that hold at 12px (Section G), and renders Spanish diacritics with care (Section E). University-press gravitas without the costume-drama tax of EB Garamond."
             />
             <LockCard
-              role="BODY"
+              usage="BODY"
               family="Funnel Sans"
               verdict="HOLD"
               weights="400 / 500 / 600"
               reason="Off the reflex-reject list, subtle flared strokes, warm without being startup-soft. Only Onest came close; Onest is slightly rounder and tips the pair toward software, not press. Funnel Sans stays."
             />
             <LockCard
-              role="BODY-DENSE"
+              usage="BODY-DENSE"
               family="Funnel Sans (collapse)"
               verdict="SWAP / COLLAPSE"
               weights="500 / 600 (same family as BODY)"
               reason="The two-sans split (Funnel + Geologica) creates a subtle incoherence on hybrid surfaces (CV, employer email, dashboard header). Funnel Sans carries the field register well enough (Section C) and renders Spanish more warmly (Section E). Eliminating the second sans family also drops ~35kB of font payload. If a dense-only surface ever needs a denser cut, use Funnel Sans at 14px semibold — not a second font."
             />
             <LockCard
-              role="MONO"
+              usage="MONO"
               family="Geist Mono"
               verdict="SWAP"
               weights="400 / 500"
@@ -1246,7 +1249,9 @@ export default function TypeStudiesPage() {
             }}
           />
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "24px", maxWidth: "80ch" }}>
+          <div
+            style={{ display: "grid", gridTemplateColumns: "1fr", gap: "24px", maxWidth: "80ch" }}
+          >
             <div>
               <div
                 style={{
@@ -1275,10 +1280,10 @@ export default function TypeStudiesPage() {
                 The combination of Source Serif 4 (neutral) + Funnel Sans (warm) + Geologica
                 (mechanical) + Fragment Mono (humanist, single-weight) gives Cruzar FOUR unrelated
                 type voices. The brand survives only because the accent period visually ties
-                editorial surfaces together. Remove the period — say, on a CV footer or an
-                operator dashboard that the design system says should not carry the accent — and
-                the stack loses cohesion. The proposed lock reduces the system from 4 families to 3
-                (Literata + Funnel Sans + Geist Mono), each with a clear job and a defensible voice.
+                editorial surfaces together. Remove the period — say, on a CV footer or an operator
+                dashboard that the design system says should not carry the accent — and the stack
+                loses cohesion. The proposed lock reduces the system from 4 families to 3 (Literata
+                + Funnel Sans + Geist Mono), each with a clear job and a defensible voice.
               </p>
             </div>
             <div
@@ -1294,9 +1299,9 @@ export default function TypeStudiesPage() {
               }}
             >
               Total CSS payload, locked stack (latin + latin-ext, woff2, Next auto-subset):
-              <br />Literata 400/500/600 + italic ≈ 112 kB · Funnel Sans 400/500/600 ≈ 58 kB ·
-              Geist Mono 400/500 ≈ 42 kB · total ≈ 212 kB. vs. current stack ≈ 265 kB. Net saving
-              ≈ 53 kB.
+              <br />
+              Literata 400/500/600 + italic ≈ 112 kB · Funnel Sans 400/500/600 ≈ 58 kB · Geist Mono
+              400/500 ≈ 42 kB · total ≈ 212 kB. vs. current stack ≈ 265 kB. Net saving ≈ 53 kB.
             </div>
           </div>
         </div>
@@ -1336,13 +1341,13 @@ export default function TypeStudiesPage() {
 }
 
 function LockCard({
-  role,
+  usage,
   family,
   verdict,
   weights,
   reason,
 }: {
-  role: string;
+  usage: string;
   family: string;
   verdict: "HOLD" | "SWAP" | "SWAP / COLLAPSE";
   weights: string;
@@ -1371,7 +1376,7 @@ function LockCard({
           textTransform: "uppercase",
         }}
       >
-        <span style={{ color: PAPER_DEEP, opacity: 0.7 }}>{role}</span>
+        <span style={{ color: PAPER_DEEP, opacity: 0.7 }}>{usage}</span>
         <span style={{ color: verdictColor, fontWeight: 700 }}>{verdict}</span>
       </div>
       <div

@@ -1,9 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import { CvDownload } from "@/components/cv-download";
-import { renderMarkdown } from "@/lib/markdown";
 import { togglePublicProfile } from "@/app/profile/actions";
+import { CvDownload } from "@/components/cv-download";
 
 interface RoleMatchDisplay {
   rank: number;

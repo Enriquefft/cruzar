@@ -1,12 +1,12 @@
 import {
   ArrowRightIcon,
+  BoldIcon,
   CheckIcon,
   DownloadIcon,
+  ItalicIcon,
   PlusIcon,
   SearchIcon,
   TrashIcon,
-  BoldIcon,
-  ItalicIcon,
   UnderlineIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -40,13 +40,9 @@ function Showcase({
         <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
           {eyebrow}
         </p>
-        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">
-          {title}
-        </h2>
+        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">{title}</h2>
         {description ? (
-          <p className="max-w-[64ch] text-sm text-muted-foreground">
-            {description}
-          </p>
+          <p className="max-w-[64ch] text-sm text-muted-foreground">{description}</p>
         ) : null}
       </div>
       <div className="flex flex-col gap-6">{children}</div>
@@ -66,12 +62,8 @@ function Row({
   return (
     <div className="grid grid-cols-1 gap-3 rounded-lg border border-border bg-card p-4 md:grid-cols-[180px_1fr]">
       <div className="flex flex-col gap-0.5">
-        <span className="font-mono text-xs font-medium text-foreground">
-          {label}
-        </span>
-        {note ? (
-          <span className="text-xs text-muted-foreground">{note}</span>
-        ) : null}
+        <span className="font-mono text-xs font-medium text-foreground">{label}</span>
+        {note ? <span className="text-xs text-muted-foreground">{note}</span> : null}
       </div>
       <div className="flex flex-wrap items-center gap-3">{children}</div>
     </div>
@@ -90,8 +82,8 @@ export default function ActionsPage() {
           Button, Badge, Toggle, ToggleGroup
         </h1>
         <p className="max-w-[68ch] text-muted-foreground">
-          Los átomos accionables. Mismos primitivos en todo Cruzar: lo único que
-          cambia es el contexto tipográfico del registro que los envuelve.
+          Los átomos accionables. Mismos primitivos en todo Cruzar: lo único que cambia es el
+          contexto tipográfico del registro que los envuelve.
         </p>
       </header>
 
@@ -171,8 +163,8 @@ export default function ActionsPage() {
               <span style={{ color: "var(--brand-accent)" }}>.</span>
             </h3>
             <p className="text-sm text-muted-foreground">
-              Surfaces rector-facing, where credibility leads and the wordmark
-              period is the only accented mark.
+              Surfaces rector-facing, where credibility leads and the wordmark period is the only
+              accented mark.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               <Button>
@@ -240,31 +232,23 @@ export default function ActionsPage() {
             <CheckIcon data-icon="inline-start" />
             Placed
           </Badge>
-          <Badge variant="secondary">
-            +$2,840 / mo
-          </Badge>
+          <Badge variant="secondary">+$2,840 / mo</Badge>
         </Row>
 
         <Row label="student status" note="Cruzar pattern: name + verification">
           <div className="flex items-center gap-2">
-            <span className="font-sans-dense text-sm font-medium">
-              Estudiante #042
-            </span>
+            <span className="font-sans-dense text-sm font-medium">Estudiante #042</span>
             <Badge variant="outline">
               <CheckIcon data-icon="inline-start" />
               Verified
             </Badge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-sans-dense text-sm font-medium">
-              Estudiante #043
-            </span>
+            <span className="font-sans-dense text-sm font-medium">Estudiante #043</span>
             <Badge variant="secondary">Pending</Badge>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-sans-dense text-sm font-medium">
-              Estudiante #044
-            </span>
+            <span className="font-sans-dense text-sm font-medium">Estudiante #044</span>
             <Badge variant="destructive">Revoked</Badge>
           </div>
         </Row>

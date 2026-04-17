@@ -1,25 +1,14 @@
 "use client";
 
+import { FileSearchIcon, InfoIcon, OctagonAlertIcon, PlusIcon } from "lucide-react";
+import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/sonner";
 import { Spinner } from "@/components/ui/spinner";
-import {
-  FileSearchIcon,
-  InfoIcon,
-  OctagonAlertIcon,
-  PlusIcon,
-} from "lucide-react";
-import { toast } from "sonner";
 
 function Eyebrow({ no, label }: { no: string; label: string }) {
   return (
@@ -89,7 +78,8 @@ export default function FeedbackPage() {
           </div>
           <p className="text-xs text-muted-foreground">
             Button has no <code className="font-mono">isPending</code>. Compose with{" "}
-            <code className="font-mono">Spinner</code> + <code className="font-mono">data-icon</code> +{" "}
+            <code className="font-mono">Spinner</code> +{" "}
+            <code className="font-mono">data-icon</code> +{" "}
             <code className="font-mono">disabled</code>.
           </p>
         </div>
@@ -165,7 +155,8 @@ export default function FeedbackPage() {
           <p className="text-xs text-muted-foreground">
             <code className="font-mono">{`<Toaster />`}</code> is rendered once on this page; sonner
             styling is mapped to Cruzar popover tokens via{" "}
-            <code className="font-mono">--normal-bg</code> → <code className="font-mono">--popover</code>.
+            <code className="font-mono">--normal-bg</code> →{" "}
+            <code className="font-mono">--popover</code>.
           </p>
         </div>
       </section>

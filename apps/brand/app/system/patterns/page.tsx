@@ -1,12 +1,5 @@
 import type { ReactNode } from "react";
 import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   CohortRow,
   CvHeaderBlock,
   EditorialSectionHeader,
@@ -21,6 +14,7 @@ import {
   VerificationStamp,
   WordmarkHeading,
 } from "@/components/patterns";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PRICING, PROOF, QUOTE } from "@/lib/content";
 
 /**
@@ -51,12 +45,8 @@ function PatternBlock({
         <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
           {no} · Pattern
         </p>
-        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">
-          {title}
-        </h2>
-        <p className="max-w-[68ch] text-sm text-muted-foreground">
-          {description}
-        </p>
+        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">{title}</h2>
+        <p className="max-w-[68ch] text-sm text-muted-foreground">{description}</p>
       </header>
       <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-6">
         {children}
@@ -80,11 +70,10 @@ export default function PatternsPage() {
           Cruzar compositions
         </h1>
         <p className="max-w-[68ch] text-muted-foreground">
-          The layer between raw shadcn primitives and full pages. Each pattern
-          encodes product knowledge — the meaning of a placement status, the
-          locked treatment of the wordmark, the editorial rhythm of a stat
-          hero — so consuming surfaces compose them rather than re-inventing
-          their internals.
+          The layer between raw shadcn primitives and full pages. Each pattern encodes product
+          knowledge — the meaning of a placement status, the locked treatment of the wordmark, the
+          editorial rhythm of a stat hero — so consuming surfaces compose them rather than
+          re-inventing their internals.
         </p>
       </header>
 
@@ -127,12 +116,15 @@ export default function PatternsPage() {
             unit="of 47"
             caption={
               <>
-                students placed into international remote roles this cohort,
-                each verified by signed offer letter and first-payroll screenshot.
+                students placed into international remote roles this cohort, each verified by signed
+                offer letter and first-payroll screenshot.
               </>
             }
             subStats={[
-              { label: "Avg. salary delta", value: `+$${PROOF.averageSalaryDeltaUsd.toLocaleString("en-US")}/mo` },
+              {
+                label: "Avg. salary delta",
+                value: `+$${PROOF.averageSalaryDeltaUsd.toLocaleString("en-US")}/mo`,
+              },
               { label: "Avg. multiple", value: `${PROOF.averageSalaryMultiple.toFixed(1)}×` },
               { label: "Partner universities", value: `${PROOF.partnerUniversities}` },
             ]}
@@ -143,7 +135,10 @@ export default function PatternsPage() {
             unit="placed"
             caption="cohort 02 — verified, remote, signed offer letter held on file"
             subStats={[
-              { label: "delta_avg", value: `+$${PROOF.averageSalaryDeltaUsd.toLocaleString("en-US")}/mo` },
+              {
+                label: "delta_avg",
+                value: `+$${PROOF.averageSalaryDeltaUsd.toLocaleString("en-US")}/mo`,
+              },
               { label: "mult_avg", value: `${PROOF.averageSalaryMultiple.toFixed(1)}×` },
             ]}
           />
@@ -319,40 +314,32 @@ type Props = { status: PlacementStatus; lang?: "es" | "en" };`}
           <TableBody>
             <CohortRow
               initials="MR"
-              role="Frontend Engineer · US remote"
+              jobTitle="Frontend Engineer · US remote"
               status="signed"
               salaryDelta={3120}
               daysToOffer={41}
             />
             <CohortRow
               initials="JC"
-              role="Data Analyst · EU remote"
+              jobTitle="Data Analyst · EU remote"
               status="interview"
               salaryDelta={2840}
             />
             <CohortRow
               initials="AV"
-              role="Customer Success · LATAM+US"
+              jobTitle="Customer Success · LATAM+US"
               status="viewed"
               salaryDelta={2200}
             />
             <CohortRow
               initials="DF"
-              role="Backend Engineer · US remote"
+              jobTitle="Backend Engineer · US remote"
               status="offer"
               salaryDelta={3540}
               daysToOffer={53}
             />
-            <CohortRow
-              initials="LP"
-              role="Design Engineer · US remote"
-              status="applied"
-            />
-            <CohortRow
-              initials="SR"
-              role="QA Engineer · US remote"
-              status="rejected"
-            />
+            <CohortRow initials="LP" jobTitle="Design Engineer · US remote" status="applied" />
+            <CohortRow initials="SR" jobTitle="QA Engineer · US remote" status="rejected" />
           </TableBody>
         </Table>
       </PatternBlock>
@@ -408,7 +395,7 @@ type Props = { status: PlacementStatus; lang?: "es" | "en" };`}
       >
         <CvHeaderBlock
           name="Mariana Reyes"
-          role="Frontend Engineer"
+          jobTitle="Frontend Engineer"
           locale={{ city: "Lima", country: "Peru" }}
           verificationHash="m4xq7p2k"
         />
@@ -427,7 +414,7 @@ type Props = { status: PlacementStatus; lang?: "es" | "en" };`}
       >
         <EmailSignature
           name="Enrique Flores-Talavera"
-          role="Co-founder · Product & Engineering"
+          jobTitle="Co-founder · Product & Engineering"
           email="enrique@cruzarapp.com"
         />
       </PatternBlock>

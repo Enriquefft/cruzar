@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { intakeBatchQuestionSchema, type IntakeBatchQuestion } from "@/schemas/intake-batch";
 import type { LlmMessage } from "@/lib/llm";
+import { type IntakeBatchQuestion, intakeBatchQuestionSchema } from "@/schemas/intake-batch";
 
 export const PROMPT_VERSION = "intake-batch-v1" as const;
 

@@ -14,8 +14,8 @@
  * they are brand locks.
  */
 
-import { cn } from "@/lib/utils";
 import { WORDMARK } from "@/lib/tokens";
+import { cn } from "@/lib/utils";
 
 type DisplayPreset = "display1" | "display2" | "display3";
 
@@ -50,10 +50,7 @@ export function WordmarkHeading({
   inverted = false,
   className,
 }: Props) {
-  const sizeClass =
-    typeof size === "string"
-      ? PRESET_CLASS[size]
-      : undefined;
+  const sizeClass = typeof size === "string" ? PRESET_CLASS[size] : undefined;
   const sizeStyle =
     typeof size === "number"
       ? {
@@ -66,11 +63,7 @@ export function WordmarkHeading({
     <Tag
       data-pattern="wordmark-heading"
       data-inverted={inverted || undefined}
-      className={cn(
-        "font-serif font-normal tracking-[-0.045em]",
-        sizeClass,
-        className,
-      )}
+      className={cn("font-serif font-normal tracking-[-0.045em]", sizeClass, className)}
       style={sizeStyle}
     >
       {WORDMARK.text}

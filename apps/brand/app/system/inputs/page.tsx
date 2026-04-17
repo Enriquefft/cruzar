@@ -10,11 +10,7 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -26,10 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 /**
  * /system/inputs — form primitives showcase.
@@ -71,13 +64,9 @@ function Showcase({
         <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
           {eyebrow}
         </p>
-        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">
-          {title}
-        </h2>
+        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">{title}</h2>
         {description ? (
-          <p className="max-w-[64ch] text-sm text-muted-foreground">
-            {description}
-          </p>
+          <p className="max-w-[64ch] text-sm text-muted-foreground">{description}</p>
         ) : null}
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{children}</div>
@@ -85,18 +74,10 @@ function Showcase({
   );
 }
 
-function Panel({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function Panel({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5">
-      <span className="font-mono text-xs font-medium text-foreground">
-        {label}
-      </span>
+      <span className="font-mono text-xs font-medium text-foreground">{label}</span>
       {children}
     </div>
   );
@@ -114,10 +95,16 @@ export default function InputsPage() {
           Input primitives
         </h1>
         <p className="max-w-[68ch] text-muted-foreground">
-          Cada control vive dentro de <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">FieldGroup → Field</code>.
-          El label, la descripción y los estados (<code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">data-invalid</code>,{" "}
-          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">data-disabled</code>) emanan del Field,
-          nunca de un <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">div</code> crudo con spacing.
+          Cada control vive dentro de{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">
+            FieldGroup → Field
+          </code>
+          . El label, la descripción y los estados (
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">data-invalid</code>,{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">data-disabled</code>
+          ) emanan del Field, nunca de un{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">div</code> crudo con
+          spacing.
         </p>
       </header>
 
@@ -137,15 +124,8 @@ export default function InputsPage() {
           <FieldGroup>
             <Field data-invalid>
               <FieldLabel htmlFor="input-invalid">Email</FieldLabel>
-              <Input
-                id="input-invalid"
-                type="email"
-                defaultValue="maria@gmail"
-                aria-invalid
-              />
-              <FieldDescription>
-                Email inválido — falta el dominio completo.
-              </FieldDescription>
+              <Input id="input-invalid" type="email" defaultValue="maria@gmail" aria-invalid />
+              <FieldDescription>Email inválido — falta el dominio completo.</FieldDescription>
             </Field>
           </FieldGroup>
         </Panel>
@@ -163,9 +143,7 @@ export default function InputsPage() {
         <Panel label="cruzar intake question">
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="intake-english">
-                ¿Cuál es tu nivel actual de inglés?
-              </FieldLabel>
+              <FieldLabel htmlFor="intake-english">¿Cuál es tu nivel actual de inglés?</FieldLabel>
               <Input id="intake-english" placeholder="p. ej. C1 Advanced (178)" />
               <FieldDescription>
                 Auto-validado contra tu certificado oficial en el paso 3.
@@ -195,12 +173,7 @@ export default function InputsPage() {
           <FieldGroup>
             <Field data-invalid>
               <FieldLabel htmlFor="ta-invalid">Motivación</FieldLabel>
-              <Textarea
-                id="ta-invalid"
-                rows={4}
-                defaultValue="quiero más dinero"
-                aria-invalid
-              />
+              <Textarea id="ta-invalid" rows={4} defaultValue="quiero más dinero" aria-invalid />
               <FieldDescription>
                 Muy corto — queremos entender tu contexto en al menos 2 oraciones.
               </FieldDescription>
@@ -256,9 +229,7 @@ export default function InputsPage() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              <FieldDescription>
-                Requerido antes de avanzar al diagnóstico.
-              </FieldDescription>
+              <FieldDescription>Requerido antes de avanzar al diagnóstico.</FieldDescription>
             </Field>
           </FieldGroup>
         </Panel>
@@ -281,9 +252,7 @@ export default function InputsPage() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              <FieldDescription>
-                Bloqueado hasta subir evidencia del certificado.
-              </FieldDescription>
+              <FieldDescription>Bloqueado hasta subir evidencia del certificado.</FieldDescription>
             </Field>
           </FieldGroup>
         </Panel>
@@ -386,8 +355,8 @@ export default function InputsPage() {
                   Autorizo verificar mi oferta laboral
                 </FieldLabel>
                 <FieldDescription>
-                  Cruzar confirmará tu contrato firmado y el primer payroll,
-                  únicamente con tu consentimiento explícito.
+                  Cruzar confirmará tu contrato firmado y el primer payroll, únicamente con tu
+                  consentimiento explícito.
                 </FieldDescription>
               </div>
             </Field>
@@ -409,10 +378,7 @@ export default function InputsPage() {
                 <InputGroupAddon align="inline-start">
                   <SearchIcon />
                 </InputGroupAddon>
-                <InputGroupInput
-                  id="ig-search"
-                  placeholder="ej. Backend Senior, Remote US"
-                />
+                <InputGroupInput id="ig-search" placeholder="ej. Backend Senior, Remote US" />
               </InputGroup>
             </Field>
           </FieldGroup>
@@ -423,11 +389,7 @@ export default function InputsPage() {
             <Field>
               <FieldLabel htmlFor="ig-score">Puntaje TOEFL iBT</FieldLabel>
               <InputGroup>
-                <InputGroupInput
-                  id="ig-score"
-                  type="number"
-                  placeholder="118"
-                />
+                <InputGroupInput id="ig-score" type="number" placeholder="118" />
                 <InputGroupAddon align="inline-end">
                   <span>/ 120</span>
                 </InputGroupAddon>
@@ -451,11 +413,7 @@ export default function InputsPage() {
                     <InputGroupAddon align="inline-start">
                       <DollarSignIcon />
                     </InputGroupAddon>
-                    <InputGroupInput
-                      id="salary-min"
-                      type="number"
-                      placeholder="2,500"
-                    />
+                    <InputGroupInput id="salary-min" type="number" placeholder="2,500" />
                     <InputGroupAddon align="inline-end">USD</InputGroupAddon>
                   </InputGroup>
                 </Field>
@@ -467,11 +425,7 @@ export default function InputsPage() {
                     <InputGroupAddon align="inline-start">
                       <DollarSignIcon />
                     </InputGroupAddon>
-                    <InputGroupInput
-                      id="salary-max"
-                      type="number"
-                      placeholder="4,000"
-                    />
+                    <InputGroupInput id="salary-max" type="number" placeholder="4,000" />
                     <InputGroupAddon align="inline-end">USD</InputGroupAddon>
                   </InputGroup>
                 </Field>
@@ -485,17 +439,10 @@ export default function InputsPage() {
             <Field data-invalid>
               <FieldLabel htmlFor="ig-invalid">Puntaje TOEFL iBT</FieldLabel>
               <InputGroup>
-                <InputGroupInput
-                  id="ig-invalid"
-                  type="number"
-                  defaultValue="82"
-                  aria-invalid
-                />
+                <InputGroupInput id="ig-invalid" type="number" defaultValue="82" aria-invalid />
                 <InputGroupAddon align="inline-end">/ 120</InputGroupAddon>
               </InputGroup>
-              <FieldDescription>
-                Por debajo del mínimo (95) para cohort 02.
-              </FieldDescription>
+              <FieldDescription>Por debajo del mínimo (95) para cohort 02.</FieldDescription>
             </Field>
           </FieldGroup>
         </Panel>
@@ -511,11 +458,7 @@ export default function InputsPage() {
           <FieldGroup>
             <Field>
               <FieldTitle id="role-pref">Preferencia de rol</FieldTitle>
-              <ToggleGroup
-                aria-labelledby="role-pref"
-                defaultValue={["fullstack"]}
-                spacing={2}
-              >
+              <ToggleGroup aria-labelledby="role-pref" defaultValue={["fullstack"]} spacing={2}>
                 <ToggleGroupItem value="backend">Backend</ToggleGroupItem>
                 <ToggleGroupItem value="frontend">Frontend</ToggleGroupItem>
                 <ToggleGroupItem value="fullstack">Fullstack</ToggleGroupItem>

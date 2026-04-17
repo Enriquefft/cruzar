@@ -1,3 +1,5 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
 import {
   ACCENT,
   ACCENT_DARK,
@@ -22,12 +24,10 @@ import {
   PAPER_DEEP,
   SIGNAL,
   SIGNAL_DIM,
-  WORDMARK,
   space,
   text,
+  WORDMARK,
 } from "@/lib/tokens";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 
 /**
  * The live tokens page — single source-of-truth rendering of every Cruzar
@@ -44,11 +44,31 @@ type LightSwatch = {
 };
 
 const LIGHT_TOKENS: LightSwatch[] = [
-  { name: "PAPER", variable: "--cruzar-paper", value: PAPER, role: "Primary background — warm cream" },
-  { name: "PAPER_DEEP", variable: "--cruzar-paper-deep", value: PAPER_DEEP, role: "Shelf surface, muted panels" },
-  { name: "CARD", variable: "--cruzar-card", value: CARD, role: "Inset raised rows, cards over paper" },
+  {
+    name: "PAPER",
+    variable: "--cruzar-paper",
+    value: PAPER,
+    role: "Primary background — warm cream",
+  },
+  {
+    name: "PAPER_DEEP",
+    variable: "--cruzar-paper-deep",
+    value: PAPER_DEEP,
+    role: "Shelf surface, muted panels",
+  },
+  {
+    name: "CARD",
+    variable: "--cruzar-card",
+    value: CARD,
+    role: "Inset raised rows, cards over paper",
+  },
   { name: "INK", variable: "--cruzar-ink", value: INK, role: "Body text, primary buttons" },
-  { name: "INK_SOFT", variable: "--cruzar-ink-soft", value: INK_SOFT, role: "Secondary text, muted foreground" },
+  {
+    name: "INK_SOFT",
+    variable: "--cruzar-ink-soft",
+    value: INK_SOFT,
+    role: "Secondary text, muted foreground",
+  },
   {
     name: "INK_LABEL",
     variable: "--cruzar-ink-label",
@@ -57,7 +77,12 @@ const LIGHT_TOKENS: LightSwatch[] = [
     warning: "Fails WCAG AA (3.3–3.5:1). Decorative / label-only — never body text.",
   },
   { name: "HAIRLINE", variable: "--cruzar-hairline", value: HAIRLINE, role: "1px dividers" },
-  { name: "HAIRLINE_STRONG", variable: "--cruzar-hairline-strong", value: HAIRLINE_STRONG, role: "Section dividers in dense layouts" },
+  {
+    name: "HAIRLINE_STRONG",
+    variable: "--cruzar-hairline-strong",
+    value: HAIRLINE_STRONG,
+    role: "Section dividers in dense layouts",
+  },
   {
     name: "ACCENT",
     variable: "--brand-accent",
@@ -65,19 +90,54 @@ const LIGHT_TOKENS: LightSwatch[] = [
     role: "Wordmark period, § markers, focus rings — surgical use only",
     warning: "Sub-AA on paper (~4.0–4.25:1). Never fill body text or backgrounds.",
   },
-  { name: "SIGNAL", variable: "--brand-signal", value: SIGNAL, role: "Field-register operator contexts" },
-  { name: "SIGNAL_DIM", variable: "--brand-signal-dim", value: SIGNAL_DIM, role: "Row highlights, status bands" },
+  {
+    name: "SIGNAL",
+    variable: "--brand-signal",
+    value: SIGNAL,
+    role: "Field-register operator contexts",
+  },
+  {
+    name: "SIGNAL_DIM",
+    variable: "--brand-signal-dim",
+    value: SIGNAL_DIM,
+    role: "Row highlights, status bands",
+  },
 ];
 
 const DARK_TOKENS: LightSwatch[] = [
   { name: "DARK_PAPER", variable: "--cruzar-paper", value: DARK_PAPER, role: "Dark background" },
-  { name: "DARK_PAPER_DEEP", variable: "--cruzar-paper-deep", value: DARK_PAPER_DEEP, role: "Shelf surface on dark" },
+  {
+    name: "DARK_PAPER_DEEP",
+    variable: "--cruzar-paper-deep",
+    value: DARK_PAPER_DEEP,
+    role: "Shelf surface on dark",
+  },
   { name: "DARK_CARD", variable: "--cruzar-card", value: DARK_CARD, role: "Raised cards on dark" },
   { name: "DARK_INK", variable: "--cruzar-ink", value: DARK_INK, role: "Body text on dark" },
-  { name: "DARK_INK_SOFT", variable: "--cruzar-ink-soft", value: DARK_INK_SOFT, role: "Secondary text on dark" },
-  { name: "DARK_INK_LABEL", variable: "--cruzar-ink-label", value: DARK_INK_LABEL, role: "Labels on dark — same WCAG constraints" },
-  { name: "DARK_HAIRLINE", variable: "--cruzar-hairline", value: DARK_HAIRLINE, role: "Dividers on dark" },
-  { name: "ACCENT_DARK", variable: "--brand-accent", value: ACCENT_DARK, role: "Lifted accent — the light-mode ACCENT collapses on dark" },
+  {
+    name: "DARK_INK_SOFT",
+    variable: "--cruzar-ink-soft",
+    value: DARK_INK_SOFT,
+    role: "Secondary text on dark",
+  },
+  {
+    name: "DARK_INK_LABEL",
+    variable: "--cruzar-ink-label",
+    value: DARK_INK_LABEL,
+    role: "Labels on dark — same WCAG constraints",
+  },
+  {
+    name: "DARK_HAIRLINE",
+    variable: "--cruzar-hairline",
+    value: DARK_HAIRLINE,
+    role: "Dividers on dark",
+  },
+  {
+    name: "ACCENT_DARK",
+    variable: "--brand-accent",
+    value: ACCENT_DARK,
+    role: "Lifted accent — the light-mode ACCENT collapses on dark",
+  },
 ];
 
 const CHART_TOKENS = [
@@ -141,7 +201,9 @@ function Swatch({ token }: { token: LightSwatch }) {
           <code className="font-mono text-[0.7rem] text-muted-foreground">{token.variable}</code>
         </div>
         <div className="text-xs text-muted-foreground">{token.role}</div>
-        <code className="font-mono text-[0.7rem] text-muted-foreground tabular-nums">{token.value}</code>
+        <code className="font-mono text-[0.7rem] text-muted-foreground tabular-nums">
+          {token.value}
+        </code>
         {token.warning ? (
           <div className="mt-1 text-[0.7rem] text-destructive leading-snug">{token.warning}</div>
         ) : null}
@@ -270,12 +332,17 @@ export default function FoundationsPage() {
         <div className="flex flex-col gap-2 rounded-md bg-card p-6 ring-1 ring-border">
           <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
             <span className="font-sans-dense text-lg font-semibold">Geologica</span>
-            <span className="font-mono text-xs text-muted-foreground">bodyDense · font-sans-dense</span>
+            <span className="font-mono text-xs text-muted-foreground">
+              bodyDense · font-sans-dense
+            </span>
           </div>
           <div className="flex flex-col gap-3 pt-2">
-            <div className="font-sans-dense text-xl font-medium">Operator register — instrument-panel voice.</div>
+            <div className="font-sans-dense text-xl font-medium">
+              Operator register — instrument-panel voice.
+            </div>
             <div className="font-sans-dense text-base">
-              Denser than Funnel Sans. Used for CV templates, operator dashboards, and internal field surfaces.
+              Denser than Funnel Sans. Used for CV templates, operator dashboards, and internal
+              field surfaces.
             </div>
           </div>
         </div>
@@ -305,7 +372,10 @@ export default function FoundationsPage() {
           {SPACE_STEPS.map((s) => (
             <div key={s.key} className="grid grid-cols-[180px_1fr] items-center gap-4">
               <div className="font-mono text-xs tabular-nums">{s.label}</div>
-              <div className="h-3 rounded-sm bg-[color:var(--brand-signal)]" style={{ width: space[s.key] }} />
+              <div
+                className="h-3 rounded-sm bg-[color:var(--brand-signal)]"
+                style={{ width: space[s.key] }}
+              />
             </div>
           ))}
         </div>
@@ -321,8 +391,13 @@ export default function FoundationsPage() {
           {TYPE_SCALE.map((s) => {
             const isDisplay = s.key.toString().startsWith("display");
             return (
-              <div key={s.key} className="grid grid-cols-[180px_1fr] items-baseline gap-4 border-b border-border pb-4 last:border-b-0 last:pb-0">
-                <div className="font-mono text-xs text-muted-foreground tabular-nums">{s.label}</div>
+              <div
+                key={s.key}
+                className="grid grid-cols-[180px_1fr] items-baseline gap-4 border-b border-border pb-4 last:border-b-0 last:pb-0"
+              >
+                <div className="font-mono text-xs text-muted-foreground tabular-nums">
+                  {s.label}
+                </div>
                 <div
                   className={isDisplay ? "font-serif leading-[1.05]" : "font-sans"}
                   style={{ fontSize: text[s.key] }}

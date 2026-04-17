@@ -19,30 +19,29 @@ import { WordmarkHeading } from "./WordmarkHeading";
 
 type Props = {
   name: string;
-  role: string;
+  jobTitle: string;
   email: string;
   className?: string;
 };
 
 const DOMAIN = "cruzarapp.com";
 
-export function EmailSignature({ name, role, email, className }: Props) {
+export function EmailSignature({ name, jobTitle, email, className }: Props) {
   return (
     <div
       data-pattern="email-signature"
-      className={cn(
-        "flex flex-col gap-1 font-sans text-sm leading-snug tabular-nums",
-        className,
-      )}
+      className={cn("flex flex-col gap-1 font-sans text-sm leading-snug tabular-nums", className)}
     >
       <div className="font-medium text-foreground">{name}</div>
-      <div className="text-brand-ink-soft">{role}</div>
+      <div className="text-brand-ink-soft">{jobTitle}</div>
       <div className="pt-1">
         <WordmarkHeading as="div" size={18} />
       </div>
       <div className="font-mono text-xs text-brand-ink-soft">
         {DOMAIN}
-        <span aria-hidden className="px-1.5 text-brand-ink-label">·</span>
+        <span aria-hidden className="px-1.5 text-brand-ink-label">
+          ·
+        </span>
         <a href={`mailto:${email}`} className="hover:underline">
           {email}
         </a>

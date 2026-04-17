@@ -1,16 +1,15 @@
 import { and, eq, sql } from "drizzle-orm";
-import { z } from "zod";
 
 import { db } from "@/db/client";
 import { applications, statusEvents } from "@/db/schema";
 import { llmJsonCompletion } from "@/lib/llm";
-import { logDone, logError } from "./_shared/logger";
 import {
-  PROMPT_VERSION,
-  inboxClassifyResultSchema,
-  renderInboxClassifyPrompt,
   type InboxClassification,
+  inboxClassifyResultSchema,
+  PROMPT_VERSION,
+  renderInboxClassifyPrompt,
 } from "@/lib/prompts/inbox-classify";
+import { logDone, logError } from "./_shared/logger";
 
 const STATUS_MAP: Record<string, "viewed" | "rejected" | "interview_invited"> = {
   viewed: "viewed",

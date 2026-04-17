@@ -449,13 +449,13 @@ function ContrastSample({
 function ColorSwatch({
   token,
   value,
-  role,
+  usage,
   fill,
   ink,
 }: {
   token: string;
   value: string;
-  role: string;
+  usage: string;
   fill: string;
   ink: string;
 }) {
@@ -482,7 +482,7 @@ function ColorSwatch({
           {token}
         </span>
         <span style={{ fontSize: "0.78rem", color: INK_SOFT, fontFamily: "var(--cruzar-body)" }}>
-          {role}
+          {usage}
         </span>
         <span
           style={{
@@ -515,7 +515,7 @@ function ColorSwatch({
 // ---------------------------------------------------------------------------
 
 function TypeSpecimen({
-  role,
+  usage,
   family,
   sample,
   fontFamily,
@@ -524,7 +524,7 @@ function TypeSpecimen({
   letterSpacing,
   upper,
 }: {
-  role: string;
+  usage: string;
   family: string;
   sample: string;
   fontFamily: string;
@@ -555,7 +555,7 @@ function TypeSpecimen({
             fontWeight: 700,
           }}
         >
-          {role}
+          {usage}
         </span>
         <span
           style={{
@@ -712,10 +712,10 @@ export default function BrandGuidelinesPage() {
                 lineHeight: 1.6,
               }}
             >
-              One screen, every rule, paired side-by-side as DO and DON'T. Mirror of the
-              canonical Spanish reference at <code>product/cruzar/brand-guidelines.md</code>.
-              Before shipping anything — email signature, slide, template, tweet — skim this
-              page to catch the reflex mistakes.
+              One screen, every rule, paired side-by-side as DO and DON'T. Mirror of the canonical
+              Spanish reference at <code>product/cruzar/brand-guidelines.md</code>. Before shipping
+              anything — email signature, slide, template, tweet — skim this page to catch the
+              reflex mistakes.
             </p>
           </div>
           <div
@@ -770,10 +770,19 @@ export default function BrandGuidelinesPage() {
 
         {/* A.3 Minimum size */}
         <div style={{ ...RULE_BOX, marginBottom: space[8] }}>
-          <h3 style={{ margin: 0, ...DO_LABEL }}>A.3 · Minimum size (provisional — Capa 1 pending)</h3>
+          <h3 style={{ margin: 0, ...DO_LABEL }}>
+            A.3 · Minimum size (provisional — Capa 1 pending)
+          </h3>
           <DoDont
             doNode={
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: space[2] }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: space[2],
+                }}
+              >
                 <Logotype height={24} />
                 <span
                   style={{
@@ -788,7 +797,14 @@ export default function BrandGuidelinesPage() {
               </div>
             }
             dontNode={
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: space[2] }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: space[2],
+                }}
+              >
                 <Logotype height={12} />
                 <span
                   style={{
@@ -850,11 +866,13 @@ export default function BrandGuidelinesPage() {
             {[
               {
                 node: <TiltedWordmark />,
-                reason: "BANNED — tilt / skew · projects 'startup toy', destroys Literata optical calibration",
+                reason:
+                  "BANNED — tilt / skew · projects 'startup toy', destroys Literata optical calibration",
               },
               {
                 node: <ShadowedWordmark />,
-                reason: "BANNED — drop shadow · top-tier AI slop tell, kills the flat editorial register",
+                reason:
+                  "BANNED — drop shadow · top-tier AI slop tell, kills the flat editorial register",
               },
               {
                 node: (
@@ -871,11 +889,13 @@ export default function BrandGuidelinesPage() {
                     Cruzar<span style={{ color: ACCENT }}>.</span>
                   </span>
                 ),
-                reason: "BANNED — outline / stroke · Cruzar never needs outline; using it signals emergency contrast fix",
+                reason:
+                  "BANNED — outline / stroke · Cruzar never needs outline; using it signals emergency contrast fix",
               },
               {
                 node: <WordmarkMissingPeriod />,
-                reason: "BANNED — period removed · the period is part of the mark, not punctuation. Removing it is deleting the r",
+                reason:
+                  "BANNED — period removed · the period is part of the mark, not punctuation. Removing it is deleting the r",
               },
               {
                 node: <WordmarkRecoloredPeriod />,
@@ -883,7 +903,8 @@ export default function BrandGuidelinesPage() {
               },
               {
                 node: <WordmarkReplacedPeriod />,
-                reason: "BANNED — period replaced · no asterisk, dash, emoji, or circle. Typographic period only",
+                reason:
+                  "BANNED — period replaced · no asterisk, dash, emoji, or circle. Typographic period only",
               },
             ].map((m) => (
               <figure
@@ -919,7 +940,9 @@ export default function BrandGuidelinesPage() {
                     lineHeight: 1.5,
                   }}
                 >
-                  <span style={{ color: ACCENT, fontWeight: 700, letterSpacing: "0.16em" }}>✗ </span>
+                  <span style={{ color: ACCENT, fontWeight: 700, letterSpacing: "0.16em" }}>
+                    ✗{" "}
+                  </span>
                   {m.reason}
                 </figcaption>
               </figure>
@@ -951,62 +974,80 @@ export default function BrandGuidelinesPage() {
               marginBottom: space[8],
             }}
           >
-            <ColorSwatch token="PAPER" value="oklch(0.97 0.012 85)" role="Canvas · dominant bg" fill={PAPER} ink={INK} />
+            <ColorSwatch
+              token="PAPER"
+              value="oklch(0.97 0.012 85)"
+              usage="Canvas · dominant bg"
+              fill={PAPER}
+              ink={INK}
+            />
             <ColorSwatch
               token="PAPER_DEEP"
               value="oklch(0.945 0.014 82)"
-              role="Shelf · section bg"
+              usage="Shelf · section bg"
               fill={PAPER_DEEP}
               ink={INK}
             />
-            <ColorSwatch token="CARD" value="oklch(0.985 0.006 82)" role="Elevated surface" fill={CARD} ink={INK} />
-            <ColorSwatch token="INK" value="oklch(0.18 0.01 80)" role="Body type / headings" fill={INK} ink={PAPER} />
+            <ColorSwatch
+              token="CARD"
+              value="oklch(0.985 0.006 82)"
+              usage="Elevated surface"
+              fill={CARD}
+              ink={INK}
+            />
+            <ColorSwatch
+              token="INK"
+              value="oklch(0.18 0.01 80)"
+              usage="Body type / headings"
+              fill={INK}
+              ink={PAPER}
+            />
             <ColorSwatch
               token="INK_SOFT"
               value="oklch(0.38 0.012 80)"
-              role="Secondary type"
+              usage="Secondary type"
               fill={INK_SOFT}
               ink={PAPER}
             />
             <ColorSwatch
               token="INK_LABEL"
               value="oklch(0.55 0.012 80)"
-              role="Caption / label"
+              usage="Caption / label"
               fill={INK_LABEL}
               ink={PAPER}
             />
             <ColorSwatch
               token="HAIRLINE"
               value="oklch(0.82 0.012 80)"
-              role="1px divider"
+              usage="1px divider"
               fill={HAIRLINE}
               ink={INK}
             />
             <ColorSwatch
               token="HAIRLINE_STRONG"
               value="oklch(0.72 0.012 80)"
-              role="Section divider"
+              usage="Section divider"
               fill={HAIRLINE_STRONG}
               ink={INK}
             />
             <ColorSwatch
               token="ACCENT"
               value="oklch(0.42 0.14 30)"
-              role="Aged red · wordmark dot"
+              usage="Aged red · wordmark dot"
               fill={ACCENT}
               ink={PAPER}
             />
             <ColorSwatch
               token="SIGNAL"
               value="oklch(0.55 0.16 35)"
-              role="Operator signal"
+              usage="Operator signal"
               fill={SIGNAL}
               ink={PAPER}
             />
             <ColorSwatch
               token="SIGNAL_DIM"
               value="oklch(0.55 0.16 35 / .12)"
-              role="Status band tint"
+              usage="Status band tint"
               fill={SIGNAL_DIM}
               ink={INK}
             />
@@ -1150,9 +1191,17 @@ export default function BrandGuidelinesPage() {
             }}
           >
             <h3 style={{ margin: 0, ...DO_LABEL }}>B.5 · Dark-mode tokens</h3>
-            <p style={{ margin: 0, fontSize: "0.95rem", color: INK, lineHeight: 1.6, maxWidth: "72ch" }}>
-              Pending Capa 3 lock (<code>apps/brand/app/brand/color-studies/page.tsx</code> not
-              yet produced). Provisional pair: <strong>INK</strong> as background,{" "}
+            <p
+              style={{
+                margin: 0,
+                fontSize: "0.95rem",
+                color: INK,
+                lineHeight: 1.6,
+                maxWidth: "72ch",
+              }}
+            >
+              Pending Capa 3 lock (<code>apps/brand/app/brand/color-studies/page.tsx</code> not yet
+              produced). Provisional pair: <strong>INK</strong> as background,{" "}
               <strong>PAPER</strong> as type, <strong>ACCENT</strong> preserved. Used only on
               operator dashboards; every other surface stays light-first.
             </p>
@@ -1169,7 +1218,7 @@ export default function BrandGuidelinesPage() {
         />
         <div style={{ border: `1px solid ${HAIRLINE}`, background: CARD, marginBottom: space[8] }}>
           <TypeSpecimen
-            role="DISPLAY"
+            usage="DISPLAY"
             family="Literata · 400"
             sample="Cruza del salario local al internacional."
             fontFamily="var(--cruzar-display), ui-serif, Georgia, serif"
@@ -1178,7 +1227,7 @@ export default function BrandGuidelinesPage() {
             letterSpacing="-0.02em"
           />
           <TypeSpecimen
-            role="BODY"
+            usage="BODY"
             family="Funnel Sans · 400"
             sample="Diagnóstico, validación en escenarios reales y postulación autónoma a empleos remotos."
             fontFamily="var(--cruzar-body), ui-sans-serif, system-ui, sans-serif"
@@ -1186,7 +1235,7 @@ export default function BrandGuidelinesPage() {
             weight={400}
           />
           <TypeSpecimen
-            role="BODY DENSE"
+            usage="BODY DENSE"
             family="Geologica · 400"
             sample="Placement verified · offer letter on file · first payroll screenshot attached."
             fontFamily="var(--cruzar-body-dense), ui-sans-serif, system-ui, sans-serif"
@@ -1195,7 +1244,7 @@ export default function BrandGuidelinesPage() {
             letterSpacing="-0.005em"
           />
           <TypeSpecimen
-            role="MONO"
+            usage="MONO"
             family="Geist Mono · 400"
             sample="+$2,840 / mo · ×4.1 · 0123456789"
             fontFamily="var(--cruzar-mono), ui-monospace, SFMono-Regular, monospace"
@@ -1203,7 +1252,7 @@ export default function BrandGuidelinesPage() {
             weight={400}
           />
           <TypeSpecimen
-            role="MONO LABEL"
+            usage="MONO LABEL"
             family="Geist Mono · tracked"
             sample="Cohort 02 · Field Report · Build 0001"
             fontFamily="var(--cruzar-mono), ui-monospace, SFMono-Regular, monospace"
@@ -1225,8 +1274,8 @@ export default function BrandGuidelinesPage() {
                 maxWidth: "65ch",
               }}
             >
-              Pasé de ganar S/. 2.400 a USD 3.100 al mes en 11 semanas. La diferencia paga mi
-              casa, mi familia y un fondo de emergencia que nunca tuve.
+              Pasé de ganar S/. 2.400 a USD 3.100 al mes en 11 semanas. La diferencia paga mi casa,
+              mi familia y un fondo de emergencia que nunca tuve.
             </div>
           }
           dontNode={
@@ -1239,8 +1288,8 @@ export default function BrandGuidelinesPage() {
                 maxWidth: "65ch",
               }}
             >
-              Pasé de ganar S/. 2.400 a USD 3.100 al mes en 11 semanas. La diferencia paga mi
-              casa, mi familia y un fondo de emergencia que nunca tuve.
+              Pasé de ganar S/. 2.400 a USD 3.100 al mes en 11 semanas. La diferencia paga mi casa,
+              mi familia y un fondo de emergencia que nunca tuve.
             </div>
           }
           doCaption="Prose in Funnel Sans body — 65ch max width, tabular nums. The eye tracks easily."
@@ -1805,10 +1854,7 @@ export default function BrandGuidelinesPage() {
                 n: "Gradient text is banned for any element on any surface.",
               },
             ].map((c) => (
-              <div
-                key={c.k}
-                style={{ display: "flex", flexDirection: "column", gap: space[2] }}
-              >
+              <div key={c.k} style={{ display: "flex", flexDirection: "column", gap: space[2] }}>
                 <span
                   style={{
                     fontFamily: "var(--cruzar-mono)",
@@ -1878,8 +1924,8 @@ export default function BrandGuidelinesPage() {
           </div>
           <div style={{ fontSize: "0.88rem", color: INK_SOFT, maxWidth: "44ch", lineHeight: 1.6 }}>
             Canonical reference pair. This visual page mirrors the Spanish markdown at{" "}
-            <code>product/cruzar/brand-guidelines.md</code>. Any conflict between the two is a
-            bug — the markdown wins by default; the visual page is re-rendered to match.
+            <code>product/cruzar/brand-guidelines.md</code>. Any conflict between the two is a bug —
+            the markdown wins by default; the visual page is re-rendered to match.
           </div>
           <div
             style={{

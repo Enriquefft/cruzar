@@ -1,5 +1,6 @@
 "use client";
 
+import { BriefcaseIcon, FileTextIcon, HelpCircleIcon, SettingsIcon, UserIcon } from "lucide-react";
 import { useState } from "react";
 import {
   AlertDialog,
@@ -14,13 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   CommandDialog,
@@ -67,19 +62,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  BriefcaseIcon,
-  FileTextIcon,
-  HelpCircleIcon,
-  SettingsIcon,
-  UserIcon,
-} from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 function Eyebrow({ no, label }: { no: string; label: string }) {
   return (
@@ -101,7 +84,9 @@ export default function OverlaysPage() {
           <Eyebrow no="I" label="Overlays" />
           <h1 className="font-serif text-4xl font-normal tracking-tight">
             Overlays<span className="text-[color:var(--brand-accent)]">.</span>{" "}
-            <span className="text-brand-ink-soft">Dialog, Sheet, AlertDialog, Tooltip, Popover, HoverCard, Command</span>
+            <span className="text-brand-ink-soft">
+              Dialog, Sheet, AlertDialog, Tooltip, Popover, HoverCard, Command
+            </span>
           </h1>
         </header>
 
@@ -110,15 +95,13 @@ export default function OverlaysPage() {
           <Eyebrow no="II" label="Dialog — Edit profile" />
           <div className="rounded-md bg-card p-6 ring-1 ring-border">
             <Dialog>
-              <DialogTrigger render={<Button variant="outline" />}>
-                Edit profile
-              </DialogTrigger>
+              <DialogTrigger render={<Button variant="outline" />}>Edit profile</DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
-                    Update the student-facing profile fields. Changes propagate to the CV builder
-                    on save.
+                    Update the student-facing profile fields. Changes propagate to the CV builder on
+                    save.
                   </DialogDescription>
                 </DialogHeader>
                 <FieldGroup>
@@ -148,9 +131,7 @@ export default function OverlaysPage() {
           <Eyebrow no="III" label="Sheet — Filters" />
           <div className="rounded-md bg-card p-6 ring-1 ring-border">
             <Sheet>
-              <SheetTrigger render={<Button variant="outline" />}>
-                Open filters
-              </SheetTrigger>
+              <SheetTrigger render={<Button variant="outline" />}>Open filters</SheetTrigger>
               <SheetContent>
                 <SheetHeader>
                   <SheetTitle>Filter applications</SheetTitle>
@@ -178,7 +159,9 @@ export default function OverlaysPage() {
                       <Checkbox id="f-interview" />
                       <FieldContent>
                         <FieldLabel htmlFor="f-interview">Interview</FieldLabel>
-                        <FieldDescription>Live interview scheduled or in progress.</FieldDescription>
+                        <FieldDescription>
+                          Live interview scheduled or in progress.
+                        </FieldDescription>
                       </FieldContent>
                     </Field>
                     <Field orientation="horizontal">
@@ -256,24 +239,28 @@ export default function OverlaysPage() {
           <Eyebrow no="VI" label="Popover — quick stats" />
           <div className="rounded-md bg-card p-6 ring-1 ring-border">
             <Popover>
-              <PopoverTrigger render={<Button variant="outline" />}>
-                Quick stats
-              </PopoverTrigger>
+              <PopoverTrigger render={<Button variant="outline" />}>Quick stats</PopoverTrigger>
               <PopoverContent>
                 <PopoverHeader>
                   <PopoverTitle>Cohort 02 · snapshot</PopoverTitle>
                 </PopoverHeader>
                 <div className="grid grid-cols-3 gap-3 pt-1">
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">Placed</span>
+                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                      Placed
+                    </span>
                     <span className="font-serif text-xl tabular-nums">12</span>
                   </div>
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">Δ / mo</span>
+                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                      Δ / mo
+                    </span>
                     <span className="font-serif text-xl tabular-nums">$2,840</span>
                   </div>
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">Multi</span>
+                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                      Multi
+                    </span>
                     <span className="font-serif text-xl tabular-nums">4.1×</span>
                   </div>
                 </div>
@@ -294,6 +281,7 @@ export default function OverlaysPage() {
                 <HoverCardTrigger
                   render={
                     <a
+                      // biome-ignore lint/a11y/useValidAnchor: hover-card trigger specimen in design-system showcase.
                       href="#"
                       className="font-medium underline underline-offset-4 hover:text-foreground"
                     >
@@ -313,11 +301,15 @@ export default function OverlaysPage() {
                     <Separator />
                     <div className="grid grid-cols-2 gap-3 pt-1">
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">Δ / mo</span>
+                        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                          Δ / mo
+                        </span>
                         <span className="font-mono text-sm tabular-nums">+$3,120</span>
                       </div>
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">Days</span>
+                        <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                          Days
+                        </span>
                         <span className="font-mono text-sm tabular-nums">41</span>
                       </div>
                     </div>
@@ -337,7 +329,9 @@ export default function OverlaysPage() {
           <Card size="sm">
             <CardHeader>
               <CardTitle>Command palette</CardTitle>
-              <CardDescription>The standard shadcn pattern — Command inside a Dialog.</CardDescription>
+              <CardDescription>
+                The standard shadcn pattern — Command inside a Dialog.
+              </CardDescription>
             </CardHeader>
             <CardContent className="pb-4">
               <Button variant="outline" onClick={() => setCommandOpen(true)}>

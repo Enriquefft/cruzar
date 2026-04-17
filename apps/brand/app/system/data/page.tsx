@@ -1,3 +1,4 @@
+import { ArrowUpRightIcon } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowUpRightIcon } from "lucide-react";
 
 type Row = {
   initials: string;
@@ -31,10 +31,34 @@ type Row = {
 };
 
 const ROWS: Row[] = [
-  { initials: "MR", role: "Frontend Engineer · US remote", status: "Placed", delta: "+USD 3,120/mo", days: 41 },
-  { initials: "JC", role: "Data Analyst · EU remote", status: "Interview", delta: "+USD 2,840/mo", days: 28 },
-  { initials: "AV", role: "Customer Success · LATAM+US", status: "In review", delta: "+USD 2,200/mo", days: 22 },
-  { initials: "DF", role: "Backend Engineer · US remote", status: "Placed", delta: "+USD 3,540/mo", days: 53 },
+  {
+    initials: "MR",
+    role: "Frontend Engineer · US remote",
+    status: "Placed",
+    delta: "+USD 3,120/mo",
+    days: 41,
+  },
+  {
+    initials: "JC",
+    role: "Data Analyst · EU remote",
+    status: "Interview",
+    delta: "+USD 2,840/mo",
+    days: 28,
+  },
+  {
+    initials: "AV",
+    role: "Customer Success · LATAM+US",
+    status: "In review",
+    delta: "+USD 2,200/mo",
+    days: 22,
+  },
+  {
+    initials: "DF",
+    role: "Backend Engineer · US remote",
+    status: "Placed",
+    delta: "+USD 3,540/mo",
+    days: 53,
+  },
   { initials: "LP", role: "Design Engineer · US remote", status: "Applied", delta: "—", days: 9 },
 ];
 
@@ -92,15 +116,21 @@ export default function DataPage() {
             <CardContent>
               <div className="grid grid-cols-3 gap-4">
                 <div className="flex flex-col gap-1">
-                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Placed</span>
+                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                    Placed
+                  </span>
                   <span className="font-serif text-3xl tabular-nums">12</span>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Avg. Δ</span>
+                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                    Avg. Δ
+                  </span>
                   <span className="font-serif text-3xl tabular-nums">$2,840</span>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Multiple</span>
+                  <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                    Multiple
+                  </span>
                   <span className="font-serif text-3xl tabular-nums">4.1×</span>
                 </div>
               </div>
@@ -170,8 +200,8 @@ export default function DataPage() {
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            AvatarFallback initials are rendered in <code className="font-mono">font-mono</code> for tabular
-            consistency across a cohort roster.
+            AvatarFallback initials are rendered in <code className="font-mono">font-mono</code> for
+            tabular consistency across a cohort roster.
           </p>
         </div>
       </section>
@@ -203,7 +233,9 @@ export default function DataPage() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Avatar size="sm" className="size-6">
-                          <AvatarFallback className="font-mono text-[0.65rem]">{row.initials}</AvatarFallback>
+                          <AvatarFallback className="font-mono text-[0.65rem]">
+                            {row.initials}
+                          </AvatarFallback>
                         </Avatar>
                         <span className="font-mono text-xs">{row.initials}</span>
                       </div>

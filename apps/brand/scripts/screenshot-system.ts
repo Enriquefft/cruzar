@@ -22,8 +22,7 @@ const ROUTES = [
 async function main() {
   await mkdir(OUT, { recursive: true });
   const browser = await chromium.launch({
-    executablePath:
-      process.env.PLAYWRIGHT_CHROME ?? "/run/current-system/sw/bin/google-chrome",
+    executablePath: process.env.PLAYWRIGHT_CHROME ?? "/run/current-system/sw/bin/google-chrome",
   });
   try {
     const ctx = await browser.newContext({

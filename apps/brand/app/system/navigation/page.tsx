@@ -1,5 +1,6 @@
 "use client";
 
+import { ArchiveIcon, MoreHorizontalIcon, PencilIcon, Trash2Icon, UserIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -15,13 +16,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,13 +37,6 @@ import {
 } from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  ArchiveIcon,
-  MoreHorizontalIcon,
-  PencilIcon,
-  Trash2Icon,
-  UserIcon,
-} from "lucide-react";
 
 function Eyebrow({ no, label }: { no: string; label: string }) {
   return (
@@ -67,7 +55,9 @@ export default function NavigationPage() {
         <Eyebrow no="I" label="Navigation" />
         <h1 className="font-serif text-4xl font-normal tracking-tight">
           Navigation<span className="text-[color:var(--brand-accent)]">.</span>{" "}
-          <span className="text-brand-ink-soft">Tabs, Breadcrumb, Pagination, Accordion, DropdownMenu</span>
+          <span className="text-brand-ink-soft">
+            Tabs, Breadcrumb, Pagination, Accordion, DropdownMenu
+          </span>
         </h1>
       </header>
 
@@ -103,15 +93,21 @@ export default function NavigationPage() {
               <CardContent className="pb-4">
                 <div className="grid grid-cols-3 gap-4 font-sans-dense">
                   <div className="flex flex-col gap-1">
-                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Placed</span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      Placed
+                    </span>
                     <span className="font-mono text-2xl tabular-nums">12</span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Δ USD/mo</span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      Δ USD/mo
+                    </span>
                     <span className="font-mono text-2xl tabular-nums">2,840</span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">×</span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      ×
+                    </span>
                     <span className="font-mono text-2xl tabular-nums">4.1</span>
                   </div>
                 </div>
@@ -126,7 +122,7 @@ export default function NavigationPage() {
               </CardHeader>
               <CardContent className="pb-4">
                 <pre className="overflow-x-auto rounded-md bg-muted p-3 font-mono text-xs text-muted-foreground">
-{`{
+                  {`{
   "cohort": "02",
   "placed": 12,
   "avg_salary_delta_usd": 2840,
@@ -149,14 +145,17 @@ export default function NavigationPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
+                {/* biome-ignore lint/a11y/useValidAnchor: breadcrumb specimen in design-system showcase. */}
                 <BreadcrumbLink render={<a href="#">Cruzar</a>} />
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
+                {/* biome-ignore lint/a11y/useValidAnchor: breadcrumb specimen in design-system showcase. */}
                 <BreadcrumbLink render={<a href="#">Cohort 02</a>} />
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
+                {/* biome-ignore lint/a11y/useValidAnchor: breadcrumb specimen in design-system showcase. */}
                 <BreadcrumbLink render={<a href="#">U0</a>} />
               </BreadcrumbItem>
               <BreadcrumbSeparator />
@@ -174,9 +173,7 @@ export default function NavigationPage() {
       <section className="flex flex-col gap-5">
         <Eyebrow no="IV" label="Pagination — 47-student cohort" />
         <div className="flex flex-col gap-3 rounded-md bg-card p-6 ring-1 ring-border">
-          <div className="text-xs text-muted-foreground">
-            Showing 11–20 of 47 students
-          </div>
+          <div className="text-xs text-muted-foreground">Showing 11–20 of 47 students</div>
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -221,8 +218,8 @@ export default function NavigationPage() {
               <AccordionTrigger>¿Cuándo se cobra el fee?</AccordionTrigger>
               <AccordionContent>
                 <p>
-                  El fee se cobra una sola vez, solo cuando se firma el contrato internacional.
-                  No hay depósito, no hay suscripción, no hay matrícula.
+                  El fee se cobra una sola vez, solo cuando se firma el contrato internacional. No
+                  hay depósito, no hay suscripción, no hay matrícula.
                 </p>
               </AccordionContent>
             </AccordionItem>

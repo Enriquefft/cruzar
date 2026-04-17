@@ -38,12 +38,7 @@ const STATUS_DOT: Record<Status, string> = {
   alert: "var(--brand-signal)",
 };
 
-export function FieldSectionHeader({
-  no,
-  label,
-  status,
-  className,
-}: Props) {
+export function FieldSectionHeader({ no, label, status, className }: Props) {
   return (
     <div
       data-pattern="field-section-header"

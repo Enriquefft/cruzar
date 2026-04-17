@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { gapSeverityValues, readinessVerdictValues } from "@/schemas/_shared";
 import type { LlmMessage } from "@/lib/llm";
+import { gapSeverityValues, readinessVerdictValues } from "@/schemas/_shared";
 
 export const PROMPT_VERSION = "assessment-v1" as const;
 

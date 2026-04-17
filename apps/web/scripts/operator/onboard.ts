@@ -1,12 +1,11 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-
-import { parseFlags } from "./_shared/args";
 import { db } from "@/db/client";
 import { englishCerts, students } from "@/db/schema";
-import { logDone, logError } from "./_shared/logger";
+import { type CefrLevel, mapCertToCefr, meetsB2 } from "@/lib/cefr-map";
 import { assertAttestationExists, presignAttestationGet } from "@/lib/r2";
-import { mapCertToCefr, meetsB2, type CefrLevel } from "@/lib/cefr-map";
+import { parseFlags } from "./_shared/args";
+import { logDone, logError } from "./_shared/logger";
 
 const flagsSchema = z.object({
   student: z.string().min(1),

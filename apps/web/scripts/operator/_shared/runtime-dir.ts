@@ -1,5 +1,5 @@
 import { mkdir, rm, writeFile } from "node:fs/promises";
-import { join, resolve, dirname } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { asc, desc, eq } from "drizzle-orm";
 import { db } from "@/db/client";
@@ -141,7 +141,7 @@ function serializeYml(data: ProfileYml): string {
     lines.push(`    comp_min_usd: ${match.comp_min_usd}`);
     lines.push(`    comp_max_usd: ${match.comp_max_usd}`);
   }
-  return lines.join("\n") + "\n";
+  return `${lines.join("\n")}\n`;
 }
 
 interface AppRow {
@@ -165,5 +165,5 @@ function renderApplicationsMd(rows: AppRow[]): string {
       `- **${row.company_name}** | ${row.role_normalized} | ${row.platform} | ${row.status} | ${appliedStr} | ${row.job_url}`,
     );
   }
-  return lines.join("\n") + "\n";
+  return `${lines.join("\n")}\n`;
 }

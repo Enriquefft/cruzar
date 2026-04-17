@@ -1,5 +1,5 @@
 // No explicit prompt caching — z.ai OpenAI-compat surface handles any server-side caching transparently.
-import { z, type ZodType } from "zod";
+import { type ZodType, z } from "zod";
 import { env } from "./env";
 
 export type LlmTier = "strong" | "weak";

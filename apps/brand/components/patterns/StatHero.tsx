@@ -14,8 +14,8 @@
  */
 
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 type Register = "editorial" | "field";
 
@@ -41,15 +41,13 @@ type Props = {
 const REGISTER_FIGURE: Record<Register, string> = {
   editorial:
     "font-serif font-light tracking-[-0.03em] text-[clamp(6rem,18vw,14rem)] leading-[0.88]",
-  field:
-    "font-mono font-medium tracking-[-0.02em] text-[clamp(4rem,11vw,8rem)] leading-[0.92]",
+  field: "font-mono font-medium tracking-[-0.02em] text-[clamp(4rem,11vw,8rem)] leading-[0.92]",
 };
 
 const REGISTER_CAPTION: Record<Register, string> = {
   editorial:
     "font-serif text-[clamp(1.4rem,2.2vw,2rem)] font-normal leading-[1.18] tracking-[-0.012em]",
-  field:
-    "font-sans-dense text-[clamp(1.05rem,1.6vw,1.35rem)] font-medium leading-[1.3]",
+  field: "font-sans-dense text-[clamp(1.05rem,1.6vw,1.35rem)] font-medium leading-[1.3]",
 };
 
 export function StatHero({
@@ -64,19 +62,14 @@ export function StatHero({
     <section
       data-pattern="stat-hero"
       data-register={register}
-      className={cn(
-        "flex flex-col gap-8 tabular-nums",
-        className,
-      )}
+      className={cn("flex flex-col gap-8 tabular-nums", className)}
     >
       {/* Asymmetric primary row: figure (left) + sentence (right). */}
       <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-2 md:gap-16">
         <div className="text-foreground">
           <span className={REGISTER_FIGURE[register]}>{value}</span>
           {unit ? (
-            <span className="ml-2 text-[0.42em] font-light text-brand-ink-label">
-              {unit}
-            </span>
+            <span className="ml-2 text-[0.42em] font-light text-brand-ink-label">{unit}</span>
           ) : null}
         </div>
         <div className={cn("max-w-[34ch] text-foreground", REGISTER_CAPTION[register])}>

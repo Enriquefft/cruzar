@@ -190,8 +190,8 @@ export default function EditorialDirection() {
               lineHeight: 1.5,
             }}
           >
-            Set in Literata at 400, with a single terminal accent in aged red to carry the
-            voice across long-form print and screen.
+            Set in Literata at 400, with a single terminal accent in aged red to carry the voice
+            across long-form print and screen.
           </div>
         </div>
       </section>

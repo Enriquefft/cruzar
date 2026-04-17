@@ -29,13 +29,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export type PlacementStatus =
-  | "applied"
-  | "viewed"
-  | "interview"
-  | "offer"
-  | "signed"
-  | "rejected";
+export type PlacementStatus = "applied" | "viewed" | "interview" | "offer" | "signed" | "rejected";
 
 type Lang = "es" | "en";
 
@@ -72,11 +66,7 @@ const VARIANT: Record<PlacementStatus, "default" | "secondary" | "outline" | "gh
   rejected: "ghost",
 };
 
-export function PlacementStatusBadge({
-  status,
-  lang = "en",
-  className,
-}: Props) {
+export function PlacementStatusBadge({ status, lang = "en", className }: Props) {
   const Icon = ICON[status];
   return (
     <Badge

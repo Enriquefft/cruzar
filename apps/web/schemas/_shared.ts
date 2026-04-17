@@ -4,11 +4,11 @@ import { z } from "zod";
 // `pgEnum()`. Every enum array is exported `as const` so its values feed both
 // `z.enum()` and `pgEnum()` without duplication.
 
-export {
-  cefrLevels as englishLevelValues,
-  cefrLevelSchema as englishLevelSchema,
-} from "@/lib/cefr-map";
 export type { CefrLevel as EnglishLevel } from "@/lib/cefr-map";
+export {
+  cefrLevelSchema as englishLevelSchema,
+  cefrLevels as englishLevelValues,
+} from "@/lib/cefr-map";
 
 export const readinessVerdictValues = ["ready", "presentation_gap", "experience_gap"] as const;
 export type ReadinessVerdict = (typeof readinessVerdictValues)[number];

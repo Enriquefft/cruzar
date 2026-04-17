@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
  * /system — editorial-register intro to the Cruzar design-system showcase.
@@ -27,32 +21,28 @@ const CATEGORIES: CategoryCard[] = [
   {
     slug: "actions",
     title: "Actions",
-    description:
-      "Pulsadores y estados binarios. La gramática de todo botón en Cruzar.",
+    description: "Pulsadores y estados binarios. La gramática de todo botón en Cruzar.",
     components: ["Button", "Badge", "Toggle", "ToggleGroup"],
     status: "ready",
   },
   {
     slug: "inputs",
     title: "Inputs",
-    description:
-      "Controles primitivos para cohort-intake y dashboards operativos.",
+    description: "Controles primitivos para cohort-intake y dashboards operativos.",
     components: ["Input", "Textarea", "Select", "Checkbox", "RadioGroup", "Switch", "InputGroup"],
     status: "ready",
   },
   {
     slug: "forms",
     title: "Forms",
-    description:
-      "Composiciones reales: onboarding cohort, validación, loading states.",
+    description: "Composiciones reales: onboarding cohort, validación, loading states.",
     components: ["FieldGroup", "FieldSet", "FieldError", "Spinner + Button"],
     status: "ready",
   },
   {
     slug: "data",
     title: "Data display",
-    description:
-      "Tablas densas y tarjetas editoriales. El ledger de placements vive aquí.",
+    description: "Tablas densas y tarjetas editoriales. El ledger de placements vive aquí.",
     components: ["Table", "Card", "Badge", "Avatar"],
     status: "soon",
   },
@@ -66,8 +56,7 @@ const CATEGORIES: CategoryCard[] = [
   {
     slug: "feedback",
     title: "Feedback",
-    description:
-      "Alertas, toasts, estados vacíos. La voz del sistema hacia el usuario.",
+    description: "Alertas, toasts, estados vacíos. La voz del sistema hacia el usuario.",
     components: ["Alert", "Sonner", "Spinner", "Skeleton", "Empty"],
     status: "soon",
   },
@@ -94,22 +83,19 @@ export default function SystemIndexPage() {
         </h1>
         <div className="flex max-w-[68ch] flex-col gap-5 text-base leading-relaxed text-foreground">
           <p>
-            Un sistema, dos registros. El{" "}
-            <span className="font-medium">editorial</span> gobierna las
-            superficies que firman rectores — decks, MOUs, landing top-fold — y
-            se apoya en Literata como voz. El{" "}
-            <span className="font-medium">field</span> gobierna los dashboards
-            operativos, CVs y emails al empleador, y cambia a Geologica con
-            Geist Mono para dar textura de instrumento.
+            Un sistema, dos registros. El <span className="font-medium">editorial</span> gobierna
+            las superficies que firman rectores — decks, MOUs, landing top-fold — y se apoya en
+            Literata como voz. El <span className="font-medium">field</span> gobierna los dashboards
+            operativos, CVs y emails al empleador, y cambia a Geologica con Geist Mono para dar
+            textura de instrumento.
           </p>
           <p className="text-muted-foreground">
-            Los primitivos no cambian entre registros — solo lo hace la densidad,
-            el encabezado y qué familia lidera. Todo lo que ves abajo consume la
-            misma SSOT de tokens y fuentes; ningún color crudo, ningún{" "}
-            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">
-              dark:
-            </code>{" "}
-            manual, ningún override tipográfico por <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">className</code>.
+            Los primitivos no cambian entre registros — solo lo hace la densidad, el encabezado y
+            qué familia lidera. Todo lo que ves abajo consume la misma SSOT de tokens y fuentes;
+            ningún color crudo, ningún{" "}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">dark:</code>{" "}
+            manual, ningún override tipográfico por{" "}
+            <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">className</code>.
           </p>
         </div>
       </section>
@@ -117,9 +103,7 @@ export default function SystemIndexPage() {
       {/* ─── Category grid ─── */}
       <section className="flex flex-col gap-6">
         <div className="flex items-baseline justify-between gap-4 border-b border-border pb-3">
-          <h2 className="font-serif text-2xl font-medium tracking-[-0.01em]">
-            Catálogo
-          </h2>
+          <h2 className="font-serif text-2xl font-medium tracking-[-0.01em]">Catálogo</h2>
           <span className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
             34 primitivos · 7 categorías
           </span>
@@ -128,6 +112,7 @@ export default function SystemIndexPage() {
           {CATEGORIES.map((cat) => {
             const isReady = cat.status === "ready";
             const card = (
+              // biome-ignore lint/correctness/useJsxKeyInIterable: key is applied on the wrapping Link/div at the map return boundary.
               <Card className="h-full transition-colors hover:bg-muted/40">
                 <CardHeader>
                   <div className="flex items-center justify-between gap-2">
@@ -173,10 +158,8 @@ export default function SystemIndexPage() {
       <footer className="border-t border-border pt-6 text-xs text-muted-foreground">
         <p className="font-mono">
           Tokens en <span className="text-foreground">apps/brand/lib/tokens.ts</span>
-          {" · "}Fuentes en{" "}
-          <span className="text-foreground">apps/brand/lib/fonts.ts</span>
-          {" · "}Componentes en{" "}
-          <span className="text-foreground">components/ui/</span>.
+          {" · "}Fuentes en <span className="text-foreground">apps/brand/lib/fonts.ts</span>
+          {" · "}Componentes en <span className="text-foreground">components/ui/</span>.
         </p>
       </footer>
     </div>

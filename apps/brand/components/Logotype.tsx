@@ -108,7 +108,7 @@ export function Logotype({
         exact kerned position after the "r" without us needing to know the
         font's glyph advance widths at build time.
       */}
-      <text x={20} y={180} style={GLYPH_STYLE} fill={ACCENT} aria-hidden="true">
+      <text x={20} y={180} style={GLYPH_STYLE} fill={ACCENT}>
         <tspan fill="transparent" stroke="none">
           Cruzar
         </tspan>

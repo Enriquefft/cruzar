@@ -1,4 +1,5 @@
 import { chromium } from "playwright";
+
 const url = "http://localhost:3100/system/patterns";
 const out = "/home/hybridz/Projects/cruzar/apps/brand/screenshots/system-patterns.png";
 async function main() {

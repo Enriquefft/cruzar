@@ -8,10 +8,10 @@ import { mapCertToCefr, meetsB2 } from "@/lib/cefr-map";
 import { assertAttestationExists, presignAttestationPut } from "@/lib/r2";
 import { generatePublicSlug } from "@/lib/slug";
 import {
-  attestationUploadRequestSchema,
-  onboardingInputSchema,
   type AttestationUploadRequest,
+  attestationUploadRequestSchema,
   type OnboardingInput,
+  onboardingInputSchema,
 } from "@/schemas/onboarding";
 
 export interface RequestAttestationUploadResult {

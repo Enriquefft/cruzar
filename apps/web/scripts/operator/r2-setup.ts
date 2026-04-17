@@ -3,11 +3,11 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
 import {
-  type BucketState,
-  type R2CorsRule,
   applyBucketCors,
+  type BucketState,
   bucketNames,
   ensureBucket,
+  type R2CorsRule,
   readBucketCors,
 } from "@/lib/r2";
 import { parseFlags } from "./_shared/args";

@@ -1,5 +1,5 @@
 import { BRAND, PRICING, PROOF, QUOTE } from "@/lib/content";
-import { bodyDense as sans, mono } from "@/lib/fonts";
+import { mono, bodyDense as sans } from "@/lib/fonts";
 import {
   CARD,
   HAIRLINE,
@@ -594,7 +594,7 @@ export default function FieldReport() {
             >
               <SpecimenRow
                 family="Geologica"
-                role="DISPLAY · SANS"
+                usage="DISPLAY · SANS"
                 sample="Cruzar"
                 fontFamily="var(--cruzar-body-dense)"
                 size="2.6rem"
@@ -603,7 +603,7 @@ export default function FieldReport() {
               />
               <SpecimenRow
                 family="Geologica / 400"
-                role="BODY · PROSE"
+                usage="BODY · PROSE"
                 sample="Diagnóstico, validación, postulación."
                 fontFamily="var(--cruzar-body-dense)"
                 size="1.02rem"
@@ -612,7 +612,7 @@ export default function FieldReport() {
               />
               <SpecimenRow
                 family="Geist Mono / 400"
-                role="DATA · META"
+                usage="DATA · META"
                 sample="0123456789 · +$2,840 · ×4.1"
                 fontFamily="var(--cruzar-mono)"
                 size="0.88rem"
@@ -620,7 +620,7 @@ export default function FieldReport() {
               />
               <SpecimenRow
                 family="Geist Mono / label"
-                role="LABEL · ALL-CAPS"
+                usage="LABEL · ALL-CAPS"
                 sample="FIELD REPORT · BUILD 0001"
                 fontFamily="var(--cruzar-mono)"
                 size="0.72rem"
@@ -644,13 +644,13 @@ export default function FieldReport() {
                 border: `1px solid ${C.hairline}`,
               }}
             >
-              <Swatch role="BACKGROUND" value="oklch(0.968 0.008 75)" fill={C.paper} ink={C.ink} />
-              <Swatch role="PAPER" value="oklch(0.985 0.006 78)" fill={C.card} ink={C.ink} />
-              <Swatch role="INK" value="oklch(0.22 0.012 60)" fill={C.ink} ink={C.paper} />
-              <Swatch role="DIM" value="oklch(0.45 0.010 65)" fill={C.dim} ink={C.paper} />
-              <Swatch role="HAIRLINE" value="oklch(0.82 0.010 70)" fill={C.hairline} ink={C.ink} />
+              <Swatch usage="BACKGROUND" value="oklch(0.968 0.008 75)" fill={C.paper} ink={C.ink} />
+              <Swatch usage="PAPER" value="oklch(0.985 0.006 78)" fill={C.card} ink={C.ink} />
+              <Swatch usage="INK" value="oklch(0.22 0.012 60)" fill={C.ink} ink={C.paper} />
+              <Swatch usage="DIM" value="oklch(0.45 0.010 65)" fill={C.dim} ink={C.paper} />
+              <Swatch usage="HAIRLINE" value="oklch(0.82 0.010 70)" fill={C.hairline} ink={C.ink} />
               <Swatch
-                role="SIGNAL"
+                usage="SIGNAL"
                 value="oklch(0.55 0.16 35)"
                 fill={C.signal}
                 ink={C.paper}
@@ -896,7 +896,7 @@ function PriceRow({
 
 function SpecimenRow({
   family,
-  role,
+  usage,
   sample,
   fontFamily,
   size,
@@ -906,7 +906,7 @@ function SpecimenRow({
   last,
 }: {
   family: string;
-  role: string;
+  usage: string;
   sample: string;
   fontFamily: string;
   size: string;
@@ -937,7 +937,7 @@ function SpecimenRow({
         }}
       >
         <span>{family}</span>
-        <span>{role}</span>
+        <span>{usage}</span>
       </div>
       <div
         style={{
@@ -957,13 +957,13 @@ function SpecimenRow({
 }
 
 function Swatch({
-  role,
+  usage,
   value,
   fill,
   ink,
   accent,
 }: {
-  role: string;
+  usage: string;
   value: string;
   fill: string;
   ink: string;
@@ -992,7 +992,7 @@ function Swatch({
         }}
       >
         {accent ? "◆ " : ""}
-        {role}
+        {usage}
       </span>
       <span
         style={{

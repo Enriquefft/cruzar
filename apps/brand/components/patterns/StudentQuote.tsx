@@ -13,8 +13,8 @@
  */
 
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 type Register = "editorial" | "field";
 
@@ -48,10 +48,7 @@ export function StudentQuote({
         data-pattern="student-quote"
         data-register="field"
         lang={lang}
-        className={cn(
-          "flex flex-col gap-4 font-sans-dense tabular-nums",
-          className,
-        )}
+        className={cn("flex flex-col gap-4 font-sans-dense tabular-nums", className)}
       >
         <div className="flex items-start gap-3">
           <span

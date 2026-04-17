@@ -35,16 +35,8 @@ const SENTENCE: Record<
   Lang,
   (parts: { range: string; trigger: string; currency: string }) => string[]
 > = {
-  es: ({ range, trigger }) => [
-    "Los estudiantes pagan ",
-    range,
-    `, ${trigger}.`,
-  ],
-  en: ({ range, trigger }) => [
-    "Students pay ",
-    range,
-    `, ${trigger}.`,
-  ],
+  es: ({ range, trigger }) => ["Los estudiantes pagan ", range, `, ${trigger}.`],
+  en: ({ range, trigger }) => ["Students pay ", range, `, ${trigger}.`],
 };
 
 function formatRange(range: Props["range"], currency: string) {
@@ -82,26 +74,14 @@ function Sentence({
   );
 }
 
-export function PricingLine({
-  range,
-  currency,
-  trigger,
-  langPrimary,
-  className,
-}: Props) {
+export function PricingLine({ range, currency, trigger, langPrimary, className }: Props) {
   const formatted = formatRange(range, currency);
 
   if (!langPrimary) {
     // Default: render the canonical English sentence on its own.
     return (
       <div data-pattern="pricing-line" className={cn("flex flex-col", className)}>
-        <Sentence
-          lang="en"
-          range={formatted}
-          trigger={trigger}
-          currency={currency}
-          emphasis
-        />
+        <Sentence lang="en" range={formatted} trigger={trigger} currency={currency} emphasis />
       </div>
     );
   }

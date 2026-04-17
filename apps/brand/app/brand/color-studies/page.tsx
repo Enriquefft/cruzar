@@ -522,9 +522,7 @@ export default function ColorStudiesPage() {
       </header>
 
       {/* ============ A — WCAG MATRIX ============ */}
-      <section
-        style={{ maxWidth: 1320, margin: "0 auto", padding: "64px clamp(24px,5vw,64px)" }}
-      >
+      <section style={{ maxWidth: 1320, margin: "0 auto", padding: "64px clamp(24px,5vw,64px)" }}>
         <SectionEyebrow no="A" label="WCAG 2.1 contrast — type on surface" />
         <h2
           className="cs-serif"
@@ -829,9 +827,7 @@ export default function ColorStudiesPage() {
       </section>
 
       {/* ============ C — PRINT FIDELITY ============ */}
-      <section
-        style={{ maxWidth: 1320, margin: "0 auto", padding: "64px clamp(24px,5vw,64px)" }}
-      >
+      <section style={{ maxWidth: 1320, margin: "0 auto", padding: "64px clamp(24px,5vw,64px)" }}>
         <SectionEyebrow no="C" label="Print drift — OKLCH → CMYK-safe" />
         <h2
           className="cs-serif"
@@ -1088,8 +1084,8 @@ export default function ColorStudiesPage() {
             }}
           >
             Canvas at L=0.19 (tinted to brand hue 80°, not pure-black). ACCENT lifted to L=0.68
-            C=0.17 so the wordmark period still registers — the light-mode ACCENT at L=0.42 reads
-            as a smear of dried blood on this ground.
+            C=0.17 so the wordmark period still registers — the light-mode ACCENT at L=0.42 reads as
+            a smear of dried blood on this ground.
           </p>
 
           <div className="cs-grid-4">
@@ -1216,9 +1212,7 @@ export default function ColorStudiesPage() {
                 }}
               >
                 <div style={{ ...eyebrowStyle, color: oklchString(DARK_INK_LABEL_OK) }}>
-                  <span style={{ color: oklchString(ACCENT_DARK_OK), fontWeight: 600 }}>
-                    § II
-                  </span>{" "}
+                  <span style={{ color: oklchString(ACCENT_DARK_OK), fontWeight: 600 }}>§ II</span>{" "}
                   Cohort 02 — live
                 </div>
                 <div
@@ -1276,9 +1270,7 @@ export default function ColorStudiesPage() {
       </section>
 
       {/* ============ F — CHART PALETTE ============ */}
-      <section
-        style={{ maxWidth: 1320, margin: "0 auto", padding: "64px clamp(24px,5vw,64px)" }}
-      >
+      <section style={{ maxWidth: 1320, margin: "0 auto", padding: "64px clamp(24px,5vw,64px)" }}>
         <SectionEyebrow no="F" label="Chart palette — 4-color extension" />
         <h2
           className="cs-serif"
@@ -1377,10 +1369,7 @@ export default function ColorStudiesPage() {
                       background: oklchString(c.okl),
                     }}
                   />
-                  <span
-                    className="cs-mono"
-                    style={{ fontSize: "0.8rem", color: INK_SOFT }}
-                  >
+                  <span className="cs-mono" style={{ fontSize: "0.8rem", color: INK_SOFT }}>
                     {Math.round(row.v * 100)}%
                   </span>
                 </Fragment>
@@ -1505,27 +1494,24 @@ export default function ColorStudiesPage() {
                       r: cell.ratio,
                     })),
                 ].map((ban) => (
-                    <li
-                      key={`${ban.fg}-${ban.bg}`}
-                      className="cs-mono"
-                      style={{ fontSize: "0.86rem", color: INK, lineHeight: 1.55 }}
-                    >
-                      <span style={{ color: ACCENT, fontWeight: 600 }}>FORBIDDEN —</span> {ban.fg}{" "}
-                      on {ban.bg} (
-                      <span style={{ color: INK_SOFT }}>{ban.r.toFixed(2)}:1</span>). Use INK or
-                      INK_SOFT for body on that surface.
-                    </li>
-                  ))}
+                  <li
+                    key={`${ban.fg}-${ban.bg}`}
+                    className="cs-mono"
+                    style={{ fontSize: "0.86rem", color: INK, lineHeight: 1.55 }}
+                  >
+                    <span style={{ color: ACCENT, fontWeight: 600 }}>FORBIDDEN —</span> {ban.fg} on{" "}
+                    {ban.bg} (<span style={{ color: INK_SOFT }}>{ban.r.toFixed(2)}:1</span>). Use
+                    INK or INK_SOFT for body on that surface.
+                  </li>
+                ))}
                 <li
                   className="cs-mono"
                   style={{ fontSize: "0.86rem", color: INK, lineHeight: 1.55 }}
                 >
                   <span style={{ color: ACCENT, fontWeight: 600 }}>FORBIDDEN —</span> ACCENT for
-                  body text on any surface (body-weight ≥ {ACCENT_ON_INK.toFixed(2)}:1 on INK,
-                  {" "}
+                  body text on any surface (body-weight ≥ {ACCENT_ON_INK.toFixed(2)}:1 on INK,{" "}
                   {wcagContrast(ACCENT_OK, PAPER_OK).toFixed(2)}:1 on PAPER — neither clears 4.5).
-                  ACCENT is reserved for the wordmark period and the § section marker, nothing
-                  else.
+                  ACCENT is reserved for the wordmark period and the § section marker, nothing else.
                 </li>
                 <li
                   className="cs-mono"
@@ -1586,9 +1572,9 @@ export default function ColorStudiesPage() {
                   lineHeight: 1.6,
                 }}
               >
-                {CHART_PALETTE.map((c, i) => `CHART_${i + 1}  ${oklchString(c.okl)}  ${c.name}`).join(
-                  "\n",
-                )}
+                {CHART_PALETTE.map(
+                  (c, i) => `CHART_${i + 1}  ${oklchString(c.okl)}  ${c.name}`,
+                ).join("\n")}
               </pre>
             </div>
 
@@ -1597,8 +1583,8 @@ export default function ColorStudiesPage() {
               <p style={{ marginTop: 8, color: INK, lineHeight: 1.6, maxWidth: "56ch" }}>
                 <strong>INK_LABEL on every surface fails 4.5:1.</strong> It currently ships as a
                 legitimate token and is the kind of color a developer reaches for when they want
-                &ldquo;secondary metadata.&rdquo; It only clears AA-Large on CARD and PAPER. The
-                fix is not to retune it — the warm-neutral hierarchy matters — but to scope it:
+                &ldquo;secondary metadata.&rdquo; It only clears AA-Large on CARD and PAPER. The fix
+                is not to retune it — the warm-neutral hierarchy matters — but to scope it:
                 INK_LABEL is a decorative/label color only, never body. This has to be encoded in
                 the token file so the rule travels with the SSOT rather than living in memory.
               </p>

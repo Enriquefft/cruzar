@@ -20,7 +20,7 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
     .limit(1);
 
   const student = studentRows[0];
-  if (!student || !student.consent_public_profile) {
+  if (!student?.consent_public_profile) {
     notFound();
   }
 

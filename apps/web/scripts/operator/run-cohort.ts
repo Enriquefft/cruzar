@@ -1,16 +1,15 @@
 import { execFile } from "node:child_process";
-import { resolve, dirname } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-
-import { parseFlags } from "./_shared/args";
 import { db } from "@/db/client";
 import { applications, fillFormDrafts, profiles, statusEvents, students } from "@/db/schema";
-import { logDone, logError } from "./_shared/logger";
+import { parseFlags } from "./_shared/args";
 import { tailorCvForJd } from "./_shared/cv-tailor";
-import { generateRuntimeDir, cleanupRuntimeDir } from "./_shared/runtime-dir";
+import { logDone, logError } from "./_shared/logger";
+import { cleanupRuntimeDir, generateRuntimeDir } from "./_shared/runtime-dir";
 
 const execFileAsync = promisify(execFile);
 const thisDir = dirname(fileURLToPath(import.meta.url));
@@ -128,12 +127,14 @@ async function main(): Promise<void> {
 
     let fillFormsStdout: string;
     try {
-      const result = await execFileAsync("node", [fillFormsPath], {
+      const pending = execFileAsync("node", [fillFormsPath], {
         env: { ...process.env },
         maxBuffer: 10 * 1024 * 1024,
         timeout: 600_000, // 10 min max
         cwd: workspaceDir,
       });
+      pending.child.stdin?.end(stdinPayload);
+      const result = await pending;
       fillFormsStdout = result.stdout;
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : String(cause);

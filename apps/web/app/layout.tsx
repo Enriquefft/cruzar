@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { fontVariables } from "@cruzar/brand/fonts";
+import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {

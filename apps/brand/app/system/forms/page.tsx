@@ -1,5 +1,6 @@
 import { CheckIcon, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
   FieldDescription,
@@ -8,13 +9,8 @@ import {
   FieldLegend,
   FieldSet,
 } from "@/components/ui/field";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import {
   Select,
   SelectContent,
@@ -63,13 +59,9 @@ function Section({
         <p className="text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
           {eyebrow}
         </p>
-        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">
-          {title}
-        </h2>
+        <h2 className="font-serif text-2xl font-medium tracking-[-0.012em]">{title}</h2>
         {description ? (
-          <p className="max-w-[64ch] text-sm text-muted-foreground">
-            {description}
-          </p>
+          <p className="max-w-[64ch] text-sm text-muted-foreground">{description}</p>
         ) : null}
       </div>
       {children}
@@ -89,10 +81,16 @@ export default function FormsPage() {
           Form composition
         </h1>
         <p className="max-w-[68ch] text-muted-foreground">
-          Una intake real de cohort, montada sobre FieldGroup + FieldSet. Un campo
-          muestra el estado inválido con <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">data-invalid</code>{" "}
-          + <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">aria-invalid</code>. El botón de envío compone{" "}
-          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">Spinner + disabled</code>, nunca{" "}
+          Una intake real de cohort, montada sobre FieldGroup + FieldSet. Un campo muestra el estado
+          inválido con{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">data-invalid</code>{" "}
+          +{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">aria-invalid</code>.
+          El botón de envío compone{" "}
+          <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">
+            Spinner + disabled
+          </code>
+          , nunca{" "}
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-[0.9em]">isLoading</code>.
         </p>
       </header>
@@ -117,11 +115,7 @@ export default function FormsPage() {
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="onb-name">Nombre completo</FieldLabel>
-                  <Input
-                    id="onb-name"
-                    placeholder="María Fernández Quispe"
-                    autoComplete="name"
-                  />
+                  <Input id="onb-name" placeholder="María Fernández Quispe" autoComplete="name" />
                 </Field>
                 <Field>
                   <FieldLabel htmlFor="onb-email">Email de contacto</FieldLabel>
@@ -167,17 +161,12 @@ export default function FormsPage() {
                 <Field data-invalid>
                   <FieldLabel htmlFor="onb-score">Puntaje obtenido</FieldLabel>
                   <InputGroup>
-                    <InputGroupInput
-                      id="onb-score"
-                      type="number"
-                      defaultValue="82"
-                      aria-invalid
-                    />
+                    <InputGroupInput id="onb-score" type="number" defaultValue="82" aria-invalid />
                     <InputGroupAddon align="inline-end">/ 120</InputGroupAddon>
                   </InputGroup>
                   <FieldDescription>
-                    Por debajo del mínimo (95) para cohort 02 — puedes reintentar
-                    en la siguiente convocatoria o enviar un certificado alterno.
+                    Por debajo del mínimo (95) para cohort 02 — puedes reintentar en la siguiente
+                    convocatoria o enviar un certificado alterno.
                   </FieldDescription>
                 </Field>
               </FieldGroup>
@@ -198,9 +187,7 @@ export default function FormsPage() {
 
             {/* Optional preference checkboxes */}
             <FieldSet>
-              <FieldLegend variant="label">
-                Preferencias opcionales
-              </FieldLegend>
+              <FieldLegend variant="label">Preferencias opcionales</FieldLegend>
               <FieldDescription>
                 Marca todas las que apliquen. Las usamos sólo como filtros iniciales.
               </FieldDescription>
@@ -240,8 +227,8 @@ export default function FormsPage() {
                   Autorizo verificar mi oferta laboral
                 </FieldLabel>
                 <FieldDescription>
-                  Cruzar confirmará tu contrato firmado y el primer payroll,
-                  exclusivamente con tu consentimiento explícito.
+                  Cruzar confirmará tu contrato firmado y el primer payroll, exclusivamente con tu
+                  consentimiento explícito.
                 </FieldDescription>
               </div>
             </Field>
@@ -250,6 +237,7 @@ export default function FormsPage() {
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6">
               <span className="text-xs text-muted-foreground">
                 Al enviar aceptas los{" "}
+                {/* biome-ignore lint/a11y/useValidAnchor: design-system showcase specimen; real terms URL is wired at use sites. */}
                 <a href="#" className="underline underline-offset-4">
                   términos
                 </a>{" "}
@@ -327,29 +315,19 @@ export default function FormsPage() {
             confirm · two Inputs in a FieldSet (validated match)
           </span>
           <FieldSet>
-            <FieldLegend variant="label">
-              Confirma tu email de contacto
-            </FieldLegend>
+            <FieldLegend variant="label">Confirma tu email de contacto</FieldLegend>
             <FieldDescription>
-              Escribe el mismo email dos veces. Usamos este valor para los drafts
-              y el email de bienvenida.
+              Escribe el mismo email dos veces. Usamos este valor para los drafts y el email de
+              bienvenida.
             </FieldDescription>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="confirm-email-1">Email</FieldLabel>
-                <Input
-                  id="confirm-email-1"
-                  type="email"
-                  defaultValue="maria@universidad.edu.pe"
-                />
+                <Input id="confirm-email-1" type="email" defaultValue="maria@universidad.edu.pe" />
               </Field>
               <Field>
                 <FieldLabel htmlFor="confirm-email-2">Confirmar email</FieldLabel>
-                <Input
-                  id="confirm-email-2"
-                  type="email"
-                  defaultValue="maria@universidad.edu.pe"
-                />
+                <Input id="confirm-email-2" type="email" defaultValue="maria@universidad.edu.pe" />
                 <FieldDescription className="flex items-center gap-1.5 text-foreground">
                   <CheckIcon aria-hidden className="size-3.5" />
                   Los emails coinciden.
@@ -373,12 +351,7 @@ export default function FormsPage() {
               </Field>
               <Field data-invalid>
                 <FieldLabel htmlFor="pwd-2">Confirmar contraseña</FieldLabel>
-                <Input
-                  id="pwd-2"
-                  type="password"
-                  defaultValue="*******"
-                  aria-invalid
-                />
+                <Input id="pwd-2" type="password" defaultValue="*******" aria-invalid />
                 <FieldDescription>
                   Las contraseñas no coinciden — revisa cualquier espacio sobrante.
                 </FieldDescription>

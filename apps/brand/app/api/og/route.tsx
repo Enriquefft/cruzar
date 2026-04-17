@@ -58,10 +58,30 @@ const FONT_BUFFERS = {
 } as const;
 
 const OG_FONTS = [
-  { name: "Literata", data: FONT_BUFFERS.serifLight, weight: 300 as const, style: "normal" as const },
-  { name: "Literata", data: FONT_BUFFERS.serifRegular, weight: 400 as const, style: "normal" as const },
-  { name: "Literata", data: FONT_BUFFERS.serifSemi, weight: 600 as const, style: "normal" as const },
-  { name: "Funnel Sans", data: FONT_BUFFERS.sansMedium, weight: 500 as const, style: "normal" as const },
+  {
+    name: "Literata",
+    data: FONT_BUFFERS.serifLight,
+    weight: 300 as const,
+    style: "normal" as const,
+  },
+  {
+    name: "Literata",
+    data: FONT_BUFFERS.serifRegular,
+    weight: 400 as const,
+    style: "normal" as const,
+  },
+  {
+    name: "Literata",
+    data: FONT_BUFFERS.serifSemi,
+    weight: 600 as const,
+    style: "normal" as const,
+  },
+  {
+    name: "Funnel Sans",
+    data: FONT_BUFFERS.sansMedium,
+    weight: 500 as const,
+    style: "normal" as const,
+  },
 ];
 
 const OG_SIZE = { width: 1200, height: 630 } as const;

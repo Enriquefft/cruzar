@@ -1,10 +1,8 @@
 import { mkdir } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { chromium } from "playwright";
 
 const HOST = process.env.BRAND_HOST ?? "http://localhost:3100";
-const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT = "/home/hybridz/Projects/cruzar/apps/brand/screenshots";
 
 async function main() {

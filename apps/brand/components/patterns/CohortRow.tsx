@@ -18,14 +18,11 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import {
-  PlacementStatusBadge,
-  type PlacementStatus,
-} from "./PlacementStatusBadge";
+import { type PlacementStatus, PlacementStatusBadge } from "./PlacementStatusBadge";
 
 type Props = {
   initials: string;
-  role: string;
+  jobTitle: string;
   status: PlacementStatus;
   /** Salary delta in USD/month. `undefined` renders as em-dash. */
   salaryDelta?: number;
@@ -44,7 +41,7 @@ const formatDelta = (delta?: number) => {
 
 export function CohortRow({
   initials,
-  role,
+  jobTitle,
   status,
   salaryDelta,
   daysToOffer,
@@ -65,7 +62,7 @@ export function CohortRow({
         </Avatar>
       </TableCell>
       <TableCell className="max-w-[34ch] truncate text-sm font-medium text-foreground">
-        {role}
+        {jobTitle}
       </TableCell>
       <TableCell>
         <PlacementStatusBadge status={status} lang={lang} />

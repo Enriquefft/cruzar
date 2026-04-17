@@ -33,22 +33,18 @@ type Props = {
 const FIGURE_LEAD: Record<Register, string> = {
   editorial:
     "font-serif text-[clamp(3rem,5.2vw,4.6rem)] font-light tracking-[-0.022em] leading-none",
-  field:
-    "font-mono text-[clamp(2.4rem,4vw,3.4rem)] font-medium tracking-[-0.015em] leading-none",
+  field: "font-mono text-[clamp(2.4rem,4vw,3.4rem)] font-medium tracking-[-0.015em] leading-none",
 };
 
 const FIGURE_SUPPORT: Record<Register, string> = {
   editorial:
     "font-serif text-[clamp(1.7rem,2.6vw,2.3rem)] font-normal tracking-[-0.022em] leading-none",
-  field:
-    "font-mono text-[clamp(1.3rem,2vw,1.7rem)] font-medium tracking-[-0.015em] leading-none",
+  field: "font-mono text-[clamp(1.3rem,2vw,1.7rem)] font-medium tracking-[-0.015em] leading-none",
 };
 
 const LABEL_CLASS: Record<Register, string> = {
-  editorial:
-    "font-sans text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-foreground",
-  field:
-    "font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-foreground",
+  editorial: "font-sans text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-foreground",
+  field: "font-mono text-[0.72rem] font-medium uppercase tracking-[0.14em] text-foreground",
 };
 
 function MetricCell({
@@ -76,11 +72,7 @@ function MetricCell({
         <span
           className={isLead ? FIGURE_LEAD[register] : FIGURE_SUPPORT[register]}
           // Field register tints the lead figure with SIGNAL (B.3).
-          style={
-            isLead && register === "field"
-              ? { color: "var(--brand-signal)" }
-              : undefined
-          }
+          style={isLead && register === "field" ? { color: "var(--brand-signal)" } : undefined}
         >
           {metric.value}
         </span>
@@ -95,12 +87,7 @@ function MetricCell({
   );
 }
 
-export function ProofLedger({
-  lead,
-  support,
-  register = "editorial",
-  className,
-}: Props) {
+export function ProofLedger({ lead, support, register = "editorial", className }: Props) {
   const cellCount = 1 + support.length;
   const supportCols =
     support.length <= 1 ? "1fr" : support.length === 2 ? "1fr 1fr" : "1fr 1fr 1fr";
@@ -109,21 +96,13 @@ export function ProofLedger({
     <section
       data-pattern="proof-ledger"
       data-register={register}
-      className={cn(
-        "border-y border-brand-hairline tabular-nums",
-        className,
-      )}
+      className={cn("border-y border-brand-hairline tabular-nums", className)}
       style={{
         display: "grid",
         gridTemplateColumns: `2fr ${supportCols}`,
       }}
     >
-      <MetricCell
-        metric={lead}
-        register={register}
-        scale="lead"
-        isLast={cellCount === 1}
-      />
+      <MetricCell metric={lead} register={register} scale="lead" isLast={cellCount === 1} />
       {support.map((m, i) => (
         <MetricCell
           key={m.label}

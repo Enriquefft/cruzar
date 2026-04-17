@@ -6,14 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "biome check .",
     "typecheck": "tsc --noEmit",
-    "format": "biome format --write .",
+    "format": "biome check --write .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "bun run db/seed.ts",
+    "db:seed-demo": "bun run scripts/seed-demo-fixtures.ts",
     "eval:cefr": "bun run scripts/eval-cefr.ts"
   },
   "dependencies": {
@@ -39,8 +40,6 @@
     "@types/react-dom": "^19",
     "drizzle-kit": "0.31.10",
     "@biomejs/biome": "2.4.12",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

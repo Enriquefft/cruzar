@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { type AttestationMimeType, attestationMimeTypeValues } from "@/lib/attestation-mime";
 import { type CefrLevel, cefrLevels, mapCertToCefr, meetsB2 } from "@/lib/cefr-map";
-import { attestationMimeTypeValues, type AttestationMimeType } from "@/lib/attestation-mime";
 import { type EnglishCertKind, englishCertKindValues } from "@/schemas/_shared";
-import { onboardingInputSchema, type OnboardingInput } from "@/schemas/onboarding";
+import { type OnboardingInput, onboardingInputSchema } from "@/schemas/onboarding";
 import { requestAttestationUpload, submitOnboarding } from "./actions";
 
 const MAX_BYTES = 10_000_000;
@@ -595,6 +595,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
                       ? "bg-secondary text-secondary-foreground"
                       : "bg-destructive text-destructive-foreground"
                   }`}
+                  role="img"
                   aria-label={`Nivel CEFR ${effectiveLevel}`}
                 >
                   {effectiveLevel}
@@ -688,6 +689,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
         {certKind !== "" && effectiveLevel !== null && meetsB2(effectiveLevel) ? (
           <div className="space-y-2">
             <p className="text-sm font-medium">Sube tu certificado</p>
+            {/* biome-ignore lint/a11y/useSemanticElements: dropzone needs drag/drop targets a <button> cannot express, so the ARIA role is kept on the div. */}
             <div
               ref={dropzoneRef}
               role="button"

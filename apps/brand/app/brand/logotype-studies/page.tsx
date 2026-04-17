@@ -1,5 +1,5 @@
-import type { CSSProperties } from "react";
 import { Caladea, EB_Garamond, Literata, Source_Serif_4, Spectral } from "next/font/google";
+import type { CSSProperties } from "react";
 import { body, display } from "@/lib/fonts";
 import {
   ACCENT,
@@ -109,15 +109,7 @@ function Caption({ children, style }: { children: React.ReactNode; style?: CSSPr
   );
 }
 
-function SectionHeading({
-  no,
-  title,
-  lede,
-}: {
-  no: string;
-  title: string;
-  lede: string;
-}) {
+function SectionHeading({ no, title, lede }: { no: string; title: string; lede: string }) {
   return (
     <div style={{ marginBottom: "48px" }}>
       <div
@@ -517,10 +509,7 @@ function SectionA() {
         >
           <Wordmark weight={400} tracking="0" />
         </VariantCell>
-        <VariantCell
-          label="tracking -0.02em"
-          note="Natural tight. Period still breathes."
-        >
+        <VariantCell label="tracking -0.02em" note="Natural tight. Period still breathes.">
           <Wordmark weight={400} tracking="-0.02em" />
         </VariantCell>
         <VariantCell
@@ -538,7 +527,9 @@ function SectionA() {
       </div>
 
       {/* A.5 Alternative serifs */}
-      <Caption style={{ marginBottom: "16px" }}>A.5 · Alternative serif families (Google Fonts)</Caption>
+      <Caption style={{ marginBottom: "16px" }}>
+        A.5 · Alternative serif families (Google Fonts)
+      </Caption>
       <div
         style={{
           display: "grid",
@@ -584,13 +575,41 @@ function SectionA() {
 /* ───────────────────────── SECTION B ───────────────────────── */
 
 const SCALE_ROWS: Array<{ size: number; surface: string; note: string }> = [
-  { size: 16, surface: "favicon, inline footer glyph", note: "At 16px the period becomes a 1px stain. Distinguishable from a dust speck only because the rest of the wordmark anchors it." },
-  { size: 20, surface: "footer signature, email sig sub-line", note: "Period is legible but requires crisp subpixel rendering. Below this is unsafe — do not ship at 14px or lower." },
-  { size: 32, surface: "top-nav header, menu branding", note: "Fully safe. Period has room, period color is recognizable as red-not-black." },
-  { size: 64, surface: "email signature hero, sidebar masthead", note: "Optimal. Period size matches counter of 'a'." },
-  { size: 128, surface: "deck cover secondary, OG card co-signature", note: "Optimal. Kerning holds." },
-  { size: 320, surface: "landing hero, rector deck cover", note: "Optimal. Period becomes a deliberate object — reads as a seal, not punctuation." },
-  { size: 800, surface: "rector deck cover at projector scale", note: "Extreme. Source Serif 4 optical sizing should kick in; stems thin slightly, which is correct — the glyph was drawn for this." },
+  {
+    size: 16,
+    surface: "favicon, inline footer glyph",
+    note: "At 16px the period becomes a 1px stain. Distinguishable from a dust speck only because the rest of the wordmark anchors it.",
+  },
+  {
+    size: 20,
+    surface: "footer signature, email sig sub-line",
+    note: "Period is legible but requires crisp subpixel rendering. Below this is unsafe — do not ship at 14px or lower.",
+  },
+  {
+    size: 32,
+    surface: "top-nav header, menu branding",
+    note: "Fully safe. Period has room, period color is recognizable as red-not-black.",
+  },
+  {
+    size: 64,
+    surface: "email signature hero, sidebar masthead",
+    note: "Optimal. Period size matches counter of 'a'.",
+  },
+  {
+    size: 128,
+    surface: "deck cover secondary, OG card co-signature",
+    note: "Optimal. Kerning holds.",
+  },
+  {
+    size: 320,
+    surface: "landing hero, rector deck cover",
+    note: "Optimal. Period becomes a deliberate object — reads as a seal, not punctuation.",
+  },
+  {
+    size: 800,
+    surface: "rector deck cover at projector scale",
+    note: "Extreme. Source Serif 4 optical sizing should kick in; stems thin slightly, which is correct — the glyph was drawn for this.",
+  },
 ];
 
 function SectionB() {
@@ -1201,7 +1220,9 @@ function SectionF() {
           </p>
         </div>
         <div>
-          <Caption style={{ marginBottom: "12px" }}>Justification · grounded in the studies</Caption>
+          <Caption style={{ marginBottom: "12px" }}>
+            Justification · grounded in the studies
+          </Caption>
           <p
             style={{
               margin: 0,
@@ -1249,11 +1270,9 @@ function SectionF() {
         >
           On surfaces with hue within 20° of ACCENT and lightness within 0.2 of ACCENT, the period
           disappears and the mark silently loses its defining gesture. The current Logotype.tsx has
-          no guard against this; a typed <code style={{ fontFamily: "var(--cruzar-mono)" }}>
-            surface
-          </code>{" "}
-          prop that validates background against the ACCENT halo is required before this lock
-          ships to apps/web.
+          no guard against this; a typed{" "}
+          <code style={{ fontFamily: "var(--cruzar-mono)" }}>surface</code> prop that validates
+          background against the ACCENT halo is required before this lock ships to apps/web.
         </p>
       </div>
     </section>

@@ -45,21 +45,15 @@ const NAV: NavSection[] = [
   },
   {
     title: "Navigation",
-    items: [
-      { href: "/system#nav", label: "Tabs · Breadcrumb · Pagination", note: "Soon" },
-    ],
+    items: [{ href: "/system#nav", label: "Tabs · Breadcrumb · Pagination", note: "Soon" }],
   },
   {
     title: "Feedback",
-    items: [
-      { href: "/system#feedback", label: "Alert · Toast · Spinner", note: "Soon" },
-    ],
+    items: [{ href: "/system#feedback", label: "Alert · Toast · Spinner", note: "Soon" }],
   },
   {
     title: "Overlays",
-    items: [
-      { href: "/system#overlays", label: "Dialog · Sheet · Popover", note: "Soon" },
-    ],
+    items: [{ href: "/system#overlays", label: "Dialog · Sheet · Popover", note: "Soon" }],
   },
   {
     title: "Patterns",
@@ -75,10 +69,7 @@ const NAV: NavSection[] = [
 function Wordmark({ className }: { className?: string }) {
   return (
     <span
-      className={cn(
-        "font-serif text-xl font-medium tracking-[-0.035em] leading-none",
-        className,
-      )}
+      className={cn("font-serif text-xl font-medium tracking-[-0.035em] leading-none", className)}
     >
       Cruzar
       <span style={{ color: "var(--brand-accent)" }}>.</span>
@@ -91,10 +82,7 @@ export default function SystemLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       {/* ─── Masthead ─── */}
       <header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-6 border-b border-border bg-background/95 px-6 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-        <Link
-          href="/system"
-          className="flex items-baseline gap-3 text-foreground"
-        >
+        <Link href="/system" className="flex items-baseline gap-3 text-foreground">
           <Wordmark />
           <span className="hidden text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground sm:inline">
             Design System
@@ -103,15 +91,13 @@ export default function SystemLayout({ children }: { children: ReactNode }) {
 
         {/* Register switch — non-functional visual placeholder */}
         <div
-          aria-label="Register (visual placeholder)"
+          aria-hidden="true"
           className="flex items-center gap-1 rounded-full border border-border bg-muted p-0.5 text-xs font-medium"
         >
           <span className="rounded-full bg-background px-3 py-1 text-foreground shadow-sm ring-1 ring-border">
             Editorial
           </span>
-          <span className="px-3 py-1 font-sans-dense text-muted-foreground">
-            Field
-          </span>
+          <span className="px-3 py-1 font-sans-dense text-muted-foreground">Field</span>
         </div>
       </header>
 

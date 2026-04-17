@@ -11,8 +11,8 @@
  * swaps to mono.
  */
 
-import { cn } from "@/lib/utils";
 import { BRAND } from "@/lib/content";
+import { cn } from "@/lib/utils";
 import { WordmarkHeading } from "./WordmarkHeading";
 
 type Register = "editorial" | "field";

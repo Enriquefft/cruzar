@@ -1,14 +1,6 @@
 import { Logotype } from "@/components/Logotype";
 import { body, display } from "@/lib/fonts";
-import {
-  ACCENT,
-  HAIRLINE,
-  INK,
-  INK_LABEL,
-  INK_SOFT,
-  PAPER,
-  PAPER_DEEP,
-} from "@/lib/tokens";
+import { ACCENT, HAIRLINE, INK, INK_LABEL, INK_SOFT, PAPER, PAPER_DEEP } from "@/lib/tokens";
 
 /**
  * Logotype asset preview.
@@ -123,9 +115,7 @@ export default function LogotypePreview() {
       >
         <span>Cruzar · Asset Preview</span>
         <span>The Logotype · SVG + Component</span>
-        <span style={{ fontVariantNumeric: "tabular-nums" }}>
-          Internal verification page
-        </span>
+        <span style={{ fontVariantNumeric: "tabular-nums" }}>Internal verification page</span>
       </header>
 
       {/* ============== SIDE-BY-SIDE WITH LIVE EDITORIAL RENDER ============== */}
@@ -194,10 +184,10 @@ export default function LogotypePreview() {
             lineHeight: 1.6,
           }}
         >
-          The component render should match the live wordmark glyph-for-glyph:
-          same stroke thickness, same kerning, same period position. The
-          component uses an SVG-internal font-size (200px) and letter-spacing
-          (-9px) that resolve to the editorial page's -0.045em ratio.
+          The component render should match the live wordmark glyph-for-glyph: same stroke
+          thickness, same kerning, same period position. The component uses an SVG-internal
+          font-size (200px) and letter-spacing (-9px) that resolve to the editorial page's -0.045em
+          ratio.
         </p>
       </section>
 
@@ -324,7 +314,7 @@ export default function LogotypePreview() {
             >
               /cruzar-wordmark.svg
             </figcaption>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {/* biome-ignore lint/performance/noImgElement: asset preview page compares the raw SVG against next/image-wrapped and component renders. */}
             <img
               src="/cruzar-wordmark.svg"
               alt="Cruzar wordmark"
@@ -350,7 +340,7 @@ export default function LogotypePreview() {
             >
               /cruzar-wordmark-inverted.svg
             </figcaption>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {/* biome-ignore lint/performance/noImgElement: asset preview page compares the raw SVG against next/image-wrapped and component renders. */}
             <img
               src="/cruzar-wordmark-inverted.svg"
               alt="Cruzar wordmark, inverted"

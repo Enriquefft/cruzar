@@ -8,6 +8,9 @@
 //
 // Ordered alphabetically to match `ls components/ui/*.tsx`.
 
+// `cn` is also exposed as its own subpath (`@cruzar/brand/cn`) so callers
+// that only need the helper don't pull the entire primitive barrel.
+export { cn } from "../../lib/utils";
 export * from "./accordion";
 export * from "./alert";
 export * from "./alert-dialog";
@@ -42,7 +45,3 @@ export * from "./textarea";
 export * from "./toggle";
 export * from "./toggle-group";
 export * from "./tooltip";
-
-// `cn` is also exposed as its own subpath (`@cruzar/brand/cn`) so callers
-// that only need the helper don't pull the entire primitive barrel.
-export { cn } from "../../lib/utils";
