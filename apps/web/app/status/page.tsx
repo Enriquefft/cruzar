@@ -1,6 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { AuthedHeader } from "@/components/authed-header";
 import { StatusCounters } from "@/components/status-counters";
 import { StatusTimeline } from "@/components/status-timeline";
 import { db } from "@/db/client";
@@ -32,11 +33,12 @@ function computeCounters(
 
 export default async function StatusPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) {
+  if (!session?.user?.id || !session.user.email) {
     redirect("/");
   }
 
   const studentId = session.user.id;
+  const email = session.user.email;
 
   const [studentApplications, studentEvents] = await Promise.all([
     db
@@ -53,19 +55,22 @@ export default async function StatusPage() {
 
   if (studentApplications.length === 0) {
     return (
-      <main className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
-        <div className="mx-auto max-w-2xl px-6 py-16 md:px-10 md:py-24">
-          <h1 className="font-serif text-3xl font-medium leading-tight tracking-tight text-[color:var(--brand-ink)] md:text-4xl">
-            Estado de aplicaciones
-          </h1>
-          <div className="mt-10 rounded-lg border border-[color:var(--brand-hairline)] bg-[color:var(--brand-card)] px-6 py-10 md:px-10 md:py-14">
-            <p className="text-base leading-relaxed text-[color:var(--brand-ink-soft)] md:text-lg md:leading-8">
-              Aún no tienes aplicaciones en curso. Cuando Miura envíe tus primeras postulaciones,
-              las verás aquí.
-            </p>
+      <div className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
+        <AuthedHeader email={email} active="status" />
+        <main>
+          <div className="mx-auto max-w-2xl px-6 py-16 md:px-10 md:py-24">
+            <h1 className="font-serif text-3xl font-medium leading-tight tracking-tight text-[color:var(--brand-ink)] md:text-4xl">
+              Estado de aplicaciones
+            </h1>
+            <div className="mt-10 rounded-lg border border-[color:var(--brand-hairline)] bg-[color:var(--brand-card)] px-6 py-10 md:px-10 md:py-14">
+              <p className="text-base leading-relaxed text-[color:var(--brand-ink-soft)] md:text-lg md:leading-8">
+                Aún no tienes aplicaciones en curso. Cuando Miura envíe tus primeras postulaciones,
+                las verás aquí.
+              </p>
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     );
   }
 
@@ -79,23 +84,26 @@ export default async function StatusPage() {
   }));
 
   return (
-    <main className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
-      <div className="mx-auto max-w-2xl px-6 py-16 md:px-10 md:py-24">
-        <h1 className="font-serif text-3xl font-medium leading-tight tracking-tight text-[color:var(--brand-ink)] md:text-4xl">
-          Estado de aplicaciones
-        </h1>
-        <div className="mt-10">
-          <StatusCounters
-            applied={counters.applied}
-            viewed={counters.viewed}
-            rejected={counters.rejected}
-            interviewInvited={counters.interview_invited}
-          />
+    <div className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
+      <AuthedHeader email={email} active="status" />
+      <main>
+        <div className="mx-auto max-w-2xl px-6 py-16 md:px-10 md:py-24">
+          <h1 className="font-serif text-3xl font-medium leading-tight tracking-tight text-[color:var(--brand-ink)] md:text-4xl">
+            Estado de aplicaciones
+          </h1>
+          <div className="mt-10">
+            <StatusCounters
+              applied={counters.applied}
+              viewed={counters.viewed}
+              rejected={counters.rejected}
+              interviewInvited={counters.interview_invited}
+            />
+          </div>
+          <div className="mt-12">
+            <StatusTimeline events={eventsWithApplication} />
+          </div>
         </div>
-        <div className="mt-12">
-          <StatusTimeline events={eventsWithApplication} />
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

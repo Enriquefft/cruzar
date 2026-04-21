@@ -1,12 +1,15 @@
 import { and, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { AuthedHeader } from "@/components/authed-header";
+import { IntakeProgressBand } from "@/components/intake-progress-band";
 import { ProfilePlan } from "@/components/profile-plan";
 import { ProfileReady } from "@/components/profile-ready";
 import { db } from "@/db/client";
 import { englishCerts, profiles, roleMatches, roles, students } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { env } from "@/lib/env";
+import { getIntakeProgress } from "@/lib/intake-progress";
 import { renderMarkdown } from "@/lib/markdown";
 import { publicUrl } from "@/lib/r2";
 
@@ -14,11 +17,12 @@ export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session?.user?.id) {
+  if (!session?.user?.id || !session.user.email) {
     redirect("/");
   }
 
   const studentId = session.user.id;
+  const email = session.user.email;
 
   const [studentRows, profileRows, certRows] = await Promise.all([
     db.select().from(students).where(eq(students.id, studentId)).limit(1),
@@ -39,26 +43,16 @@ export default async function ProfilePage() {
 
   // No profile yet: intake in progress
   if (!profile) {
+    const progress = await getIntakeProgress(studentId);
     return (
-      <main className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
-        <div className="mx-auto max-w-2xl px-6 py-16 md:px-10">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--brand-hairline)] bg-[color:var(--brand-card)] px-3 py-1">
-              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-[color:var(--brand-ink-label)]" />
-              <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-[color:var(--brand-ink-label)]">
-                En proceso
-              </span>
-            </div>
-            <h1 className="font-serif text-2xl font-semibold tracking-tight text-[color:var(--brand-ink)] md:text-3xl">
-              Tu intake esta en curso
-            </h1>
-            <p className="max-w-prose text-sm leading-relaxed text-[color:var(--brand-ink-soft)]">
-              Miura te contactara pronto por WhatsApp para completar tu diagnostico. Cuando termine,
-              tu perfil aparecera aqui.
-            </p>
+      <div className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
+        <AuthedHeader email={email} active="profile" />
+        <main>
+          <div className="mx-auto max-w-2xl px-6 py-16 md:px-10">
+            <IntakeProgressBand progress={progress} />
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     );
   }
 
@@ -89,43 +83,49 @@ export default async function ProfilePage() {
       : null;
 
     return (
-      <main className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
-        <div className="mx-auto max-w-3xl px-6 py-16 md:px-10">
-          <ProfileReady
-            cefrLevel={cefrLevel}
-            localSalaryUsd={student.local_salary_usd}
-            roleMatches={matchRows.map((rm) => ({
-              rank: rm.rank,
-              title: rm.title,
-              compMinUsd: rm.compMinUsd,
-              compMaxUsd: rm.compMaxUsd,
-              rationale: rm.rationale,
-            }))}
-            profileMdHtml={profileMdHtml}
-            showcaseCvUrl={showcaseCvUrl}
-            consentPublicProfile={student.consent_public_profile}
-            publicUrl={studentPublicUrl}
-          />
-        </div>
-      </main>
+      <div className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
+        <AuthedHeader email={email} active="profile" />
+        <main>
+          <div className="mx-auto max-w-3xl px-6 py-16 md:px-10">
+            <ProfileReady
+              cefrLevel={cefrLevel}
+              localSalaryUsd={student.local_salary_usd}
+              roleMatches={matchRows.map((rm) => ({
+                rank: rm.rank,
+                title: rm.title,
+                compMinUsd: rm.compMinUsd,
+                compMaxUsd: rm.compMaxUsd,
+                rationale: rm.rationale,
+              }))}
+              profileMdHtml={profileMdHtml}
+              showcaseCvUrl={showcaseCvUrl}
+              consentPublicProfile={student.consent_public_profile}
+              publicUrl={studentPublicUrl}
+            />
+          </div>
+        </main>
+      </div>
     );
   }
 
   // Presentation gap or experience gap
   const verdictLabel =
     profile.readiness_verdict === "presentation_gap"
-      ? "Brecha de presentacion"
+      ? "Brecha de presentación"
       : "Brecha de experiencia";
 
   return (
-    <main className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
-      <div className="mx-auto max-w-2xl px-6 py-16 md:px-10">
-        <ProfilePlan
-          planMarkdown={profile.plan_markdown}
-          nextAssessmentAt={profile.next_assessment_at}
-          verdictLabel={verdictLabel}
-        />
-      </div>
-    </main>
+    <div className="min-h-screen bg-[color:var(--background)] text-[color:var(--foreground)]">
+      <AuthedHeader email={email} active="profile" />
+      <main>
+        <div className="mx-auto max-w-2xl px-6 py-16 md:px-10">
+          <ProfilePlan
+            planMarkdown={profile.plan_markdown}
+            nextAssessmentAt={profile.next_assessment_at}
+            verdictLabel={verdictLabel}
+          />
+        </div>
+      </main>
+    </div>
   );
 }

@@ -91,6 +91,13 @@ export function ProfileReady({
         <h1 className="font-serif text-2xl font-semibold tracking-tight text-[color:var(--brand-ink)] md:text-3xl">
           Tu perfil Cruzar
         </h1>
+        <p className="text-sm leading-relaxed text-[color:var(--brand-ink-soft)]">
+          Miura empieza a postular esta semana. Sigue el avance en{" "}
+          <a className="underline underline-offset-2" href="/status">
+            /status
+          </a>
+          .
+        </p>
       </header>
 
       {salaryDelta !== null && salaryDelta > 0 && (
@@ -163,14 +170,14 @@ export function ProfileReady({
                 }`}
               />
             </span>
-            {shareState.consent ? "Perfil publico activo" : "Activar perfil publico"}
+            {shareState.consent ? "Perfil público activo" : "Activar perfil público"}
           </button>
         </form>
       </div>
 
       {shareState.consent && shareState.publicUrl && (
         <p className="text-sm text-[color:var(--brand-ink-soft)]">
-          Tu perfil publico:{" "}
+          Tu perfil público:{" "}
           <a
             href={shareState.publicUrl}
             target="_blank"
