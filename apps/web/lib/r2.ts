@@ -27,7 +27,15 @@ function requireR2Env() {
   const publicBucket = e.R2_PUBLIC_BUCKET;
   const privateBucket = e.R2_PRIVATE_BUCKET;
   const publicBase = e.R2_PUBLIC_URL;
+  const missing: string[] = [];
+  if (!accountId) missing.push("R2_ACCOUNT_ID");
+  if (!accessKeyId) missing.push("R2_ACCESS_KEY_ID");
+  if (!secretAccessKey) missing.push("R2_SECRET_ACCESS_KEY");
+  if (!publicBucket) missing.push("R2_PUBLIC_BUCKET");
+  if (!privateBucket) missing.push("R2_PRIVATE_BUCKET");
+  if (!publicBase) missing.push("R2_PUBLIC_URL");
   if (
+    missing.length > 0 ||
     !accountId ||
     !accessKeyId ||
     !secretAccessKey ||
@@ -35,9 +43,7 @@ function requireR2Env() {
     !privateBucket ||
     !publicBase
   ) {
-    throw new Error(
-      "R2 env missing. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_PUBLIC_BUCKET, R2_PRIVATE_BUCKET, R2_PUBLIC_URL in .env.",
-    );
+    throw new Error(`R2 env missing: ${missing.join(", ")}. Set in Vercel + .env.`);
   }
   return { accountId, accessKeyId, secretAccessKey, publicBucket, privateBucket, publicBase };
 }
