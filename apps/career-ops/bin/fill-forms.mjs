@@ -29,6 +29,21 @@ import { readFile, mkdir, writeFile } from 'fs/promises';
 import { resolve, basename } from 'path';
 
 // ---------------------------------------------------------------------------
+// Ethical-gate env assertion — defence in depth.
+// This binary must only be invoked via apps/web/scripts/operator/run-cohort.ts,
+// which sets CRUZAR_ETHICAL_GATE=1 on the subprocess env. Direct invocations
+// are rejected so nobody can quietly bypass the orchestrator's guardrails.
+// The hardcoded `isApplyTriggerSafe()` guard below is the primary enforcement.
+// ---------------------------------------------------------------------------
+
+if (process.env.CRUZAR_ETHICAL_GATE !== '1') {
+  process.stderr.write(
+    'ERROR: CRUZAR_ETHICAL_GATE env var missing. This binary must be invoked via apps/web/scripts/operator/run-cohort.ts.\n',
+  );
+  process.exit(1);
+}
+
+// ---------------------------------------------------------------------------
 // Input parsing — JSON on stdin
 // ---------------------------------------------------------------------------
 

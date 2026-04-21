@@ -21,6 +21,7 @@ import {
   roleMatchSchema,
 } from "@/lib/prompts/assessment";
 import { parseFlags } from "./_shared/args";
+import { generateShowcaseCv } from "./_shared/cv-tailor";
 import { logDone, logError } from "./_shared/logger";
 
 const flagsSchema = z.object({
@@ -236,6 +237,14 @@ async function main(): Promise<void> {
 
     profileMdLength = profileMdResult.profile_md.length;
 
+    // --- Showcase CV: render before profile commit so failure can't leave
+    //     a Ready profile without a downloadable CV. Re-runs overwrite the
+    //     same R2 key per generateShowcaseCv's idempotency contract.
+    const showcaseCvR2Key = await generateShowcaseCv({
+      profileMd: profileMdResult.profile_md,
+      studentId: student.id,
+    });
+
     // --- Persist: upsert profile (ready) ------------------------------------
     const now = new Date();
     const profileValues = {
@@ -247,6 +256,7 @@ async function main(): Promise<void> {
       profile_md: profileMdResult.profile_md,
       profile_md_version: nextProfileMdVersion,
       profile_md_generated_at: now,
+      showcase_cv_r2_key: showcaseCvR2Key,
       prompt_version: PROMPT_VERSION,
     } as const;
 

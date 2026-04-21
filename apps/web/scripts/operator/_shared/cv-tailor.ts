@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,6 +18,7 @@ interface TailorCvInput {
   jdText: string;
   studentId: string;
   applicationId: string;
+  destPdfPath?: string;
 }
 
 interface TailorCvOutput {
@@ -39,6 +40,7 @@ export async function tailorCvForJd({
   jdText,
   studentId,
   applicationId,
+  destPdfPath,
 }: TailorCvInput): Promise<TailorCvOutput> {
   // Determine next version for this application
   const existingVersions = await db
@@ -79,6 +81,10 @@ export async function tailorCvForJd({
     const r2Key = `generated-cvs/${studentId}/${applicationId}/v${nextVersion}.pdf`;
     await uploadFileToR2(r2Key, pdfPath, "application/pdf", "private");
 
+    if (destPdfPath) {
+      await copyFile(pdfPath, destPdfPath);
+    }
+
     // Persist generated_cvs row
     await db.insert(schema.generatedCvs).values({
       student_id: studentId,
@@ -96,6 +102,50 @@ export async function tailorCvForJd({
     };
   } finally {
     // Cleanup temp dir
+    await rm(tmpDir, { recursive: true, force: true }).catch(() => {});
+  }
+}
+
+interface ShowcaseCvInput {
+  profileMd: string;
+  studentId: string;
+}
+
+/**
+ * Render a showcase CV from profile_md (no JD tailoring) and upload to R2
+ * public bucket. Returns the R2 key. Idempotent per student: re-runs overwrite
+ * the same key so /profile + /p/<slug> always read the latest render.
+ */
+export async function generateShowcaseCv({
+  profileMd,
+  studentId,
+}: ShowcaseCvInput): Promise<string> {
+  const messages = renderCvTailorPrompt({
+    profileMd,
+    jdText:
+      "Showcase CV — not tied to any specific role. Optimize for clarity, breadth, and general readability by a reviewer scanning the student's public profile.",
+  });
+  const result = await llmJsonCompletion({
+    tier: "strong",
+    messages,
+    schema: cvTailorSchema,
+    schemaName: "cv-tailor-showcase",
+  });
+
+  const tmpDir = await mkdtemp(join(tmpdir(), "cruzar-showcase-"));
+  try {
+    const mdPath = join(tmpDir, "cv.md");
+    const pdfPath = join(tmpDir, "cv.pdf");
+    await writeFile(mdPath, result.cv_markdown, "utf-8");
+
+    const thisDir = dirname(fileURLToPath(import.meta.url));
+    const generatePdfPath = resolve(thisDir, "../../../../career-ops/bin/generate-pdf.mjs");
+    await execFileAsync("node", [generatePdfPath, mdPath, pdfPath]);
+
+    const r2Key = `showcase-cvs/${studentId}.pdf`;
+    await uploadFileToR2(r2Key, pdfPath, "application/pdf", "public");
+    return r2Key;
+  } finally {
     await rm(tmpDir, { recursive: true, force: true }).catch(() => {});
   }
 }
