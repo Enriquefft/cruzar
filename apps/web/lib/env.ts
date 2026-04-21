@@ -36,6 +36,9 @@ const envSchema = z.object({
   NEXT_PUBLIC_POSTHOG_KEY: optionalString,
   NEXT_PUBLIC_POSTHOG_HOST: optionalUrl,
 
+  GOOGLE_CLIENT_ID: optionalString,
+  GOOGLE_CLIENT_SECRET: optionalString,
+
   OPERATOR_EMAILS: z.string().transform((raw) =>
     raw
       .split(",")

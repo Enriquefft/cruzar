@@ -14,5 +14,21 @@ export const authClient = createAuthClient({
 });
 
 export async function signInWithMagicLink(email: string): Promise<void> {
-  await authClient.signIn.magicLink({ email });
+  await authClient.signIn.magicLink({
+    email,
+    callbackURL: "/profile",
+    newUserCallbackURL: "/onboarding",
+  });
+}
+
+export async function signInWithGoogle(): Promise<void> {
+  await authClient.signIn.social({
+    provider: "google",
+    callbackURL: "/profile",
+    newUserCallbackURL: "/onboarding",
+  });
+}
+
+export async function signOut(): Promise<void> {
+  await authClient.signOut();
 }
