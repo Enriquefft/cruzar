@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { eq, sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { db } from "@/db/client";
 import {
   englishCerts,
@@ -36,6 +36,7 @@ interface FixtureBatch {
 
 interface Fixture {
   user_id: string;
+  profile_id: string;
   email: string;
   name: string;
   whatsapp: string;
@@ -276,6 +277,7 @@ const FIXTURES: readonly Fixture[] = [
     // user_id is a stable string so re-runs with --reset re-create the same
     // fixture without orphaned FKs pointing at a rotated id.
     user_id: "demo-presentation-0001",
+    profile_id: "11111111-1111-4111-8111-111111111111",
     email: "enrique+demo-presentation@cruzarapp.com",
     name: "Fabián Álvarez",
     whatsapp: "+51987000111",
@@ -336,6 +338,7 @@ Background sólido en prospección B2B: 2 años ejecutando outbound para una Saa
   },
   {
     user_id: "demo-experience-0001",
+    profile_id: "22222222-2222-4222-8222-222222222222",
     email: "enrique+demo-experience@cruzarapp.com",
     name: "María García",
     whatsapp: "+51987000222",
@@ -407,7 +410,7 @@ async function resetFixtures(): Promise<void> {
   // A single user delete wipes the whole fixture tree.
   const deleted = await db
     .delete(user)
-    .where(sql`${user.id} = ANY(${FIXTURE_IDS})`)
+    .where(inArray(user.id, [...FIXTURE_IDS]))
     .returning({ id: user.id });
   log(`  Deleted ${deleted.length} fixture user(s).`);
 }
@@ -510,6 +513,7 @@ async function upsertFixture(f: Fixture): Promise<"created" | "exists"> {
     await tx
       .insert(profiles)
       .values({
+        id: f.profile_id,
         student_id: f.user_id,
         readiness_verdict: f.verdict,
         gaps_jsonb: f.gaps,
@@ -520,7 +524,7 @@ async function upsertFixture(f: Fixture): Promise<"created" | "exists"> {
         profile_md_generated_at: now,
         prompt_version: "demo-fixture-v1",
       })
-      .onConflictDoNothing({ target: profiles.student_id });
+      .onConflictDoNothing({ target: profiles.id });
   });
 
   return "created";
