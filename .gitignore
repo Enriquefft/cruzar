@@ -146,6 +146,12 @@ apps/career-ops/output/
 # themselves live under apps/web/drizzle/ and are tracked.
 .drizzle-kit/
 
+# Claude Code session runtime artifacts (PID locks, transient state). Skills,
+# settings, and agents under .claude/ remain tracked — only session runtime is
+# ignored.
+.claude/scheduled_tasks.lock
+.claude/*.pid
+
 # Turbo
 .turbo
 

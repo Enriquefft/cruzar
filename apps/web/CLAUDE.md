@@ -88,7 +88,6 @@ If the block cannot land in one session + 50% slack, escalate per `roadmap.md §
 - `bun run dev` — Next dev server
 - `bun run build` — production build
 - `bun run typecheck` — `tsc --noEmit`, must be green
-- `bun run lint` — ESLint (Next's eslint-config-next)
 - `bun run format` — Biome format
 - `bun run db:generate` — Drizzle kit: generate migrations from schema
 - `bun run db:migrate` — apply migrations

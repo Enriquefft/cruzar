@@ -18,6 +18,16 @@
 - Role in Cruzar: Co-founder. Product, engineering, AI systems. Orchestrates agent swarms for development.
 - Has personal fork of career-ops (MIT) with autonomous job application capabilities.
 
+## Capacity
+
+**Estado actual (2026-04-17):** Ni Miura ni Enrique estan full-time ni part-time formal en Cruzar. Cruzar opera como side-project hasta primer contrato firmado + plata en mano.
+
+**Implicaciones:**
+- Timelines en [traction.md](./traction.md) asumen ejecucion dedicada; expandir 2-3x bajo capacidad actual.
+- No hay hires, advisors ni tercer cofundador pre-gate. Sumar gente antes de revenue consume horas que el equipo no tiene.
+- Decisiones estructurales grandes (shareholder agreement, vesting lock-in, spinoff formal) se firman post-gate con data real de contribucion. Ver [equity.md](./equity.md).
+- Primer contrato firmado (estudiante success fee O universidad anchor) = trigger para renegociar capacity commitment y revisitar composicion de equipo.
+
 ## Team
 
 ### Engineering
