@@ -9,7 +9,7 @@ export function CohortStatus() {
       </p>
       <p className="mt-4 max-w-2xl text-pretty font-serif text-xl leading-snug text-[color:var(--brand-ink)] md:text-2xl">
         Cohorte 02 <span className="text-[color:var(--brand-ink-label)]">·</span> admisión abierta.
-        Los números públicos se publican cuando la cohorte alcance masa crítica.
+        Publicamos los números cuando la cohorte tenga suficientes perfiles activos.
       </p>
     </section>
   );

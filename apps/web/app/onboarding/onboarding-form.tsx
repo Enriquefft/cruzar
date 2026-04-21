@@ -42,27 +42,27 @@ const kindLabels: Record<EnglishCertKind, { label: string; placeholder: string; 
     ielts: {
       label: "Puntaje IELTS",
       placeholder: "6.5",
-      helper: "Overall band score (4.0 – 9.0).",
+      helper: "Tu overall band score, entre 4.0 y 9.0.",
     },
     toefl: {
       label: "Puntaje TOEFL iBT",
       placeholder: "95",
-      helper: "Total score (0 – 120).",
+      helper: "Tu puntaje total, entre 0 y 120.",
     },
     cambridge: {
       label: "Examen Cambridge",
       placeholder: "FCE / CAE / CPE",
-      helper: "Nombre del examen aprobado.",
+      helper: "El nombre del examen que aprobaste.",
     },
     aprendly: {
       label: "Resultado Aprendly",
       placeholder: "B2 / C1 / C2",
-      helper: "Nivel según Aprendly. Verificación manual.",
+      helper: "Tu nivel según Aprendly. Lo verificamos a mano.",
     },
     other: {
-      label: "Puntaje / nivel",
+      label: "Puntaje o nivel",
       placeholder: "B2",
-      helper: "Nivel exacto que tu certificación te otorga.",
+      helper: "El nivel exacto que te otorga tu certificación.",
     },
   };
 
@@ -71,7 +71,7 @@ const kindOptions: ReadonlyArray<{ value: EnglishCertKind; label: string }> = [
   { value: "toefl", label: "TOEFL iBT" },
   { value: "cambridge", label: "Cambridge (FCE / CAE / CPE)" },
   { value: "aprendly", label: "Aprendly" },
-  { value: "other", label: "Otra" },
+  { value: "other", label: "Otra certificación" },
 ];
 
 function isAttestationMime(value: string): value is AttestationMimeType {
@@ -161,11 +161,11 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
 
   const startUpload = useCallback(async (file: File) => {
     if (file.size > MAX_BYTES) {
-      setAttestation({ kind: "error", message: "El archivo supera los 10 MB." });
+      setAttestation({ kind: "error", message: "El archivo pesa más de 10 MB." });
       return;
     }
     if (!isAttestationMime(file.type)) {
-      setAttestation({ kind: "error", message: "Solo aceptamos PDF, PNG o JPEG." });
+      setAttestation({ kind: "error", message: "Aceptamos PDF, PNG o JPEG." });
       return;
     }
 
@@ -181,7 +181,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
     } catch {
       setAttestation({
         kind: "error",
-        message: "No pudimos preparar la subida. Reintentar.",
+        message: "No pudimos preparar la subida. Intenta de nuevo.",
       });
       return;
     }
@@ -214,7 +214,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
       } else {
         setAttestation({
           kind: "error",
-          message: "No pudimos subir tu certificado. Reintentar.",
+          message: "No pudimos subir tu certificado. Intenta de nuevo.",
         });
       }
     };
@@ -269,7 +269,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
       return `Subiendo ${attestation.filename}, ${attestation.percent}%.`;
     }
     if (attestation.kind === "done") {
-      return `Certificado subido: ${attestation.filename}, ${formatBytes(attestation.sizeBytes)}.`;
+      return `Certificado listo: ${attestation.filename}, ${formatBytes(attestation.sizeBytes)}.`;
     }
     if (attestation.kind === "error") {
       return attestation.message;
@@ -297,21 +297,21 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
     const errors: FieldErrors = {};
 
     if (certKind === "") {
-      errors.kind = "Selecciona el tipo de certificación.";
+      errors.kind = "Elige tu tipo de certificación.";
     }
 
     let salaryValue: number | undefined;
     if (localSalaryInput.trim() !== "") {
       const parsed = Number(localSalaryInput);
       if (!Number.isInteger(parsed) || parsed <= 0) {
-        errors.local_salary_usd = "Ingresa un entero positivo en USD, o déjalo vacío.";
+        errors.local_salary_usd = "Escribe un número entero en USD, o déjalo en blanco.";
       } else {
         salaryValue = parsed;
       }
     }
 
     if (attestationKey === null) {
-      errors.attestation_r2_key = "Necesitamos el comprobante.";
+      errors.attestation_r2_key = "Necesitamos tu certificado.";
     }
 
     if (certKind !== "") {
@@ -334,18 +334,18 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           const path = issue.path;
           const head = path[0];
           if (head === "name")
-            errors.name = "Necesitamos tu nombre completo como aparece en tu certificado.";
-          else if (head === "whatsapp")
-            errors.whatsapp = "Necesitamos un número con código de país.";
+            errors.name = "Escribe tu nombre completo, tal como aparece en el certificado.";
+          else if (head === "whatsapp") errors.whatsapp = "Escribe tu número con código de país.";
           else if (head === "local_salary_usd")
-            errors.local_salary_usd = "Ingresa un entero positivo en USD, o déjalo vacío.";
+            errors.local_salary_usd = "Escribe un número entero en USD, o déjalo en blanco.";
           else if (head === "english_cert") {
             const sub = path[1];
             if (sub === "score")
-              errors.score = "Ingresa tu puntaje exactamente como aparece en tu certificado.";
-            else if (sub === "issued_at") errors.issued_at = "Tal como aparece en el certificado.";
+              errors.score = "Escribe tu puntaje tal como aparece en el certificado.";
+            else if (sub === "issued_at")
+              errors.issued_at = "Escribe la fecha de emisión del certificado.";
             else if (sub === "attestation_r2_key")
-              errors.attestation_r2_key = "Necesitamos el comprobante.";
+              errors.attestation_r2_key = "Necesitamos tu certificado.";
           }
         }
         return { ok: false, errors };
@@ -378,7 +378,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
       setSubmitAttempts((n) => n + 1);
 
       if (effectiveLevel === null || !meetsB2(effectiveLevel)) {
-        setFieldErrors({ level: "Tu nivel CEFR debe ser B2 o superior." });
+        setFieldErrors({ level: "Tu nivel CEFR tiene que ser B2 o más alto." });
         manualLevelRef.current?.focus();
         return;
       }
@@ -401,7 +401,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           setSubmitting(false);
         }
       } catch {
-        setServerError("Algo salió mal. Inténtalo de nuevo.");
+        setServerError("Algo falló. Intenta de nuevo.");
         setSubmitting(false);
       }
     },
@@ -440,7 +440,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
             readOnly
             className="h-11 w-full rounded-md border border-input bg-muted/30 px-3 text-sm text-muted-foreground"
           />
-          <p className="text-sm text-muted-foreground">Tu sesión está vinculada a este correo.</p>
+          <p className="text-sm text-muted-foreground">Tu sesión está ligada a este correo.</p>
         </div>
 
         <div className="space-y-2">
@@ -493,7 +493,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
             className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
           <p className="text-sm text-muted-foreground">
-            Miura te escribirá aquí dentro de 24h para iniciar tu intake.
+            Miura te escribirá aquí en las próximas 24 horas para empezar tu intake.
           </p>
           {fieldErrors.whatsapp ? (
             <p id={whatsappErrId} className="text-sm text-destructive">
@@ -521,7 +521,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
             className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
           />
           <p className="text-sm text-muted-foreground">
-            Lo usamos para calcular tu salary delta. No lo compartimos.
+            Nos sirve para calcular tu salary delta. No lo compartimos con nadie.
           </p>
           {fieldErrors.local_salary_usd ? (
             <p id={salaryErrId} className="text-sm text-destructive">
@@ -556,7 +556,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
             aria-describedby={fieldErrors.kind ? kindErrId : undefined}
             className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <option value="">Selecciona tu certificación</option>
+            <option value="">Elige tu certificación</option>
             {kindOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -632,7 +632,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
               aria-describedby={fieldErrors.level ? levelErrId : undefined}
               className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <option value="">Selecciona tu nivel</option>
+              <option value="">Elige tu nivel</option>
               {cefrLevels.map((lvl) => (
                 <option key={lvl} value={lvl}>
                   {lvl}
@@ -640,7 +640,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
               ))}
             </select>
             <p className="text-sm text-muted-foreground">
-              No pudimos derivar tu nivel — selecciónalo del certificado.
+              No pudimos deducir tu nivel. Elígelo tal como aparece en tu certificado.
             </p>
             {fieldErrors.level ? (
               <p id={levelErrId} className="text-sm text-destructive">
@@ -656,8 +656,9 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
             className="rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive transition-opacity duration-200"
           >
             <strong className="font-semibold">Aún no estás listo para roles remotos.</strong> La
-            mayoría de nuestros estudiantes llegan a B2 en 3-6 meses. Te avisaremos al email que
-            registraste cuando certifiques.
+            mayoría de nuestros estudiantes llega a B2 en 3 a 6 meses. Te avisaremos a{" "}
+            <strong className="font-semibold">{initialEmail}</strong> cuando tengas un certificado
+            B2+.
           </div>
         ) : null}
 
@@ -677,7 +678,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
               aria-describedby={fieldErrors.issued_at ? issuedAtErrId : undefined}
               className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
-            <p className="text-sm text-muted-foreground">Tal como aparece en el certificado.</p>
+            <p className="text-sm text-muted-foreground">Tal como figura en tu certificado.</p>
             {fieldErrors.issued_at ? (
               <p id={issuedAtErrId} className="text-sm text-destructive">
                 {fieldErrors.issued_at}
@@ -731,14 +732,14 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
                 <>
                   <span className="text-sm font-medium">Toca o arrastra tu certificado</span>
                   <span className="mt-1 text-sm text-muted-foreground">
-                    PDF, PNG o JPEG, máximo 10 MB. Lo verificamos manualmente.
+                    PDF, PNG o JPEG, hasta 10 MB. Lo verificamos a mano.
                   </span>
                 </>
               ) : null}
 
               {attestation.kind === "preparing" ? (
                 <span className="text-sm text-muted-foreground">
-                  Preparando subida de {attestation.filename}...
+                  Preparando la subida de {attestation.filename}...
                 </span>
               ) : null}
 
@@ -820,7 +821,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
-            Adjuntarás tu certificado una vez que el sistema confirme tu nivel.
+            Podrás adjuntar tu certificado apenas confirmemos tu nivel.
           </p>
         )}
       </section>
@@ -836,12 +837,10 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           />
           <span className="flex flex-col gap-1 text-sm">
             <span className="font-medium">
-              Permito que mi perfil sea público en{" "}
-              <code className="font-mono">/p/&lt;slug&gt;</code>.
+              Quiero una página pública de mi perfil que las empresas puedan encontrar.
             </span>
             <span className="text-muted-foreground">
-              Recomendado: tu perfil público te trae oportunidades pasivas. Puedes desactivarlo
-              después.
+              Ejemplo: <code className="font-mono">cruzarapp.com/p/maria-garcia-lopez-a3f9b2</code>
             </span>
           </span>
         </label>
@@ -858,7 +857,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
 
       {submitAttempts > 0 && Object.keys(fieldErrors).length > 0 ? (
         <div aria-live="polite" className="sr-only">
-          Hay {Object.keys(fieldErrors).length} campo(s) por corregir.
+          Te falta corregir {Object.keys(fieldErrors).length} campo(s).
         </div>
       ) : null}
 
@@ -872,7 +871,7 @@ export function OnboardingForm({ initialEmail }: OnboardingFormProps) {
           {submitting ? "Enviando..." : "Enviar y empezar mi intake"}
         </button>
         {!formReady ? (
-          <span className="sr-only">Completa los campos requeridos y un certificado B2+.</span>
+          <span className="sr-only">Completa los campos y sube un certificado B2+.</span>
         ) : null}
       </div>
     </form>

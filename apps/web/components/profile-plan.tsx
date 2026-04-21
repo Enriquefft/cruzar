@@ -28,15 +28,15 @@ export function ProfilePlan({ planMarkdown, nextAssessmentAt, verdictLabel }: Pr
           Tu plan de desarrollo
         </h1>
         <p className="text-sm text-[color:var(--brand-ink-soft)]">
-          Hemos identificado las areas en las que puedes mejorar para acceder a roles remotos
-          internacionales. Sigue tu plan y agenda tu proxima evaluacion.
+          Identificamos las áreas en las que puedes mejorar para acceder a roles remotos
+          internacionales. Sigue tu plan y agenda tu próxima evaluación.
         </p>
       </header>
 
       {formattedDate && (
         <div className="rounded-md border border-[color:var(--brand-hairline)] bg-[color:var(--brand-card)] px-5 py-4">
           <p className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-[color:var(--brand-ink-label)]">
-            Proxima evaluacion
+            Próxima evaluación
           </p>
           <p className="mt-1 font-serif text-lg font-medium text-[color:var(--brand-ink)]">
             {formattedDate}
