@@ -20,6 +20,8 @@ description: Onboard a new Cruzar student. Reads the students row + english_cert
 
 - `--student <id>` -- student ID (required).
 
+If Miura says `/cruzar onboard` with no id, CC first runs [`/cruzar students list --state pending_onboard`](../cruzar-students-list/SKILL.md) to surface the candidates, then re-invokes this skill with the chosen id. The script itself also lists candidates to stderr and exits `2` with `error: "missing_student"` when `--student` is absent, so direct invocations fail safe.
+
 ## Procedure
 
 1. Run the script:

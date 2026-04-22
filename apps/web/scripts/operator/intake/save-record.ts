@@ -1,14 +1,12 @@
+// PII contract: this script persists CC's parse of a student reply. stdout
+// emits IDs + counts only; no verbatim text appears in the final JSON envelope.
+// `@/lib/llm` is intentionally not imported — reasoning happens in CC, this
+// script only validates + persists.
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/client";
 import { intakeBatchAnswers, intakeBatches } from "@/db/schema";
-import { llmJsonCompletion } from "@/lib/llm";
-import {
-  PROMPT_VERSION,
-  renderReplyParsePrompt,
-  replyParseSchema,
-} from "@/lib/prompts/intake-batch";
-import { intakeBatchQuestionSchema } from "@/schemas/intake-batch";
+import { PROMPT_VERSION, replyParseSchema } from "@/lib/prompts/intake-batch";
 import { parseFlags } from "../_shared/args";
 import { logDone, logError } from "../_shared/logger";
 
@@ -26,6 +24,10 @@ const flagsSchema = z.object({
 
 const rawReplySchema = z.string().min(1).max(20_000);
 
+const stdinSchema = replyParseSchema.extend({
+  raw_reply: rawReplySchema,
+});
+
 async function readStdin(): Promise<string> {
   process.stdin.setEncoding("utf8");
   let data = "";
@@ -38,13 +40,34 @@ async function readStdin(): Promise<string> {
 async function main(): Promise<void> {
   const flags = parseFlags(flagsSchema);
 
+  const stdinRaw = await readStdin();
+  const trimmed = stdinRaw.trim();
+  if (trimmed.length === 0) {
+    logError("empty_stdin", "No JSON on stdin; pipe the {raw_reply, answers, unmatched_notes?} payload");
+  }
+
+  let parsedJson: unknown;
+  try {
+    parsedJson = JSON.parse(trimmed);
+  } catch (cause: unknown) {
+    const message = cause instanceof Error ? cause.message : String(cause);
+    logError("invalid_json", `stdin is not valid JSON: ${message}`);
+  }
+
+  const parsed = stdinSchema.safeParse(parsedJson);
+  if (!parsed.success) {
+    logError("invalid_payload", "stdin JSON failed schema validation", {
+      issues: parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`),
+    });
+  }
+  const { raw_reply, answers, unmatched_notes } = parsed.data;
+
   const batchRows = await db
     .select({
       id: intakeBatches.id,
       intake_id: intakeBatches.intake_id,
       batch_num: intakeBatches.batch_num,
       raw_reply: intakeBatches.raw_reply,
-      questions_jsonb: intakeBatches.questions_jsonb,
     })
     .from(intakeBatches)
     .where(eq(intakeBatches.id, flags.batch))
@@ -55,16 +78,6 @@ async function main(): Promise<void> {
       batch_id: flags.batch,
     });
   }
-
-  const stdinRaw = await readStdin();
-  const parsedReply = rawReplySchema.safeParse(stdinRaw.trim());
-  if (!parsedReply.success) {
-    logError("invalid_reply", "Reply from stdin failed validation", {
-      batch_id: batchRow.id,
-      issues: parsedReply.error.issues.map((i) => i.message),
-    });
-  }
-  const rawReply = parsedReply.data;
 
   if (batchRow.raw_reply !== null && !flags.overwrite) {
     logError(
@@ -77,34 +90,14 @@ async function main(): Promise<void> {
     );
   }
 
-  const questionsParsed = z
-    .array(intakeBatchQuestionSchema)
-    .length(10)
-    .safeParse(batchRow.questions_jsonb);
-  if (!questionsParsed.success) {
-    logError("corrupt_questions_jsonb", "Stored questions failed schema validation.", {
-      batch_id: batchRow.id,
-    });
-  }
-
-  const parsedLlm = await llmJsonCompletion({
-    tier: "strong",
-    messages: renderReplyParsePrompt({
-      questions: questionsParsed.data,
-      rawReply,
-    }),
-    schema: replyParseSchema,
-    schemaName: "intake-reply-parse",
-  });
-
   let confidenceSum = 0;
   await db.transaction(async (tx) => {
     await tx
       .update(intakeBatches)
-      .set({ raw_reply: rawReply, reply_at: new Date() })
+      .set({ raw_reply, reply_at: new Date() })
       .where(eq(intakeBatches.id, batchRow.id));
 
-    for (const ans of parsedLlm.answers) {
+    for (const ans of answers) {
       confidenceSum += ans.confidence;
       await tx
         .insert(intakeBatchAnswers)
@@ -126,9 +119,9 @@ async function main(): Promise<void> {
     }
   });
 
-  const answerCount = parsedLlm.answers.length;
+  const answerCount = answers.length;
   const meanConfidence = answerCount > 0 ? Number((confidenceSum / answerCount).toFixed(3)) : 0;
-  const unmatchedLength = parsedLlm.unmatched_notes?.length ?? 0;
+  const unmatchedLength = unmatched_notes?.length ?? 0;
 
   logDone({
     batch_id: batchRow.id,

@@ -9,6 +9,8 @@ description: Classify pasted email threads from the cohort inbox into viewed/rej
 
 **Architecture:** [Flow E -- Scan inbox](../../../product/cruzar/architecture.md#flow-e--scan-inbox)
 
+CC-in-the-loop: the scripts emit a classification context bundle; **CC itself** (in this session) produces the `classifications[]` JSON using the bundled system + user prompt, then pipes it back into the save script. `@/lib/llm` is no longer called.
+
 ## Preconditions
 
 - At least one student has applications in the DB.
@@ -16,37 +18,63 @@ description: Classify pasted email threads from the cohort inbox into viewed/rej
 
 ## Inputs
 
-- No flags. Interactive: reads threads from stdin.
+- No flags. Interactive: reads threads from stdin on step 1.
 
 ## Procedure
 
-1. Run the script:
+1. Run the prepare script and paste the threads (Ctrl+D when done):
    ```bash
-   bun run apps/web/scripts/operator/scan-inbox.ts
+   bun run apps/web/scripts/operator/inbox/prepare-classify.ts
    ```
-2. When prompted, paste one or more email threads (sender, subject, body), then press Ctrl+D.
-3. The script:
-   a. Sends threads to Claude for classification (Zod-validated, `inbox-classify-v1` prompt).
-   b. For each classified thread: matches to an `applications` row by `(company_normalized, role_normalized)`.
-   c. Displays each classification with confidence, matched application, and proposed status flip.
-   d. Prompts Miura for Y/N per thread.
-   e. On Y: inserts `status_events` row and updates `applications.status` where applicable.
-   f. For `interview` classifications: suggests running `/cruzar interview --application <id>`.
+   The stdout JSON is:
+   ```
+   { success, threads, system_prompt, user_prompt, output_schema_hint, prompt_version }
+   ```
+
+2. **CC authors the classifications.** Read `system_prompt` + `user_prompt` from the bundle and produce a JSON object matching `inboxClassifyResultSchema` exactly:
+   ```json
+   {
+     "classifications": [
+       {
+         "thread_id": "thread-1",
+         "classification": "viewed" | "rejected" | "interview" | "other",
+         "application_match": { "company": "...", "role": "...", "job_url": "..." },
+         "interview_time": "<ISO 8601>",
+         "confidence": 0.0
+       }
+     ]
+   }
+   ```
+   Be conservative; when ambiguous, `"other"` with low confidence. Never invent interview times.
+
+3. Show the proposed classifications to Miura on stderr/chat. If she wants to edit one, edit in-session before step 4.
+
+4. Pipe the final JSON into the save script:
+   ```bash
+   echo '<classifications JSON>' | bun run apps/web/scripts/operator/inbox/save-classifications.ts
+   ```
+   It:
+   - Validates against `inboxClassifyResultSchema`.
+   - Matches each classification to an `applications` row via `(company_normalized, role_normalized[, job_url])`, with fuzzy fallback on company alone.
+   - Inserts `status_events` rows (`viewed` / `rejected` / `interview_invited`) and flips `applications.status` for rejections/interviews.
+   - Skips classifications with no matching application and surfaces their `thread_id` in `unmatched_thread_ids` on stdout.
+
+5. If the envelope returns `interview_application_ids: ["<uuid>", ...]`, suggest `/cruzar interview --application <uuid>` for each.
 
 ## Success criteria
 
-- Every classified thread either flips a status or is explicitly declined by Miura.
-- Zero silent writes -- every mutation confirmed interactively.
-- Low-confidence classifications (<0.7) flagged for extra scrutiny.
+- Every classified thread either flips a status or is surfaced as unmatched.
+- `@/lib/llm` is not invoked; reasoning is CC-in-the-loop.
+- Low-confidence classifications (<0.7) are flagged by CC before step 4.
 
 ## Exit codes
 
-- `0` -- success. JSON stdout: `{ success: true, threads_classified, flipped, skipped, prompt_version }`.
-- `1` -- error.
-- `2` -- invalid input (empty stdin).
+- `0` — success. Final stdout: `{ success: true, threads_classified, flipped, skipped, unmatched_thread_ids, interview_application_ids, prompt_version }`.
+- `1` — error (empty stdin, invalid JSON, schema fail, DB error).
+- `2` — args / invalid input.
 
 ## Failure modes
 
-- Ambiguous application match: lists top candidates, lets Miura see the IDs.
-- Low-confidence classification: flagged with warning, Miura decides.
-- No matching application in DB: warns, cannot write status_event without student_id.
+- `invalid_classifications` — CC-authored JSON did not match the schema. Re-author and pipe again.
+- Ambiguous application match: the save script falls back to fuzzy-on-company; no match → `unmatched_thread_ids`.
+- No matching application in DB: skipped, cannot write `status_events` without `student_id`.

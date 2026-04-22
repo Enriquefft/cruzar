@@ -7,42 +7,34 @@ import { promisify } from "node:util";
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/db/client";
 import * as schema from "@/db/schema";
-import { llmJsonCompletion } from "@/lib/llm";
-import { cvTailorSchema, renderCvTailorPrompt } from "@/lib/prompts/cv-tailor";
+import { PROMPT_VERSION, renderCvTailorPrompt } from "@/lib/prompts/cv-tailor";
 import { uploadFileToR2 } from "@/lib/r2";
 
 const execFileAsync = promisify(execFile);
 
-interface TailorCvInput {
+interface PrepareTailorContextInput {
   profileMd: string;
   jdText: string;
-  studentId: string;
   applicationId: string;
-  destPdfPath?: string;
 }
 
-interface TailorCvOutput {
-  cvMarkdown: string;
-  cvR2Key: string;
-  version: number;
+interface PrepareTailorContextOutput {
+  nextVersion: number;
+  system_prompt: string;
+  user_prompt: string;
+  prompt_version: typeof PROMPT_VERSION;
 }
 
 /**
- * Derive a tailored cv_markdown from profile_md + JD text, render to PDF,
- * upload to R2, and persist a generated_cvs row. Returns the cv_markdown,
- * R2 key, and version number.
- *
- * Idempotent on (application_id, version): re-running with the same
- * application_id increments version (append-only audit trail).
+ * CC-in-the-loop: load the next version number for this application and emit
+ * the system/user prompts so Claude Code (in the orchestrator session) can
+ * author the tailored cv_markdown. No LLM call here.
  */
-export async function tailorCvForJd({
+export async function prepareTailorContext({
   profileMd,
   jdText,
-  studentId,
   applicationId,
-  destPdfPath,
-}: TailorCvInput): Promise<TailorCvOutput> {
-  // Determine next version for this application
+}: PrepareTailorContextInput): Promise<PrepareTailorContextOutput> {
   const existingVersions = await db
     .select({ version: schema.generatedCvs.version })
     .from(schema.generatedCvs)
@@ -53,31 +45,60 @@ export async function tailorCvForJd({
   const lastVersion = existingVersions[0]?.version ?? 0;
   const nextVersion = lastVersion + 1;
 
-  // Call LLM: profile_md + JD -> tailored cv_markdown
   const messages = renderCvTailorPrompt({ profileMd, jdText });
-  const result = await llmJsonCompletion({
-    tier: "strong",
-    messages,
-    schema: cvTailorSchema,
-    schemaName: "cv-tailor",
-  });
+  let system = "";
+  let user = "";
+  for (const m of messages) {
+    if (m.role === "system") system = m.content;
+    else if (m.role === "user") user = m.content;
+  }
 
-  const { cv_markdown, changes_summary } = result;
+  return {
+    nextVersion,
+    system_prompt: system,
+    user_prompt: user,
+    prompt_version: PROMPT_VERSION,
+  };
+}
 
-  // Render PDF via generate-pdf.mjs subprocess
+interface SaveTailoredCvInput {
+  cvMarkdown: string;
+  changesSummary: string;
+  studentId: string;
+  applicationId: string;
+  nextVersion: number;
+  destPdfPath?: string;
+}
+
+interface TailorCvOutput {
+  cvMarkdown: string;
+  cvR2Key: string;
+  version: number;
+}
+
+/**
+ * Render the CC-authored cv_markdown to PDF, upload to R2, and persist a
+ * generated_cvs row. Append-only audit trail on (application_id, version).
+ */
+export async function saveTailoredCv({
+  cvMarkdown,
+  changesSummary,
+  studentId,
+  applicationId,
+  nextVersion,
+  destPdfPath,
+}: SaveTailoredCvInput): Promise<TailorCvOutput> {
   const tmpDir = await mkdtemp(join(tmpdir(), "cruzar-cv-"));
   try {
     const mdPath = join(tmpDir, "cv.md");
     const pdfPath = join(tmpDir, "cv.pdf");
 
-    await writeFile(mdPath, cv_markdown, "utf-8");
+    await writeFile(mdPath, cvMarkdown, "utf-8");
 
-    // generate-pdf.mjs accepts <input> <output> positional args
     const thisDir = dirname(fileURLToPath(import.meta.url));
     const generatePdfPath = resolve(thisDir, "../../../../career-ops/bin/generate-pdf.mjs");
     await execFileAsync("node", [generatePdfPath, mdPath, pdfPath]);
 
-    // Upload PDF to R2
     const r2Key = `generated-cvs/${studentId}/${applicationId}/v${nextVersion}.pdf`;
     await uploadFileToR2(r2Key, pdfPath, "application/pdf", "private");
 
@@ -85,58 +106,48 @@ export async function tailorCvForJd({
       await copyFile(pdfPath, destPdfPath);
     }
 
-    // Persist generated_cvs row
     await db.insert(schema.generatedCvs).values({
       student_id: studentId,
       application_id: applicationId,
-      cv_markdown,
+      cv_markdown: cvMarkdown,
       cv_r2_key: r2Key,
       version: nextVersion,
-      changes_summary,
+      changes_summary: changesSummary,
     });
 
     return {
-      cvMarkdown: cv_markdown,
+      cvMarkdown,
       cvR2Key: r2Key,
       version: nextVersion,
     };
   } finally {
-    // Cleanup temp dir
     await rm(tmpDir, { recursive: true, force: true }).catch(() => {});
   }
 }
 
-interface ShowcaseCvInput {
-  profileMd: string;
+interface RenderShowcaseCvInput {
+  cvMarkdown: string;
   studentId: string;
 }
 
 /**
- * Render a showcase CV from profile_md (no JD tailoring) and upload to R2
- * public bucket. Returns the R2 key. Idempotent per student: re-runs overwrite
- * the same key so /profile + /p/<slug> always read the latest render.
+ * Render a pre-authored showcase CV markdown to PDF and upload to the R2
+ * public bucket. Returns the R2 key. Idempotent per student: re-runs
+ * overwrite the same key so /profile + /p/<slug> always read the latest
+ * render.
+ *
+ * CC-in-the-loop: the markdown is authored upstream by Claude Code from
+ * the prepare.ts context bundle. This function does no LLM work.
  */
-export async function generateShowcaseCv({
-  profileMd,
+export async function renderShowcaseCvFromMarkdown({
+  cvMarkdown,
   studentId,
-}: ShowcaseCvInput): Promise<string> {
-  const messages = renderCvTailorPrompt({
-    profileMd,
-    jdText:
-      "Showcase CV — not tied to any specific role. Optimize for clarity, breadth, and general readability by a reviewer scanning the student's public profile.",
-  });
-  const result = await llmJsonCompletion({
-    tier: "strong",
-    messages,
-    schema: cvTailorSchema,
-    schemaName: "cv-tailor-showcase",
-  });
-
+}: RenderShowcaseCvInput): Promise<string> {
   const tmpDir = await mkdtemp(join(tmpdir(), "cruzar-showcase-"));
   try {
     const mdPath = join(tmpDir, "cv.md");
     const pdfPath = join(tmpDir, "cv.pdf");
-    await writeFile(mdPath, result.cv_markdown, "utf-8");
+    await writeFile(mdPath, cvMarkdown, "utf-8");
 
     const thisDir = dirname(fileURLToPath(import.meta.url));
     const generatePdfPath = resolve(thisDir, "../../../../career-ops/bin/generate-pdf.mjs");

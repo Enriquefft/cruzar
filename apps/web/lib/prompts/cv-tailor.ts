@@ -14,7 +14,7 @@ interface RenderCvTailorInput {
   jdText: string;
 }
 
-const cvTailorSystem = `You are the Cruzar CV tailoring engine. Given a student's profile_md (their single source of truth narrative document) and a specific job description, produce a tailored cv_markdown optimized for this role.
+export const cvTailorSystem = `You are the Cruzar CV tailoring engine. Given a student's profile_md (their single source of truth narrative document) and a specific job description, produce a tailored cv_markdown optimized for this role.
 
 The cv_markdown is a markdown document structured as a professional CV/resume. It must:
 
@@ -56,3 +56,10 @@ Produce a tailored CV markdown optimized for this specific role. Output strict J
     { role: "user", content: user },
   ];
 }
+
+export const showcaseCvTailorSystem = `${cvTailorSystem}
+
+Showcase flavor: this render is not tied to any specific JD. The "Job description" below is a placeholder asking for a general-purpose showcase CV. Optimize for clarity, breadth, and general readability by a reviewer scanning the student's public profile. Prioritize the strongest stories and skills from profile_md; do not narrow to a single role.`;
+
+export const SHOWCASE_JD_PLACEHOLDER =
+  "Showcase CV — not tied to any specific role. Optimize for clarity, breadth, and general readability by a reviewer scanning the student's public profile." as const;

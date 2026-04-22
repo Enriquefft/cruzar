@@ -2,7 +2,7 @@
   "CORSRules": [
     {
       "ID": "cruzar-prod",
-      "AllowedOrigins": ["https://cruzarapp.com"],
+      "AllowedOrigins": ["https://cruzarapp.com", "https://www.cruzarapp.com"],
       "AllowedMethods": ["GET", "PUT"],
       "AllowedHeaders": ["Content-Type", "Content-Length"],
       "ExposeHeaders": ["ETag"],

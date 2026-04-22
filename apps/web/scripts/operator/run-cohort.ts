@@ -1,4 +1,5 @@
 import { execFile } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -9,9 +10,10 @@ import { applications, fillFormDrafts, profiles, statusEvents, students, user } 
 import { uploadFileToR2 } from "@/lib/r2";
 import type { platformValues } from "@/schemas/_shared";
 import { parseFlags } from "./_shared/args";
-import { tailorCvForJd } from "./_shared/cv-tailor";
+import { prepareTailorContext, saveTailoredCv } from "./_shared/cv-tailor";
 import { logDone, logError } from "./_shared/logger";
 import { cleanupRuntimeDir, generateRuntimeDir } from "./_shared/runtime-dir";
+import { renderCandidatesForStderr } from "./students/list";
 
 const execFileAsync = promisify(execFile);
 const thisDir = dirname(fileURLToPath(import.meta.url));
@@ -22,6 +24,8 @@ const flagsSchema = z.object({
   company: z.string().min(1),
   role: z.string().min(1),
   debug: z.preprocess((v) => v === true || v === "true", z.boolean().default(false)),
+  "cv-markdown-path": z.string().min(1).optional(),
+  "changes-summary": z.string().min(1).optional(),
 });
 
 const fillFormsResultSchema = z.object({
@@ -62,6 +66,19 @@ function splitName(full: string): { firstName: string; lastName: string } {
 }
 
 async function main(): Promise<void> {
+  // Pre-parse check: if `--student` is missing entirely, list `ready`
+  // candidates on stderr so Miura (via CC) can pick an id before re-invoking
+  // with the rest of the flags. Any other Zod issue still flows through
+  // parseFlags below.
+  if (!process.argv.slice(2).includes("--student")) {
+    const block = await renderCandidatesForStderr("ready");
+    process.stderr.write(block);
+    process.stdout.write(
+      `${JSON.stringify({ success: false, error: "missing_student", message: "Pass --student <id> along with --job-url --company --role. Candidates listed above on stderr; also run `/cruzar students list --state ready`." })}\n`,
+    );
+    process.exit(2);
+  }
+
   const flags = parseFlags(flagsSchema);
 
   if (process.platform === "linux" && !process.env.DISPLAY) {
@@ -156,16 +173,64 @@ async function main(): Promise<void> {
   }
   const applicationId = firstInserted.id;
 
+  const jdText = `Job URL: ${jobUrl}\nCompany: ${flags.company}\nRole: ${flags.role}\nPlatform: ${platform}`;
+
+  const cvMarkdownPath = flags["cv-markdown-path"];
+  if (!cvMarkdownPath) {
+    const ctx = await prepareTailorContext({
+      profileMd: row.profile_md,
+      jdText,
+      applicationId,
+    });
+    const payload = {
+      success: false,
+      error: "need_cv_markdown",
+      message:
+        "Author cv_markdown using system_prompt+user_prompt, write it to a temp file, then re-invoke run-cohort with --cv-markdown-path <path> and --changes-summary <string>.",
+      student_id: flags.student,
+      application_id: applicationId,
+      next_version: ctx.nextVersion,
+      system_prompt: ctx.system_prompt,
+      user_prompt: ctx.user_prompt,
+      output_schema_hint:
+        "See cvTailorSchema in @/lib/prompts/cv-tailor — {cv_markdown: string (≥50 chars), changes_summary: string}. Write ONLY cv_markdown to the temp file; pass changes_summary via --changes-summary.",
+      prompt_version: ctx.prompt_version,
+    } as const;
+    process.stdout.write(`${JSON.stringify(payload)}\n`);
+    process.exit(2);
+  }
+
+  const changesSummary = flags["changes-summary"];
+  if (!changesSummary) {
+    logError(
+      "missing_changes_summary",
+      "--cv-markdown-path requires --changes-summary <string> describing what was tailored",
+      { student_id: flags.student, application_id: applicationId },
+    );
+  }
+
   const workspaceDir = await generateRuntimeDir(flags.student);
 
   try {
     const cvPdfPath = join(workspaceDir, "cv.pdf");
-    const jdText = `Job URL: ${jobUrl}\nCompany: ${flags.company}\nRole: ${flags.role}\nPlatform: ${platform}`;
-    await tailorCvForJd({
+    const cvMarkdown = await readFile(cvMarkdownPath, "utf-8");
+    if (cvMarkdown.trim().length < 50) {
+      logError("cv_markdown_too_short", "cv_markdown from --cv-markdown-path is shorter than 50 chars", {
+        student_id: flags.student,
+        application_id: applicationId,
+      });
+    }
+    const tailorCtx = await prepareTailorContext({
       profileMd: row.profile_md,
       jdText,
+      applicationId,
+    });
+    await saveTailoredCv({
+      cvMarkdown,
+      changesSummary,
       studentId: flags.student,
       applicationId,
+      nextVersion: tailorCtx.nextVersion,
       destPdfPath: cvPdfPath,
     });
 

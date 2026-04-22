@@ -6,13 +6,24 @@ import { type CefrLevel, mapCertToCefr, meetsB2 } from "@/lib/cefr-map";
 import { assertAttestationExists, presignAttestationGet } from "@/lib/r2";
 import { parseFlags } from "./_shared/args";
 import { logDone, logError } from "./_shared/logger";
+import { renderCandidatesForStderr } from "./students/list";
 
 const flagsSchema = z.object({
   student: z.string().min(1),
 });
 
 async function main(): Promise<void> {
+  if (!process.argv.slice(2).includes("--student")) {
+    const block = await renderCandidatesForStderr("pending_onboard");
+    process.stderr.write(block);
+    process.stdout.write(
+      `${JSON.stringify({ success: false, error: "missing_student", message: "Pass --student <id>. Candidates listed above on stderr; also run `/cruzar students list --state pending_onboard`." })}\n`,
+    );
+    process.exit(2);
+  }
+
   const flags = parseFlags(flagsSchema);
+  const studentId: string = flags.student;
 
   // --- Load student -----------------------------------------------------------
   const studentRows = await db
@@ -22,13 +33,13 @@ async function main(): Promise<void> {
       onboarded_at: students.onboarded_at,
     })
     .from(students)
-    .where(eq(students.id, flags.student))
+    .where(eq(students.id, studentId))
     .limit(1);
 
   const student = studentRows[0];
   if (!student) {
     logError("student_not_found", "No students row for the given id", {
-      student_id: flags.student,
+      student_id: studentId,
     });
   }
 

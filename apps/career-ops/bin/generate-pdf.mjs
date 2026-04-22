@@ -136,7 +136,8 @@ async function generatePDF() {
     console.log(`🧹 ATS normalization: ${totalReplacements} replacements (${breakdown})`);
   }
 
-  const browser = await chromium.launch({ headless: true });
+  const executablePath = process.env.CHROMIUM_EXECUTABLE_PATH || undefined;
+  const browser = await chromium.launch({ headless: true, executablePath });
   try {
     const page = await browser.newPage();
 

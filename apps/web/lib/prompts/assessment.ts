@@ -113,7 +113,7 @@ export interface RoleMatchSummary {
 // Prompt renderers
 // ---------------------------------------------------------------------------
 
-const readinessSystem = `You are the Cruzar readiness classifier. Given a student's full intake Q&A (up to 40 answers across 4 batches) and their English certification, classify them into one of three verdicts:
+export const readinessSystem = `You are the Cruzar readiness classifier. Given a student's full intake Q&A (up to 40 answers across 4 batches) and their English certification, classify them into one of three verdicts:
 
 - "ready" — the student has sufficient experience, communication skills, and positioning to be matched with remote roles and have competitive applications submitted on their behalf. They may have minor gaps but nothing that blocks immediate placement.
 - "presentation_gap" — the student has real experience and skills but their self-presentation (storytelling, framing accomplishments, articulating value) needs work before applications would be competitive. Fixable in days/weeks with coaching.
@@ -141,24 +141,27 @@ interface RenderReadinessInput {
   cert: CertSummary;
 }
 
-export function renderReadinessPrompt({ answers, cert }: RenderReadinessInput): LlmMessage[] {
+export function renderReadinessUser({ answers, cert }: RenderReadinessInput): string {
   const answersJson = JSON.stringify(answers, null, 2);
-  const user = `English certification:
+  return `English certification:
 - Kind: ${cert.kind}, Score: ${cert.score}, Level: ${cert.level}
 
 All intake answers (${answers.length} total):
 ${answersJson}
 
 Classify this student's readiness now as strict JSON.`;
+}
+
+export function renderReadinessPrompt({ answers, cert }: RenderReadinessInput): LlmMessage[] {
   return [
     { role: "system", content: readinessSystem },
-    { role: "user", content: user },
+    { role: "user", content: renderReadinessUser({ answers, cert }) },
   ];
 }
 
 // ---------------------------------------------------------------------------
 
-const planSystemPresentation = `You are the Cruzar plan generator for students with a "presentation_gap" verdict. The student has real experience but needs to improve how they present themselves for remote roles.
+export const planSystemPresentation = `You are the Cruzar plan generator for students with a "presentation_gap" verdict. The student has real experience but needs to improve how they present themselves for remote roles.
 
 Generate an actionable plan with:
 - plan_markdown: A markdown document with specific, concrete steps. Focus on CV/LinkedIn positioning fixes, storytelling practice, and framing accomplishments with metrics. Written in Spanish (the operator will share it with the student). If the student is ready (no plan needed), set this to an empty string.
@@ -176,7 +179,7 @@ Output strict JSON:
 
 PROMPT_VERSION: ${PROMPT_VERSION}`;
 
-const planSystemExperience = `You are the Cruzar plan generator for students with an "experience_gap" verdict. The student lacks sufficient professional experience for the target remote role catalog.
+export const planSystemExperience = `You are the Cruzar plan generator for students with an "experience_gap" verdict. The student lacks sufficient professional experience for the target remote role catalog.
 
 Generate a growth plan with:
 - plan_markdown: A markdown document with realistic growth milestones. May include suggested projects, certifications, volunteer work, or practice activities. Written in Spanish. If the student is ready (no plan needed), set this to an empty string.
@@ -201,11 +204,10 @@ interface RenderPlanInput {
   cert: CertSummary;
 }
 
-export function renderPlanPrompt({ verdict, gaps, answers, cert }: RenderPlanInput): LlmMessage[] {
-  const system = verdict === "presentation_gap" ? planSystemPresentation : planSystemExperience;
+export function renderPlanUser({ verdict, gaps, answers, cert }: RenderPlanInput): string {
   const gapsJson = JSON.stringify(gaps, null, 2);
   const answersJson = JSON.stringify(answers, null, 2);
-  const user = `Verdict: ${verdict}
+  return `Verdict: ${verdict}
 
 English certification:
 - Kind: ${cert.kind}, Score: ${cert.score}, Level: ${cert.level}
@@ -217,15 +219,19 @@ All intake answers (${answers.length} total):
 ${answersJson}
 
 Generate the plan now as strict JSON.`;
+}
+
+export function renderPlanPrompt({ verdict, gaps, answers, cert }: RenderPlanInput): LlmMessage[] {
+  const system = verdict === "presentation_gap" ? planSystemPresentation : planSystemExperience;
   return [
     { role: "system", content: system },
-    { role: "user", content: user },
+    { role: "user", content: renderPlanUser({ verdict, gaps, answers, cert }) },
   ];
 }
 
 // ---------------------------------------------------------------------------
 
-const roleMatchSystem = `You are the Cruzar role matcher. Given a student's intake answers, English certification, and identified gaps, select the top 3 best-fit roles from the provided catalog.
+export const roleMatchSystem = `You are the Cruzar role matcher. Given a student's intake answers, English certification, and identified gaps, select the top 3 best-fit roles from the provided catalog.
 
 Matching criteria:
 - English level must meet the role's requirement. A B2 student qualifies for B2 roles. C1 qualifies for C1 and below.
@@ -252,16 +258,16 @@ interface RenderRoleMatchInput {
   rolesCatalog: readonly RoleCatalogEntry[];
 }
 
-export function renderRoleMatchPrompt({
+export function renderRoleMatchUser({
   answers,
   cert,
   gaps,
   rolesCatalog,
-}: RenderRoleMatchInput): LlmMessage[] {
+}: RenderRoleMatchInput): string {
   const answersJson = JSON.stringify(answers, null, 2);
   const gapsJson = JSON.stringify(gaps, null, 2);
   const catalogJson = JSON.stringify(rolesCatalog, null, 2);
-  const user = `English certification:
+  return `English certification:
 - Kind: ${cert.kind}, Score: ${cert.score}, Level: ${cert.level}
 
 Identified gaps (minor, since student is verdict=ready):
@@ -274,15 +280,23 @@ All intake answers (${answers.length} total):
 ${answersJson}
 
 Select the top 3 roles now as strict JSON.`;
+}
+
+export function renderRoleMatchPrompt({
+  answers,
+  cert,
+  gaps,
+  rolesCatalog,
+}: RenderRoleMatchInput): LlmMessage[] {
   return [
     { role: "system", content: roleMatchSystem },
-    { role: "user", content: user },
+    { role: "user", content: renderRoleMatchUser({ answers, cert, gaps, rolesCatalog }) },
   ];
 }
 
 // ---------------------------------------------------------------------------
 
-const profileMdSystem = `You are the Cruzar profile synthesizer. You produce the single authoritative narrative document for a student — their profile_md. This is the SSOT that all downstream artifacts (CVs, public profiles, role applications) derive from.
+export const profileMdSystem = `You are the Cruzar profile synthesizer. You produce the single authoritative narrative document for a student — their profile_md. This is the SSOT that all downstream artifacts (CVs, public profiles, role applications) derive from.
 
 Input: all intake Q&A (up to 40 answers), English certification, assessment gaps, and role matches.
 
@@ -319,13 +333,13 @@ interface RenderProfileMdInput {
   localSalaryUsd: number | null;
 }
 
-export function renderProfileMdPrompt({
+export function renderProfileMdUser({
   answers,
   cert,
   gaps,
   roleMatches,
   localSalaryUsd,
-}: RenderProfileMdInput): LlmMessage[] {
+}: RenderProfileMdInput): string {
   const answersJson = JSON.stringify(answers, null, 2);
   const gapsJson = JSON.stringify(gaps, null, 2);
   const matchesJson = JSON.stringify(roleMatches, null, 2);
@@ -334,7 +348,7 @@ export function renderProfileMdPrompt({
       ? `Local salary: $${localSalaryUsd} USD/year. Compute the delta against each matched role's midpoint in the Evaluations section.`
       : "No local salary provided. Omit salary delta from Evaluations.";
 
-  const user = `English certification:
+  return `English certification:
 - Kind: ${cert.kind}, Score: ${cert.score}, Level: ${cert.level}
 
 Assessment gaps:
@@ -349,8 +363,20 @@ All intake answers (${answers.length} total):
 ${answersJson}
 
 Synthesize the profile_md now as strict JSON.`;
+}
+
+export function renderProfileMdPrompt({
+  answers,
+  cert,
+  gaps,
+  roleMatches,
+  localSalaryUsd,
+}: RenderProfileMdInput): LlmMessage[] {
   return [
     { role: "system", content: profileMdSystem },
-    { role: "user", content: user },
+    {
+      role: "user",
+      content: renderProfileMdUser({ answers, cert, gaps, roleMatches, localSalaryUsd }),
+    },
   ];
 }
