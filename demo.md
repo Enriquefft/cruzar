@@ -1,6 +1,6 @@
 # Demo — Cruzar for Miura
 
-**Date:** 2026-04-17
+**Date:** 2026-04-21
 **Surface:** production — `https://cruzarapp.com`. Operator skills run from this laptop against the Neon DB Vercel uses (ADR-01).
 **Duration:** ~30 min.
 
@@ -65,19 +65,24 @@ Open `https://cruzarapp.com` in incognito.
 
 Fresh CC session in the repo root. Student = throwaway from Part B.
 
+### 0. `/cruzar students list --state pending_onboard`
+- Read-only. Emits human-readable table on stderr: first name, masked email, slug, created date, `id`.
+- Beat: *"Miura never has to `psql` or write SQL. `students list` is the picker, state-filtered (`pending_onboard | pending_intake | pending_assess | ready | gap`). Every `/cruzar` skill that needs `--student` also auto-lists candidates when the flag is missing — zero context switches."*
+- Copy the throwaway's `id` for the next step.
+
 ### 1. `/cruzar onboard <student_id>`
 - Validates CEFR mapping, surfaces attestation, asks to flip `verified = true`.
 - Outputs paste-ready Spanish WhatsApp welcome. Copy → send on phone.
 
 ### 2. `/cruzar intake <id> --generate` → `--record` ×4 → `--finalize`
-- `--generate`: 10 adaptive Spanish Qs. Paste into WhatsApp.
-- `--record`: paste each reply. Low-confidence answer on batch 2 triggers clarification.
+- `--generate`: CC authors 10 adaptive Spanish Qs **in-session** from prior answers. No external LLM API call — scripts only persist. Paste into WhatsApp.
+- `--record`: paste each reply. CC parses into structured Q/A rows in-session. Low-confidence answer on batch 2 triggers clarification.
 - Repeat 4 batches using prepared synthetic replies.
 - `--finalize`: asserts 4 batches + ≥40 answers.
-- Beat: *"Wizard-of-Oz. Phase X swaps copy-paste for a webhook behind the same orchestrator (ADR-02)."*
+- Beat: *"Wizard-of-Oz over WhatsApp. Reasoning runs inside CC — no z.ai, no Anthropic API. Scripts are dumb persistence. Phase X swaps copy-paste for a webhook behind the same orchestrator (ADR-02)."*
 
 ### 3. `/cruzar assess <id>`
-- Readiness classifier → **Ready** (synthetic intake built for it).
+- CC-in-the-loop: single reasoning pass inside the session produces readiness verdict → **Ready** (synthetic intake built for it), role matches, `profile_md`, and showcase CV markdown. Script persists + renders PDF.
 - Generates `profile_md`, `role_matches`, salary delta, `showcase_cv_r2_key`.
 - Incognito tab → `/profile` → Ready shape: CEFR badge, role matches, salary delta, CV download. Click → PDF streams from R2.
 - `/p/<slug>` → public profile renders.
@@ -85,7 +90,7 @@ Fresh CC session in the repo root. Student = throwaway from Part B.
 
 ### 4. `/cruzar run-cohort --student <id> --job-url <gh-url> --company "<Company>" --role "<Role>"`
 - CC generates `.cruzar-runtime/<id>/` from DB, shells out to `apps/career-ops/bin/fill-forms.mjs` **headed**.
-- Playwright opens the Greenhouse posting. Claude tailors `cv.md`, renders PDF, uploads to R2, attaches to form, auto-fills standard fields, **pauses at submit**.
+- Playwright opens the Greenhouse posting. CC tailors `cv.md` **in-session** (no external LLM), script renders PDF, uploads to R2, attaches to form, auto-fills standard fields, **pauses at submit**.
 - Beat: *"ethical gate. fill-forms never clicks submit. You review, you click. Inviolable (ADR-08)."*
 - Do not submit. Close tab.
 - Re-run same URL → idempotent skip. Beat: *"same (student, company, role, job_url) → no-op."*
@@ -99,7 +104,7 @@ Fresh CC session in the repo root. Student = throwaway from Part B.
 
 ## Close (~2 min)
 
-One framing beat: *"we didn't build an admin UI. CC is the admin UI. Command surface is the product for operators (ADR-04)."*
+One framing beat: *"we didn't build an admin UI. CC is the admin UI. Command surface is the product for operators (ADR-04). And there's no external LLM API in this flow — no z.ai, no Anthropic key. CC is the brain; scripts are the hands."*
 
 **Not in this demo:** 3+ real Aprendly students end-to-end (M12 pending). Lever/Ashby/Workable adapters, WhatsApp Cloud API, in-product English assessment — Phase X behind the same command surface.
 
@@ -112,5 +117,5 @@ One framing beat: *"we didn't build an admin UI. CC is the admin UI. Command sur
   bun --env-file=.env apps/web/scripts/operator/sql.ts --write "DELETE FROM \"user\" WHERE id = '<throwaway-id>'"
   ```
   (Cascade handles downstream.)
-- Capture Miura's questions in `product/cruzar/meetings/2026-04-17-demo-debrief.md`.
+- Capture Miura's questions in `product/cruzar/meetings/2026-04-21-demo-debrief.md`.
 - Tick M12 partial progress in `roadmap.md`.
